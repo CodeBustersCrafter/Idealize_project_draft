@@ -34,5 +34,4 @@ class LoginAtivity : ComponentActivity() {
         startActivity(intent)
         finish()
     }
-    //Sample update v2
 }
