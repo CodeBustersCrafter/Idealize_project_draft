@@ -28,4 +28,3 @@ class SignUpActivity : ComponentActivity() {
         finish()
     }
 }
-#Hi
