@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUpActivity"
-    android:background="@drawable/ben">
+    android:background="@drawable/nasa
+">
     <TextView
         android:id="@+id/textView"
         android:layout_marginTop="50dp"
