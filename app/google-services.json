@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "31345152940",
+    "project_id": "idealize-app-2024",
+    "storage_bucket": "idealize-app-2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31345152940:android:b6a18ad6fed775cfd5a009",
+        "android_client_info": {
+          "package_name": "com.codebusters.idealizeprojectdraft"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7Degdz2hHGwCIl1oGk-IPo87EWISfz5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
