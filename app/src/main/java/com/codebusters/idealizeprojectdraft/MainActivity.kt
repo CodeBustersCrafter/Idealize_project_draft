@@ -7,6 +7,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.codebusters.idealizeprojectdraft.databinding.MainActivityBinding
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import java.io.BufferedReader
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     private lateinit var binding : MainActivityBinding
@@ -36,6 +40,23 @@ class MainActivity : ComponentActivity() {
         binding.imageViewUserLogin.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, LoginAtivity::class.java)
             startActivity(intent)
+
+            //Code for adding city tags
+            /*val db = Firebase.firestore
+            val input_stream = baseContext.resources.openRawResource(R.raw.cities)
+            val buffer = input_stream.bufferedReader()
+            var line = buffer.readLine()
+            val arr : ArrayList<String> = ArrayList<String>()
+            while (line!=null){
+                arr.add(line)
+                line = buffer.readLine()
+            }
+
+            val map : HashMap<String, Any> = HashMap<String, Any>()
+            map.put("Cities",arr)
+            db.collection("App Data").document("Tags").update(map)
+            */
+
         })
     }
 }
