@@ -7,14 +7,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.codebusters.idealizeprojectdraft.databinding.MainActivityBinding
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
-import java.io.BufferedReader
-import java.io.File
 
 class MainActivity : ComponentActivity() {
     private lateinit var binding : MainActivityBinding
-    private var TYPE = 0
+    private var tYPE = 0
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +18,10 @@ class MainActivity : ComponentActivity() {
         setContentView(binding.root)
 
         if(intent.hasExtra("Type")){
-            TYPE = intent.getIntExtra("Type",0)
+            tYPE = intent.getIntExtra("Type",0)
         }
 
-        if(TYPE==0){
+        if(tYPE==0){
             //Normal
             //only login
             binding.imageViewUserLogin.setImageDrawable(getDrawable(R.drawable.login))
