@@ -58,6 +58,6 @@ class MainActivity : ComponentActivity() {
             */
 
         })
-        //Sample Comment 2
+        //Sample Comment 1
     }
 }
