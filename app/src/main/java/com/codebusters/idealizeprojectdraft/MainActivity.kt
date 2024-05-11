@@ -5,10 +5,12 @@ package com.codebusters.idealizeprojectdraft
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
-import com.codebusters.idealizeprojectdraft.databinding.MainActivityBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -18,23 +20,41 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 
-class MainActivity : ComponentActivity() {
-    private lateinit var binding : MainActivityBinding
+class MainActivity : AppCompatActivity() {
     private var tYPE = 0
     private var id = "0"
     private var email = ""
     private lateinit var auth: FirebaseAuth
     private lateinit var googleCredential : GoogleSignInClient
-    @SuppressLint("UseCompatLoadingForDrawables")
+
+    private lateinit var tablayout : TabLayout
+    private lateinit var viewpager : ViewPager2
+
+    private lateinit var tabAdapter : FragmentPageAdapter
+    private lateinit var toolbar : Toolbar
+    @SuppressLint("UseCompatLoadingForDrawables", "MissingInflatedId", "UseSupportActionBar",
+        "ResourceType"
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = MainActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
+        setTheme(com.google.android.material.R.style.Theme_AppCompat)
+        setContentView(R.layout.main_activity)
+
+        toolbar = findViewById<Toolbar>(R.id.App_Bar_Main)
+        supportActionBar?.hide()
+        toolbar.inflateMenu(R.menu.main_tool_bar_menues)
+        setActionBar(toolbar)
+
+        tablayout = findViewById(R.id.Tab_layout_home_Screen)
+        viewpager = findViewById(R.id.view_pager_home_screen)
 
         auth = FirebaseAuth.getInstance()
 
+        tabAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle)
 
         if(intent.hasExtra("Type")){
             tYPE = intent.getIntExtra("Type",0)
@@ -42,20 +62,39 @@ class MainActivity : ComponentActivity() {
             email = intent.getStringExtra("Email").toString()
         }
 
-        if(tYPE==0){
-            //Normal
-            //only login
-            binding.imageViewUserLogin.setImageDrawable(getDrawable(R.drawable.login))
-            Toast.makeText(this, id,Toast.LENGTH_SHORT).show()
-        }else{
-            //Profile
-            //only logout
-            binding.imageViewUserLogin.setImageDrawable(getDrawable(R.drawable.logout))
-            Toast.makeText(this, id,Toast.LENGTH_SHORT).show()
-
+        tablayout.addTab(tablayout.newTab().setText("Home"))
+        if(tYPE!=0){
+            tablayout.addTab(tablayout.newTab().setText("Sell"))
         }
+        tablayout.addTab(tablayout.newTab().setText("Profile"))
 
-        binding.imageViewUserLogin.setOnClickListener {
+        viewpager.adapter = tabAdapter
+
+        tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab != null) {
+                    viewpager.currentItem = tab.position
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+        })
+
+        viewpager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                tablayout.selectTab(tablayout.getTabAt(position))
+            }
+
+        })
+
+        /*login.setOnClickListener {
             if (id != "0") {
                 auth.signOut()
                 val intent = Intent(this, MainActivity::class.java)
@@ -84,7 +123,7 @@ class MainActivity : ComponentActivity() {
             db.collection("App Data").document("Tags").update(map)
             */
 
-        }
+        }*/
     }
 
     private fun signIn(){
@@ -130,5 +169,40 @@ class MainActivity : ComponentActivity() {
             Toast.makeText(this,task.exception.toString(),Toast.LENGTH_SHORT).show()
 
         }
+    }
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_tool_bar_menues,menu)
+        if(tYPE==0){
+            //Normal
+            //only login
+            menu?.getItem(0)?.setIcon(getDrawable(R.drawable.login))
+            Toast.makeText(this, id,Toast.LENGTH_SHORT).show()
+        }else{
+            //Profile
+            //only logout
+            menu?.getItem(0)?.setIcon(getDrawable(R.drawable.logout))
+            Toast.makeText(this, id,Toast.LENGTH_SHORT).show()
+
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId==R.id.login_menu){
+            if (id != "0") {
+                auth.signOut()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("Type", 0)
+                intent.putExtra("Email", "")
+                intent.putExtra("ID", "0")
+                startActivity(intent)
+            } else {
+                signIn()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
