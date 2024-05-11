@@ -5,6 +5,8 @@
     <string name="Login_screen_sign_in_button">Sign In</string>
     <string name="Login_screen_user_name_hint">User Name</string>
     <string name="Login_screen_password_hint">Password</string>
-    <string name="Login_screen_sign_up_button">Sign UP</string>
+    <string name="Login_screen_sign_up_button">Sign UP with Google</string>
     <string name="Signup_screen_confirm_password_hint">Confirm Password</string>
+    <string name="don_t_you_have_an_account">Don\'t you have an account?</string>
+    <string name="server_client_id">31345152940-bj9uso7na1dr6o2mp42p55ef17ap8g7p.apps.googleusercontent.com</string>
 </resources>

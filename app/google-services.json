@@ -12,7 +12,12 @@
           "package_name": "com.codebusters.idealizeprojectdraft"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "31345152940-bj9uso7na1dr6o2mp42p55ef17ap8g7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA7Degdz2hHGwCIl1oGk-IPo87EWISfz5w"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31345152940-bj9uso7na1dr6o2mp42p55ef17ap8g7p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
