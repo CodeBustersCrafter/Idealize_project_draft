@@ -3,6 +3,7 @@ package com.codebusters.idealizeprojectdraft
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 
 class RecyclerViewAdapter(private val itemList: ArrayList<Item>) :
     RecyclerView.Adapter<RecycleViewItemViewHolder>() {
@@ -20,7 +21,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<Item>) :
         holder.item_name.setText(current_item.name)
         holder.item_phone.setText(current_item.phone)
         holder.item_price.setText(current_item.price)
-        holder.item_image.setImageBitmap(current_item.photo)
+        Picasso.get().load(current_item.photo).into(holder.item_image)
     }
 
 }

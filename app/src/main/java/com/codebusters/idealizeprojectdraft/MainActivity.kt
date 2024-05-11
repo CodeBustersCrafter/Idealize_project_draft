@@ -11,17 +11,19 @@ import android.widget.Toast
 import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
+import com.google.firebase.initialize
+
 
 class MainActivity : AppCompatActivity() {
     private var tYPE = 0
@@ -44,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         setTheme(com.google.android.material.R.style.Theme_AppCompat)
         setContentView(R.layout.main_activity)
 
-        toolbar = findViewById<Toolbar>(R.id.App_Bar_Main)
+        toolbar = findViewById(R.id.App_Bar_Main)
         supportActionBar?.hide()
         toolbar.inflateMenu(R.menu.main_tool_bar_menues)
         setActionBar(toolbar)
@@ -52,7 +54,11 @@ class MainActivity : AppCompatActivity() {
         tablayout = findViewById(R.id.Tab_layout_home_Screen)
         viewpager = findViewById(R.id.view_pager_home_screen)
 
-        auth = FirebaseAuth.getInstance()
+        Firebase.initialize(this)
+        //val firebaseAppCheck: FirebaseAppCheck = FirebaseAppCheck.getInstance()
+        //firebaseAppCheck.installAppCheckProviderFactory(DebugAppCheckProviderFactory.getInstance())
+
+        auth = Firebase.auth
 
         tabAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle)
 
@@ -61,6 +67,8 @@ class MainActivity : AppCompatActivity() {
             id = intent.getStringExtra("ID").toString()
             email = intent.getStringExtra("Email").toString()
         }
+
+        tabAdapter.init(id,email,tYPE)
 
         tablayout.addTab(tablayout.newTab().setText("Home"))
         if(tYPE!=0){
@@ -173,6 +181,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_tool_bar_menues,menu)
         if(tYPE==0){

@@ -1,6 +1,6 @@
 package com.codebusters.idealizeprojectdraft
 
-import android.graphics.Bitmap
+import android.net.Uri
 
 data class Item(
     var name: String,
@@ -13,5 +13,6 @@ data class Item(
     var time: String,
     var description: String,
     var quantity: String,
-    var photo : Bitmap
+    var photo : Uri,
+    var category : String
 )
