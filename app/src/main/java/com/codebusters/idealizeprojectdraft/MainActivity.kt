@@ -28,6 +28,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.initialize
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.google.firebase.auth.FirebaseUser
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private var uid = "0"
 
     private lateinit var idealizeUser : IdealizeUser
+    private lateinit var currentUser : FirebaseUser
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore : FirebaseFirestore
@@ -69,9 +71,20 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
+
         if(intent.hasExtra(myTags.intentType)){
             type = intent.getIntExtra(myTags.intentType,0)
             uid = intent.getStringExtra(myTags.intentUID).toString()
+        }else if(Firebase.auth!=null){
+            uid = Firebase.auth.currentUser?.uid ?: "0"
+            if(uid.equals("0")){
+                type = myTags.guestMode
+            }else{
+                type = myTags.userMode
+            }
+        }else{
+            type = myTags.guestMode
+            uid = "0"
         }
 
         tabLayout.addTab(tabLayout.newTab().setText("Home"))
