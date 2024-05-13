@@ -14,7 +14,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun MainScreen(){
-    val composition = rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.splashvideo))
+    val composition = rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.newvideo))
     val progress by animateLottieCompositionAsState(
         composition = composition.value,
         iterations = 1
