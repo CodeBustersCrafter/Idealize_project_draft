@@ -4,6 +4,7 @@ package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,30 +12,43 @@ import android.widget.Toast
 import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.codebusters.idealizeprojectdraft.models.IdealizeUser
+import com.codebusters.idealizeprojectdraft.fragment_adapters.FragmentPageAdapter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.initialize
+import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.google.firebase.auth.FirebaseUser
+
 
 class MainActivity : AppCompatActivity() {
-    private var tYPE = 0
-    private var id = "0"
-    private var email = ""
+
+    private var myTags = MyTags()
+    private var type = 0
+    private var uid = "0"
+
+    private lateinit var idealizeUser : IdealizeUser
+    private lateinit var currentUser : FirebaseUser
+
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore : FirebaseFirestore
     private lateinit var googleCredential : GoogleSignInClient
 
-    private lateinit var tablayout : TabLayout
+    private lateinit var tabLayout : TabLayout
     private lateinit var viewpager : ViewPager2
 
-    private lateinit var tabAdapter : FragmentPageAdapter
     private lateinit var toolbar : Toolbar
+
     @SuppressLint("UseCompatLoadingForDrawables", "MissingInflatedId", "UseSupportActionBar",
         "ResourceType"
     )
@@ -44,33 +58,54 @@ class MainActivity : AppCompatActivity() {
         setTheme(com.google.android.material.R.style.Theme_AppCompat)
         setContentView(R.layout.main_activity)
 
-        toolbar = findViewById<Toolbar>(R.id.App_Bar_Main)
+        toolbar = findViewById(R.id.App_Bar_Main)
         supportActionBar?.hide()
         toolbar.inflateMenu(R.menu.main_tool_bar_menues)
         setActionBar(toolbar)
 
-        tablayout = findViewById(R.id.Tab_layout_home_Screen)
+        tabLayout = findViewById(R.id.Tab_layout_home_Screen)
         viewpager = findViewById(R.id.view_pager_home_screen)
 
-        auth = FirebaseAuth.getInstance()
+        Firebase.initialize(this)
+        firestore =FirebaseFirestore.getInstance()
 
-        tabAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle)
+        auth = Firebase.auth
 
-        if(intent.hasExtra("Type")){
-            tYPE = intent.getIntExtra("Type",0)
-            id = intent.getStringExtra("ID").toString()
-            email = intent.getStringExtra("Email").toString()
+
+        if(intent.hasExtra(myTags.intentType)){
+            type = intent.getIntExtra(myTags.intentType,0)
+            uid = intent.getStringExtra(myTags.intentUID).toString()
+        }else if(Firebase.auth!=null){
+            uid = Firebase.auth.currentUser?.uid ?: "0"
+            if(uid.equals("0")){
+                type = myTags.guestMode
+            }else{
+                type = myTags.userMode
+            }
+        }else{
+            type = myTags.guestMode
+            uid = "0"
         }
 
-        tablayout.addTab(tablayout.newTab().setText("Home"))
-        if(tYPE!=0){
-            tablayout.addTab(tablayout.newTab().setText("Sell"))
+        tabLayout.addTab(tabLayout.newTab().setText("Home"))
+        if(type==myTags.userMode){
+            firestore =FirebaseFirestore.getInstance()
+            firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
+                    documentSnapshot ->
+                if(documentSnapshot.exists()){
+                    idealizeUser = ModelBuilder().getUser(documentSnapshot)
+                    tabLayout.addTab(tabLayout.newTab().setText("Sell"))
+                    tabLayout.addTab(tabLayout.newTab().setText("Profile"))
+
+                    viewpager.adapter = FragmentPageAdapter(idealizeUser,type,supportFragmentManager,lifecycle)
+                }
+            }
+        }else{
+            viewpager.adapter = FragmentPageAdapter(IdealizeUser(),type,supportFragmentManager,lifecycle)
         }
-        tablayout.addTab(tablayout.newTab().setText("Profile"))
 
-        viewpager.adapter = tabAdapter
 
-        tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
                     viewpager.currentItem = tab.position
@@ -89,10 +124,12 @@ class MainActivity : AppCompatActivity() {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                tablayout.selectTab(tablayout.getTabAt(position))
+                tabLayout.selectTab(tabLayout.getTabAt(position))
             }
 
         })
+
+
 
         /*login.setOnClickListener {
             if (id != "0") {
@@ -120,10 +157,12 @@ class MainActivity : AppCompatActivity() {
 
             val map : HashMap<String, Any> = HashMap<String, Any>()
             map.put("Cities",arr)
-            db.collection("App Data").document("Tags").update(map)
+            db.collection("App Data").document("tags").update(map)
             */
 
         }*/
+
+
     }
 
     private fun signIn(){
@@ -155,9 +194,9 @@ class MainActivity : AppCompatActivity() {
                 val credential = GoogleAuthProvider.getCredential(account.idToken,null)
                 auth.signInWithCredential(credential).addOnCompleteListener{
                     if(it.isSuccessful){
+                        saveUserInFireStore(account)
                         val intent = Intent(this,MainActivity::class.java)
-                        intent.putExtra("Type",1)
-                        intent.putExtra("Email", auth.currentUser?.email)
+                        intent.putExtra("Type",myTags.userMode)
                         intent.putExtra("ID",auth.currentUser?.uid)
                         startActivity(intent)
                     }else{
@@ -173,18 +212,19 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_tool_bar_menues,menu)
-        if(tYPE==0){
+        if(type==myTags.guestMode){
             //Normal
             //only login
             menu?.getItem(0)?.setIcon(getDrawable(R.drawable.login))
-            Toast.makeText(this, id,Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, uid,Toast.LENGTH_SHORT).show()
         }else{
             //Profile
             //only logout
             menu?.getItem(0)?.setIcon(getDrawable(R.drawable.logout))
-            Toast.makeText(this, id,Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, uid,Toast.LENGTH_SHORT).show()
 
         }
         return super.onCreateOptionsMenu(menu)
@@ -192,12 +232,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.login_menu){
-            if (id != "0") {
+            if (type == myTags.userMode) {
                 auth.signOut()
                 val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("Type", 0)
-                intent.putExtra("Email", "")
-                intent.putExtra("ID", "0")
+                intent.putExtra(myTags.intentType, myTags.guestMode)
+                intent.putExtra(myTags.intentUID, "0")
                 startActivity(intent)
             } else {
                 signIn()
@@ -205,4 +244,49 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun saveUserInFireStore(account : GoogleSignInAccount){
+        val docRef = firestore.collection(myTags.users).document(auth.uid.toString())
+        docRef.get().addOnSuccessListener {
+            documentSnapshot ->
+
+                if(!documentSnapshot.exists()){
+                    val idealizeUser = IdealizeUser(account.email.toString(),
+                        auth.uid.toString(),
+                        "0",
+                        Uri.parse(account.photoUrl.toString()),
+                        "",
+                        "",
+                        "0.0",
+                        account.displayName.toString()
+                    )
+                    saveUser(idealizeUser)
+                }
+        }
+    }
+
+    private fun saveUser(idealizeUser : IdealizeUser){
+        val map = HashMap<String,Any>()
+        map[myTags.userName]=idealizeUser.name
+        map[myTags.userEmail]=idealizeUser.email
+        map[myTags.userAdCount] = idealizeUser.adCount
+        map[myTags.userLocation] = idealizeUser.location
+        map[myTags.userRating]=idealizeUser.rating
+        map[myTags.userPhone] = idealizeUser.phone
+        map[myTags.userPhoto] = idealizeUser.profile
+        map[myTags.userUID] = idealizeUser.uid
+
+        firestore.collection(myTags.users).document(auth.uid.toString()).set(map).addOnCompleteListener{
+            result->
+            if(result.isSuccessful){
+                Toast.makeText(this, "Account is successfully created!",Toast.LENGTH_SHORT).show()
+
+            }
+        }
+
+    }
+
+
+
+
 }

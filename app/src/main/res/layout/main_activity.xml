@@ -14,12 +14,14 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/Tab_layout_home_Screen"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="50dp"
         app:tabIndicator="@drawable/tab1"
         app:tabIndicatorAnimationMode="elastic"
         app:tabIndicatorColor="@null"
         app:tabIndicatorGravity="stretch"
         app:tabMode="fixed"
+        app:tabIndicatorFullWidth="true"
         app:tabTextColor="#5B5B5B"
         app:tabSelectedTextColor="@color/black"
         tools:ignore="SpeakableTextPresentCheck" />
