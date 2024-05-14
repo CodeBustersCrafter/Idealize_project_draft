@@ -13,8 +13,9 @@ import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.fragment_adapters.FragmentPageAdapter
+import com.codebusters.idealizeprojectdraft.models.IdealizeUser
+import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -27,8 +28,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.initialize
-import com.codebusters.idealizeprojectdraft.models.MyTags
-import com.google.firebase.auth.FirebaseUser
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     private var uid = "0"
 
     private lateinit var idealizeUser : IdealizeUser
-    private lateinit var currentUser : FirebaseUser
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore : FirebaseFirestore
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTheme(com.google.android.material.R.style.Theme_AppCompat)
+        setTheme(R.style.Theme_IdealizeProjectDraft)
         setContentView(R.layout.main_activity)
 
         toolbar = findViewById(R.id.App_Bar_Main)
@@ -77,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             uid = intent.getStringExtra(myTags.intentUID).toString()
         }else if(Firebase.auth!=null){
             uid = Firebase.auth.currentUser?.uid ?: "0"
-            if(uid.equals("0")){
+            if(uid == "0"){
                 type = myTags.guestMode
             }else{
                 type = myTags.userMode
@@ -166,7 +164,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signIn(){
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.server_client_id))
@@ -195,10 +193,6 @@ class MainActivity : AppCompatActivity() {
                 auth.signInWithCredential(credential).addOnCompleteListener{
                     if(it.isSuccessful){
                         saveUserInFireStore(account)
-                        val intent = Intent(this,MainActivity::class.java)
-                        intent.putExtra("Type",myTags.userMode)
-                        intent.putExtra("ID",auth.currentUser?.uid)
-                        startActivity(intent)
                     }else{
                         Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
                     }
@@ -261,6 +255,11 @@ class MainActivity : AppCompatActivity() {
                         account.displayName.toString()
                     )
                     saveUser(idealizeUser)
+                }else{
+                    val intent = Intent(this,MainActivity::class.java)
+                    intent.putExtra("Type",myTags.userMode)
+                    intent.putExtra("ID",auth.currentUser?.uid)
+                    startActivity(intent)
                 }
         }
     }
@@ -280,6 +279,10 @@ class MainActivity : AppCompatActivity() {
             result->
             if(result.isSuccessful){
                 Toast.makeText(this, "Account is successfully created!",Toast.LENGTH_SHORT).show()
+                val intent = Intent(this,MainActivity::class.java)
+                intent.putExtra("Type",myTags.userMode)
+                intent.putExtra("ID",auth.currentUser?.uid)
+                startActivity(intent)
 
             }
         }
