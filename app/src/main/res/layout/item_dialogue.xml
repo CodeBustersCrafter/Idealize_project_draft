@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="500dp"
-    android:orientation="vertical"
+    android:layout_gravity="center"
     android:background="@drawable/nature"
     android:backgroundTint="#65FFFFFF"
     android:backgroundTintMode="multiply"
-    android:layout_gravity="center"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:ignore="TextSizeCheck">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
         <ImageView
-            android:layout_gravity="center"
-            android:layout_width="150dp"
             android:id="@+id/dialogue_image"
+            android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@drawable/ben"
+            android:layout_gravity="center"
             android:layout_weight="1000"
-            android:contentDescription="Profile Picture" />
+            android:contentDescription="Profile Picture"
+            android:src="@drawable/ben"
+            tools:ignore="HardcodedText" />
 
         <ImageView
             android:id="@+id/dialogue_btn_close"
@@ -28,127 +33,149 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:contentDescription="Profile Picture"
-            android:src="@drawable/baseline_close_24" />
+            android:src="@drawable/baseline_close_24"
+            tools:ignore="HardcodedText,ImageContrastCheck" />
 
 
     </LinearLayout>
 
     <TextView
-        android:layout_gravity="center"
+        android:id="@+id/dialogue_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:text="Stefan Carlson"
-        android:id="@+id/dialogue_name"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginTop="8dp" />
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="8dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/dialogue_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Price: $19.99"
-            android:id="@+id/dialogue_price"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
+            android:id="@+id/dialogue_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="Quantity: 1"
             android:textSize="16sp"
-            android:id="@+id/dialogue_quantity"
-            android:layout_marginStart="16dp" />
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
 
     <TextView
+        android:id="@+id/dialogue_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialogue_location"
+        android:layout_marginTop="8dp"
         android:text="Location: New York, USA"
         android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        tools:ignore="HardcodedText" />
 
     <TextView
+        android:id="@+id/dialogue_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialogue_phone"
+        android:layout_marginTop="8dp"
         android:text="Phone: +1 (555) 123-4567"
         android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        tools:ignore="HardcodedText" />
+
     <TextView
+        android:id="@+id/dialogue_seller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialogue_seller"
+        android:layout_marginTop="8dp"
         android:text="Seller: John Doe"
         android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        tools:ignore="HardcodedText" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/dialogue_rating1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="@drawable/baseline_star_rate1_24"
-            android:layout_marginTop="8dp" />
+            tools:ignore="ContentDescription,ImageContrastCheck" />
+
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/dialogue_rating2"
-            android:background="@drawable/baseline_star_rate_24"
-            android:layout_marginTop="8dp" />
-        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/baseline_star_rate_24"
+            tools:ignore="ContentDescription,ImageContrastCheck" />
+
+        <ImageView
             android:id="@+id/dialogue_rating3"
-            android:background="@drawable/baseline_star_rate_24"
-            android:layout_marginTop="8dp" />
-        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/baseline_star_rate_24"
+            tools:ignore="ContentDescription,ImageContrastCheck" />
+
+        <ImageView
             android:id="@+id/dialogue_rating4"
-            android:background="@drawable/baseline_star_rate_24"
-            android:layout_marginTop="8dp" />
-        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dialogue_rating5"
+            android:layout_marginTop="8dp"
             android:background="@drawable/baseline_star_rate_24"
-            android:layout_marginTop="8dp" />
+            tools:ignore="ContentDescription,ImageContrastCheck" />
+
+        <ImageView
+            android:id="@+id/dialogue_rating5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/baseline_star_rate_24"
+            tools:ignore="ContentDescription,ImageContrastCheck" />
 
     </LinearLayout>
 
     <TextView
+        android:id="@+id/dialogue_date_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialogue_date_time"
+        android:layout_marginTop="8dp"
         android:text="Date and Time: 05/12/2024 10:30 AM"
         android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        tools:ignore="HardcodedText" />
 
     <TextView
+        android:id="@+id/dialogue_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dialogue_description"
+        android:layout_marginTop="8dp"
         android:text="Description: This is a sample description for the product."
         android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Category: Electronics"
         android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        android:id="@+id/dialog_category"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

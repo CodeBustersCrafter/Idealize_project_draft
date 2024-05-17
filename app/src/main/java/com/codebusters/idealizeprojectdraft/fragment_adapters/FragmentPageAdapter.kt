@@ -25,7 +25,7 @@ class FragmentPageAdapter(  user : IdealizeUser, t : Int,  fragmentManager: Frag
     override fun createFragment(position: Int): Fragment {
         return when (position) {
                 0 -> {
-                    HomeFragment()
+                    HomeFragment(idealizeUser)
                 }
                 1 -> {
                     SellFragment(idealizeUser)

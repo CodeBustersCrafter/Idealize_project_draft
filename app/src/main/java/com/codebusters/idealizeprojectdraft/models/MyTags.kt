@@ -3,6 +3,9 @@ package com.codebusters.idealizeprojectdraft.models
 class MyTags {
     var userMode: Int = 1
     var guestMode: Int = 0
+    var userViewMode: Int = 2
+    var requestMode: Int = 1
+    var myRequestMode: Int = 0
 
     var intentType: String = "Type"
     var intentUID: String = "ID"
@@ -18,6 +21,8 @@ class MyTags {
     var userPhoto: String = "Photo"
     var userRating: String = "Rating"
     var userUID: String = "User ID"
+    var userRequests = "Requests"
+    var userMyRequests = "My Requests"
 
     //Ads
     var ads: String = "Ads"
@@ -31,6 +36,12 @@ class MyTags {
     var adTime: String = "Time"
     var adVisibility: String = "Visibility"
     var adQuantity: String = "Quantity"
+
+    var requestAdID : String = "AD_ID"
+    var requestID : String = "Request_ID"
+    var requestSellerID : String = "Seller_ID"
+    var requestBuyerID : String = "Buyer_ID"
+    var requestIsCancelled : String = "Is_Cancelled"
 
     var adVisible: Int = 1
     var adNotVisible: Int = 0

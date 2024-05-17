@@ -14,11 +14,12 @@ import com.codebusters.idealizeprojectdraft.ModelBuilder
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.models.RequestModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 
-class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private val type:Int, con : Context) : RecyclerView.Adapter<RecycleViewItemViewHolder>() {
+class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private val type:Int, con : Context,private val uid : String) : RecyclerView.Adapter<RecycleViewItemViewHolder>() {
 
     private var myTags = MyTags()
     private val context = con
@@ -45,7 +46,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
 
         holder.itemDelete.visibility = View.GONE
         holder.itemVisible.visibility = View.GONE
-
+        holder.itemBooking.visibility = View.VISIBLE
 
         holder.itemLl.setOnClickListener {
             val d = Dialog(context)
@@ -62,15 +63,17 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
             val description = d.findViewById<TextView>(R.id.dialogue_description)
             val image = d.findViewById<ImageView>(R.id.dialogue_image)
             val close = d.findViewById<ImageView>(R.id.dialogue_btn_close)
+            val category = d.findViewById<TextView>(R.id.dialog_category)
 
             name.text = currentItem.name
             price.text = "Price : LKR . " + currentItem.price
             quantity.text = "Quantity : " + currentItem.quantity
             location.text = currentItem.location
             phone.text = currentItem.phone
-            seller.text = currentItem.name
+            seller.text = currentItem.username
             dateTime.text = currentItem.date + "__" + currentItem.time
             description.text = currentItem.description
+            category.text = currentItem.category
             Picasso.get().load(currentItem.photo).into(image)
             close.setOnClickListener {
                 d.cancel()
@@ -80,50 +83,84 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
 
         }
 
-        if (type != 0) {
+        when (type) {
+            myTags.userMode -> {
 
-            holder.itemDelete.visibility = View.VISIBLE
-            holder.itemVisible.visibility = View.VISIBLE
+                holder.itemDelete.visibility = View.VISIBLE
+                holder.itemVisible.visibility = View.VISIBLE
+                holder.itemBooking.visibility = View.GONE
 
-            if(currentItem.visibility==myTags.adVisible){
-                Picasso.get().load(R.drawable.baseline_visibility_24).into(holder.itemVisible)
-            }else{
-                Picasso.get().load(R.drawable.baseline_visibility_off_24).into(holder.itemVisible)
-            }
+                if(currentItem.visibility==myTags.adVisible){
+                    Picasso.get().load(R.drawable.baseline_visibility_24).into(holder.itemVisible)
+                }else{
+                    Picasso.get().load(R.drawable.baseline_visibility_off_24).into(holder.itemVisible)
+                }
 
-            holder.itemDelete.setOnClickListener {
-                //deleteItem()
-                deleteAd(currentItem.idealizeUserID, currentItem.adId, context)
-                itemList.remove(currentItem)
-                this.notifyDataSetChanged()
-            }
-
-            holder.itemVisible.setOnClickListener {
-                //set visibility
-                //flipVisibility()
-                if (currentItem.visibility == myTags.adNotVisible) {//make visible
-                    holder.itemVisible.setBackgroundResource(R.drawable.baseline_visibility_24)
-                    currentItem.visibility = myTags.adVisible
-                    makeAdVisible(
-                        currentItem,
-                        context
-                    )
+                holder.itemDelete.setOnClickListener {
+                    //deleteItem()
+                    deleteAd(currentItem.idealizeUserID, currentItem.adId, context)
+                    itemList.remove(currentItem)
                     this.notifyDataSetChanged()
+                }
 
-                } else {
-                    holder.itemVisible.setBackgroundResource(R.drawable.baseline_visibility_off_24)
-                    currentItem.visibility = myTags.adNotVisible
-                    makeAdInvisible(
-                        currentItem.idealizeUserID,
-                        currentItem.adId,
-                        context
-                    )
-                    this.notifyDataSetChanged()
+                holder.itemVisible.setOnClickListener {
+                    //set visibility
+                    //flipVisibility()
+                    if (currentItem.visibility == myTags.adNotVisible) {//make visible
+                        holder.itemVisible.setBackgroundResource(R.drawable.baseline_visibility_24)
+                        currentItem.visibility = myTags.adVisible
+                        makeAdVisible(
+                            currentItem,
+                            context
+                        )
+                        this.notifyDataSetChanged()
+
+                    } else {
+                        holder.itemVisible.setBackgroundResource(R.drawable.baseline_visibility_off_24)
+                        currentItem.visibility = myTags.adNotVisible
+                        makeAdInvisible(
+                            currentItem.idealizeUserID,
+                            currentItem.adId,
+                            context
+                        )
+                        this.notifyDataSetChanged()
+                    }
+                }
+            }
+            myTags.userViewMode -> {//
+                holder.itemBooking.setOnClickListener{
+                    val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
+                    sendRequests(request)
+                }
+            }
+            else -> {
+                holder.itemBooking.setOnClickListener{
+                    Toast.makeText(context,"You need to sign in to your account before requesting",Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+
+    private fun sendRequests(requestModel: RequestModel){
+        firestore = FirebaseFirestore.getInstance()
+        firestore.collection(myTags.users).document(requestModel.sellerId).collection(myTags.userRequests).document(requestModel.requestID).set(ModelBuilder().getRequestAsMap(requestModel)).addOnCompleteListener{
+                result ->
+            if(result.isSuccessful){
+                Toast.makeText(context,"Request is sent to user", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,"Not Sent! Try Again", Toast.LENGTH_SHORT).show()
+            }
+        }
+        firestore.collection(myTags.users).document(requestModel.buyerId).collection(myTags.userMyRequests).document(requestModel.requestID).set(ModelBuilder().getRequestAsMap(requestModel)).addOnCompleteListener{
+                result ->
+            if(result.isSuccessful){
+                Toast.makeText(context,"Request is shown to you", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,"Not Showed! Try Again", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     private fun makeAdVisible(item: ItemModel, context : Context){
         firestore = FirebaseFirestore.getInstance()
 

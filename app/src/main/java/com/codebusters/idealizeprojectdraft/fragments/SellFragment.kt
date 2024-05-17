@@ -45,7 +45,7 @@ class SellFragment(u : IdealizeUser) : Fragment() {
             for(document in result){
                 dataList.add(ModelBuilder().getAdItem(document,user))
             }
-            val adapter = RecyclerViewAdapter(dataList,1,view.context)
+            val adapter = RecyclerViewAdapter(dataList,1,view.context, user.uid)
             recyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
             recyclerView.layoutManager = LinearLayoutManager(view.context)

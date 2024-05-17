@@ -17,6 +17,7 @@ class RecycleViewItemViewHolder(itemView : View) : RecyclerView.ViewHolder(itemV
 
     val itemDelete: ImageButton = itemView.findViewById(R.id.btn_delete_item_view)
     val itemVisible: ImageButton = itemView.findViewById(R.id.btn_avilable_item_view)
+    val itemBooking: ImageButton = itemView.findViewById(R.id.btn_booking_item_view)
 
 
 }

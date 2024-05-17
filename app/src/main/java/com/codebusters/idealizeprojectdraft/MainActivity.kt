@@ -73,16 +73,13 @@ class MainActivity : AppCompatActivity() {
         if(intent.hasExtra(myTags.intentType)){
             type = intent.getIntExtra(myTags.intentType,0)
             uid = intent.getStringExtra(myTags.intentUID).toString()
-        }else if(Firebase.auth!=null){
+        }else {
             uid = Firebase.auth.currentUser?.uid ?: "0"
-            if(uid == "0"){
-                type = myTags.guestMode
+            type = if(uid == "0"){
+                myTags.guestMode
             }else{
-                type = myTags.userMode
+                myTags.userMode
             }
-        }else{
-            type = myTags.guestMode
-            uid = "0"
         }
 
         tabLayout.addTab(tabLayout.newTab().setText("Home"))

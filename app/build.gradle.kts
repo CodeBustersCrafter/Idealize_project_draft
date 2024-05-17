@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.firebase.appcheck.safetynet)
     implementation(libs.firebase.appcheck.debug)
     implementation(libs.picasso)
+    implementation(libs.androidx.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
