@@ -48,4 +48,6 @@ class MyTags {
 
     //for Ad class
     var adUser: String = "User"
+
+    val apikey : String  = "AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg"
 }

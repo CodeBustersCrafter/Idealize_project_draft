@@ -8,6 +8,7 @@ import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.fragments.HomeFragment
 import com.codebusters.idealizeprojectdraft.fragments.ProfileFragment
 import com.codebusters.idealizeprojectdraft.fragments.SellFragment
+import com.codebusters.idealizeprojectdraft.gemini_support.GeminiFragment
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 
 class FragmentPageAdapter(  user : IdealizeUser, t : Int,  fragmentManager: FragmentManager,    lifecycle: Lifecycle    ) :  FragmentStateAdapter(fragmentManager,lifecycle){
@@ -20,7 +21,7 @@ class FragmentPageAdapter(  user : IdealizeUser, t : Int,  fragmentManager: Frag
         if(type== myTags.guestMode){
             return 1
         }
-        return 3
+        return 4
     }
     override fun createFragment(position: Int): Fragment {
         return when (position) {
@@ -30,8 +31,11 @@ class FragmentPageAdapter(  user : IdealizeUser, t : Int,  fragmentManager: Frag
                 1 -> {
                     SellFragment(idealizeUser)
                 }
-                else -> {
+                2 -> {
                     ProfileFragment(idealizeUser)
+                }
+                else ->{
+                    GeminiFragment()
                 }
         }
     }

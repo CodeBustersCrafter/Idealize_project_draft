@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -23,6 +24,7 @@ android {
 
     buildFeatures{
         viewBinding = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -32,6 +34,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "apikey", "\"AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg\"")
+        }
+
+        debug {
+            buildConfigField("String", "apikey", "\"AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg\"")
         }
     }
     compileOptions {
@@ -57,9 +64,10 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation("com.google.firebase:firebase-analytics")
-    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation(libs.firebase.analytics)
+    implementation(platform(libs.firebase.bom))
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -75,13 +83,16 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.google.services)
-    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    implementation(libs.play.services.auth)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.firebase.appcheck.safetynet)
     implementation(libs.firebase.appcheck.debug)
     implementation(libs.picasso)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.generativeai)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

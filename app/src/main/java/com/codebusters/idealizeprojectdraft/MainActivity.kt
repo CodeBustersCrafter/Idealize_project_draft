@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                     idealizeUser = ModelBuilder().getUser(documentSnapshot)
                     tabLayout.addTab(tabLayout.newTab().setText("Sell"))
                     tabLayout.addTab(tabLayout.newTab().setText("Profile"))
-
+                    tabLayout.addTab(tabLayout.newTab().setText("Help"))
                     viewpager.adapter = FragmentPageAdapter(idealizeUser,type,supportFragmentManager,lifecycle)
                 }
             }
@@ -216,6 +216,7 @@ class MainActivity : AppCompatActivity() {
             //only logout
             menu?.getItem(0)?.setIcon(getDrawable(R.drawable.logout))
             Toast.makeText(this, uid,Toast.LENGTH_SHORT).show()
+
 
         }
         return super.onCreateOptionsMenu(menu)
