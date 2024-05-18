@@ -23,7 +23,7 @@ class SplashScreenActivity : ComponentActivity() {
 
         setContentView(binding.root)
 
-        val path = "android.resource://"+packageName+"/"+R.raw.newvideo
+        val path = "android.resource://"+packageName+"/"+R.raw.updatedlogo
         binding.videoViewSplash.setVideoURI(Uri.parse(path))
         binding.videoViewSplash.start()
 
