@@ -20,15 +20,14 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.codebusters.idealizeprojectdraft.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.generationConfig
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.ChatViewModel
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal.PhotoReasoningViewModel
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.text.SummarizeViewModel
-import com.codebusters.idealizeprojectdraft.models.MyTags
 
 val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
-    private val myTags = MyTags()
     @SuppressLint("SecretInSource")
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(
@@ -46,7 +45,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                     // for text generation
                     val generativeModel = GenerativeModel(
                         modelName = "gemini-1.0-pro",
-                        apiKey = myTags.apikey,
+                        apiKey = BuildConfig.apikey,
                         generationConfig = config
                     )
                     SummarizeViewModel(generativeModel)
@@ -57,7 +56,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                     // for multimodal text generation
                     val generativeModel = GenerativeModel(
                         modelName = "gemini-1.0-pro-vision-latest",
-                        apiKey = myTags.apikey,
+                        apiKey = BuildConfig.apikey,
                         generationConfig = config
                     )
                     PhotoReasoningViewModel(generativeModel)
@@ -67,7 +66,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                     // Initialize a GenerativeModel with the `gemini-pro` AI model for chat
                     val generativeModel = GenerativeModel(
                         modelName = "gemini-1.0-pro",
-                        apiKey = myTags.apikey,
+                        apiKey = BuildConfig.apikey,
                         generationConfig = config
                     )
                     ChatViewModel(generativeModel)

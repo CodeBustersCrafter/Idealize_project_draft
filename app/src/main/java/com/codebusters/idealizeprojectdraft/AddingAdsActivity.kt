@@ -1,18 +1,26 @@
+@file:Suppress("DEPRECATION")
+
 package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
+import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.Item
 import com.codebusters.idealizeprojectdraft.models.MyTags
-import com.codebusters.idealizeprojectdraft.models.IdealizeUser
-import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -23,6 +31,7 @@ class AddingAdsActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage : FirebaseStorage
+    private lateinit var progressDialog: ProgressDialog
 
     private var uid = ""
     private lateinit var item : Item
@@ -36,6 +45,7 @@ class AddingAdsActivity : AppCompatActivity() {
         binding = ActivityAddingAdsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.imageViewSellScreen.visibility = View.GONE
 
         auth= FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
@@ -48,12 +58,23 @@ class AddingAdsActivity : AppCompatActivity() {
                 documentSnapshot ->
             if(documentSnapshot.exists()){
                 idealizeUser = ModelBuilder().getUser(documentSnapshot)
-                binding.btnOpenCameraSellScreen.setOnClickListener {
-                    //open the camera
-                    imageChooser()
 
+                binding.btnOpenCameraSellScreen.setOnClickListener {
+                    if(binding.ediTextCategorySellScreen.text.toString().trim()!=""){
+                        //open the camera
+                        imageChooser()
+                    }else{
+                        Toast.makeText(this,"Please insert a category", Toast.LENGTH_SHORT).show()
+                    }
                 }
+
+
                 binding.btnSaveSellScreen.setOnClickListener {
+                    progressDialog = ProgressDialog(this)
+                    progressDialog.setCancelable(false)
+                    progressDialog.setTitle("Saving...")
+                    progressDialog.create()
+                    progressDialog.show()
                     item = init()
                     //validate inputs
                     //upload
@@ -92,6 +113,11 @@ class AddingAdsActivity : AppCompatActivity() {
                                         task ->
                                     if(task.isSuccessful){
                                         Toast.makeText(this,"Updated! from user", Toast.LENGTH_SHORT).show()
+                                        progressDialog.cancel()
+                                        val intent = Intent(baseContext,MainActivity::class.java)
+                                        intent.putExtra(myTags.intentType,myTags.userMode)
+                                        intent.putExtra(myTags.intentUID,uid)
+                                        startActivity(intent)
                                     }else{
                                         Toast.makeText(this,"Not Updated! from user. Try Again", Toast.LENGTH_SHORT).show()
                                     }
@@ -116,7 +142,37 @@ class AddingAdsActivity : AppCompatActivity() {
             val imageUri: Uri? = data?.data
             imageUri?.let {
                 // Display the selected image in the ImageView
-                uri=it
+                progressDialog = ProgressDialog(this)
+                progressDialog.setCancelable(false)
+                progressDialog.setTitle("Verifying the image...")
+                progressDialog.create()
+                progressDialog.show()
+
+                val generativeModel = GenerativeModel(
+                    modelName = "gemini-1.0-pro-vision-latest",
+                    apiKey = BuildConfig.apikey,
+                )
+
+                val prompt = "Recognize this image. If it is strictly related to "+binding.ediTextCategorySellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
+                val bitmap = Converter().getBitmap(it,this)
+
+                val inputContent = content {
+                    image(bitmap)
+                    text(prompt)
+                }
+
+                MainScope().launch {
+                    val response = generativeModel.generateContent(inputContent)
+                    if (response.text.toString().trim()=="YES"){
+                        binding.imageViewSellScreen.setImageURI(it)
+                        binding.imageViewSellScreen.visibility = View.VISIBLE
+                        uri=it
+                    }else{
+                        Toast.makeText(this@AddingAdsActivity,"Select a valid and clear image",Toast.LENGTH_SHORT).show()
+                        uri = null
+                    }
+                    progressDialog.cancel()
+                }
             }
         }
     }
@@ -137,13 +193,14 @@ class AddingAdsActivity : AppCompatActivity() {
         return getDateTime(item)
     }
 
+    @SuppressLint("MissingSuperCall")
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
-        super.onBackPressed()
         val intent = Intent(baseContext,MainActivity::class.java)
         intent.putExtra(myTags.intentType,myTags.userMode)
-        intent.putExtra(myTags.intentType,uid)
+        intent.putExtra(myTags.intentUID,uid)
         startActivity(intent)
+
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -160,6 +217,5 @@ class AddingAdsActivity : AppCompatActivity() {
         item.time=currentFormatted2
         return item
     }
-
 
 }
