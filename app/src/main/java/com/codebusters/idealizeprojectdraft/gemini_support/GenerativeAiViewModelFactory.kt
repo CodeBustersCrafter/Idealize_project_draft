@@ -26,6 +26,7 @@ import com.google.ai.client.generativeai.type.generationConfig
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.ChatViewModel
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal.PhotoReasoningViewModel
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.text.SummarizeViewModel
+import com.codebusters.idealizeprojectdraft.models.MyTags
 
 val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
     @SuppressLint("SecretInSource")
@@ -34,6 +35,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
         modelClass: Class<T>,
         extras: CreationExtras
     ): T {
+        val myTags = MyTags()
         val config = generationConfig {
             temperature = 0.7f
         }
@@ -45,7 +47,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                     // for text generation
                     val generativeModel = GenerativeModel(
                         modelName = "gemini-1.0-pro",
-                        apiKey = BuildConfig.apikey,
+                        apiKey = myTags.apikey,
                         generationConfig = config
                     )
                     SummarizeViewModel(generativeModel)
@@ -56,7 +58,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                     // for multimodal text generation
                     val generativeModel = GenerativeModel(
                         modelName = "gemini-1.0-pro-vision-latest",
-                        apiKey = BuildConfig.apikey,
+                        apiKey = myTags.apikey,
                         generationConfig = config
                     )
                     PhotoReasoningViewModel(generativeModel)
@@ -66,7 +68,7 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                     // Initialize a GenerativeModel with the `gemini-pro` AI model for chat
                     val generativeModel = GenerativeModel(
                         modelName = "gemini-1.0-pro",
-                        apiKey = BuildConfig.apikey,
+                        apiKey = myTags.apikey,
                         generationConfig = config
                     )
                     ChatViewModel(generativeModel)
