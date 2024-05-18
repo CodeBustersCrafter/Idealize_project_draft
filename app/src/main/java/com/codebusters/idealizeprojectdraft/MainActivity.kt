@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             type = intent.getIntExtra(myTags.intentType,0)
             uid = intent.getStringExtra(myTags.intentUID).toString()
         }else {
-            uid = Firebase.auth.currentUser?.uid ?: "0"
+            uid = FirebaseAuth.getInstance().currentUser?.uid ?: "0"
             type = if(uid == "0"){
                 myTags.guestMode
             }else{
@@ -194,6 +194,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.login_menu){
             if (type == myTags.userMode) {
+                Toast.makeText(this,"Cancelled Phase 03",Toast.LENGTH_SHORT).show()
                 auth.signOut()
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra(myTags.intentType, myTags.guestMode)
