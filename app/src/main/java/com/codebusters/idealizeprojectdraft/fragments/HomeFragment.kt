@@ -93,41 +93,5 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
     }
-    /*@SuppressLint("NotifyDataSetChanged")
-    fun listenForUpdates(){
-        firestore.collection(myTags.ads).addSnapshotListener { querySnapshot, _ ->
-            if (querySnapshot != null) {
-                // Process the updated data (e.g., convert to a list)
-                for(document in querySnapshot){
-                    firestore.collection(myTags.users).document(document.get(myTags.adUser).toString()).get().addOnSuccessListener{
-                            documentSnapshot->
-
-                            dataList.add(ModelBuilder().getAdItem(document,documentSnapshot))
-                        recyclerView.adapter?.notifyDataSetChanged()
-
-                    }
-                }
-            }
-        }
-    }
-    @SuppressLint("NotifyDataSetChanged")
-    private fun listenForDeletions() {
-        firestore.collection(myTags.ads).addSnapshotListener { querySnapshot: QuerySnapshot?, _ ->
-            querySnapshot?.documentChanges?.forEach { change ->
-                if (change.type == DocumentChange.Type.REMOVED) {
-                    // Handle the deleted document
-                    val deletedDocumentId = change.document.id
-                    for (itemModel in dataList) {
-                        if(itemModel.adId==deletedDocumentId) {
-                            dataList.remove(itemModel)
-                            break
-                        }
-                    }
-                    recyclerView.adapter?.notifyDataSetChanged()
-
-                }
-            }
-        }
-    }*/
 }
 
