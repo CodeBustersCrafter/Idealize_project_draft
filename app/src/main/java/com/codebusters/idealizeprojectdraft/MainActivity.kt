@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         Firebase.initialize(this)
         firestore =FirebaseFirestore.getInstance()
 
-        auth = Firebase.auth
+        auth = FirebaseAuth.getInstance()
 
 
         if(intent.hasExtra(myTags.intentType)){
@@ -123,41 +123,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-
-
-        /*login.setOnClickListener {
-            if (id != "0") {
-                auth.signOut()
-                val intent = Intent(this, MainActivity::class.java)
-                intent.putExtra("Type", 0)
-                intent.putExtra("Email", "")
-                intent.putExtra("ID", "0")
-                startActivity(intent)
-            } else {
-                signIn()
-            }
-
-
-            //Code for adding city tags
-            /*val db = Firebase.firestore
-            val input_stream = baseContext.resources.openRawResource(R.raw.city_names_sorted)
-            val buffer = input_stream.bufferedReader()
-            var line = buffer.readLine()
-            val arr : ArrayList<String> = ArrayList<String>()
-            while (line!=null){
-                arr.add(line)
-                line = buffer.readLine()
-            }
-
-            val map : HashMap<String, Any> = HashMap<String, Any>()
-            map.put("Cities",arr)
-            db.collection("App Data").document("tags").update(map)
-            */
-
-        }*/
-
-
     }
 
     private fun signIn(){
@@ -178,6 +143,8 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode== RESULT_OK){
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             handleResults(task)
+        }else{
+            Toast.makeText(this,"Cancelled Phase 01",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -194,6 +161,8 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
                     }
                 }
+            }else{
+                Toast.makeText(this,"Cancelled Phase 02",Toast.LENGTH_SHORT).show()
             }
         }else{
             Toast.makeText(this,task.exception.toString(),Toast.LENGTH_SHORT).show()
