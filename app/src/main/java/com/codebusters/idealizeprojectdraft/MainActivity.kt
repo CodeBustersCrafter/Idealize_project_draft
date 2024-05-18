@@ -25,7 +25,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.initialize
 
@@ -208,27 +207,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveUserInFireStore(account : GoogleSignInAccount){
-        val docRef = firestore.collection(myTags.users).document(auth.uid.toString())
-        docRef.get().addOnSuccessListener {
+        firestore.collection(myTags.users).get().addOnSuccessListener {
             documentSnapshot ->
-
-                if(!documentSnapshot.exists()){
-                    val idealizeUser = IdealizeUser(account.email.toString(),
-                        auth.uid.toString(),
-                        "0",
-                        Uri.parse(account.photoUrl.toString()),
-                        "",
-                        "",
-                        "0.0",
-                        account.displayName.toString()
-                    )
-                    saveUser(idealizeUser)
-                }else{
+            var isFound = false
+            for(document in documentSnapshot){
+                if(document.id==auth.uid.toString()){
+                    isFound = true
                     val intent = Intent(this,MainActivity::class.java)
                     intent.putExtra("Type",myTags.userMode)
                     intent.putExtra("ID",auth.currentUser?.uid)
                     startActivity(intent)
                 }
+            }
+            if (!isFound){
+                val idealizeUser = IdealizeUser(account.email.toString(),
+                    auth.uid.toString(),
+                    "0",
+                    Uri.parse(account.photoUrl.toString()),
+                    "",
+                    "",
+                    "0.0",
+                    account.displayName.toString()
+                )
+                saveUser(idealizeUser)
+            }
         }
     }
 
