@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.initialize
 
@@ -66,13 +67,12 @@ class MainActivity : AppCompatActivity() {
         Firebase.initialize(this)
         firestore =FirebaseFirestore.getInstance()
 
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
 
         if(intent.hasExtra(myTags.intentType)){
             type = intent.getIntExtra(myTags.intentType,0)
             uid = intent.getStringExtra(myTags.intentUID).toString()
-            Toast.makeText(this,"Cancelled Phase 04",Toast.LENGTH_SHORT).show()
         }else {
             uid = FirebaseAuth.getInstance().currentUser?.uid ?: "0"
             type = if(uid == "0"){
@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
             }else{
                 myTags.userMode
             }
-            Toast.makeText(this,"Cancelled Phase 05",Toast.LENGTH_SHORT).show()
         }
 
         tabLayout.addTab(tabLayout.newTab().setText("Home"))
@@ -127,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signIn(){
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.server_client_id))
@@ -143,7 +142,6 @@ class MainActivity : AppCompatActivity() {
             result ->
         if (result.resultCode== RESULT_OK){
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            Toast.makeText(this,"Cancelled Phase 06",Toast.LENGTH_SHORT).show()
             handleResults(task)
         }else{
             Toast.makeText(this,"Cancelled Phase 01",Toast.LENGTH_SHORT).show()
@@ -158,7 +156,6 @@ class MainActivity : AppCompatActivity() {
                 val credential = GoogleAuthProvider.getCredential(account.idToken,null)
                 auth.signInWithCredential(credential).addOnCompleteListener{
                     if(it.isSuccessful){
-                        Toast.makeText(this,"Cancelled Phase 07",Toast.LENGTH_SHORT).show()
                         saveUserInFireStore(account)
                     }else{
                         Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
@@ -204,7 +201,6 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra(myTags.intentUID, "0")
                 startActivity(intent)
             } else {
-                Toast.makeText(this,"Cancelled Phase 11",Toast.LENGTH_SHORT).show()
                 signIn()
             }
         }
@@ -217,7 +213,6 @@ class MainActivity : AppCompatActivity() {
             var isFound = false
             for(document in documentSnapshot){
                 if(document.id==auth.uid.toString()){
-                    Toast.makeText(this,"Cancelled Phase 09",Toast.LENGTH_SHORT).show()
                     isFound = true
                     val intent = Intent(this,MainActivity::class.java)
                     intent.putExtra("Type",myTags.userMode)
@@ -226,7 +221,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             if (!isFound){
-                Toast.makeText(this,"Cancelled Phase 08",Toast.LENGTH_SHORT).show()
                 val idealizeUser = IdealizeUser(account.email.toString(),
                     auth.uid.toString(),
                     "0",
