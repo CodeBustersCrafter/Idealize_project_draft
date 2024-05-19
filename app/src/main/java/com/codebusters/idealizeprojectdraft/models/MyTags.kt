@@ -50,5 +50,10 @@ class MyTags {
     //for Ad class
     var adUser: String = "User"
 
+    var appData : String = "App Data"
+    var tags : String = "Tags"
+    var cities : String = "Cities"
+    var categories : String = "Categories"
+
     val apikey : String  = "AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg"
 }
