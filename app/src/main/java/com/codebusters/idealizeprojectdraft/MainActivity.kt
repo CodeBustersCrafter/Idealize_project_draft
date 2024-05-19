@@ -67,14 +67,14 @@ class MainActivity : AppCompatActivity() {
         Firebase.initialize(this)
         firestore =FirebaseFirestore.getInstance()
 
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
 
         if(intent.hasExtra(myTags.intentType)){
             type = intent.getIntExtra(myTags.intentType,0)
             uid = intent.getStringExtra(myTags.intentUID).toString()
         }else {
-            uid = Firebase.auth.currentUser?.uid ?: "0"
+            uid = FirebaseAuth.getInstance().currentUser?.uid ?: "0"
             type = if(uid == "0"){
                 myTags.guestMode
             }else{
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signIn(){
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.server_client_id))
@@ -194,6 +194,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.login_menu){
             if (type == myTags.userMode) {
+                Toast.makeText(this,"Cancelled Phase 03",Toast.LENGTH_SHORT).show()
                 auth.signOut()
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra(myTags.intentType, myTags.guestMode)
@@ -207,27 +208,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveUserInFireStore(account : GoogleSignInAccount){
-        val docRef = firestore.collection(myTags.users).document(auth.uid.toString())
-        docRef.get().addOnSuccessListener {
+        firestore.collection(myTags.users).get().addOnSuccessListener {
             documentSnapshot ->
-
-                if(!documentSnapshot.exists()){
-                    val idealizeUser = IdealizeUser(account.email.toString(),
-                        auth.uid.toString(),
-                        "0",
-                        Uri.parse(account.photoUrl.toString()),
-                        "",
-                        "",
-                        "0.0",
-                        account.displayName.toString()
-                    )
-                    saveUser(idealizeUser)
-                }else{
+            var isFound = false
+            for(document in documentSnapshot){
+                if(document.id==auth.uid.toString()){
+                    isFound = true
                     val intent = Intent(this,MainActivity::class.java)
                     intent.putExtra("Type",myTags.userMode)
                     intent.putExtra("ID",auth.currentUser?.uid)
                     startActivity(intent)
                 }
+            }
+            if (!isFound){
+                val idealizeUser = IdealizeUser(account.email.toString(),
+                    auth.uid.toString(),
+                    "0",
+                    Uri.parse(account.photoUrl.toString()),
+                    "",
+                    "",
+                    "0.0",
+                    account.displayName.toString()
+                )
+                saveUser(idealizeUser)
+            }
         }
     }
 
