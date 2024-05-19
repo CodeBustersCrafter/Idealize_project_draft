@@ -80,7 +80,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // Update the data based on the search query
-                initDataLike(type, view, s.toString())
+                initData(type, view, s.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -100,7 +100,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         // Create Firestore query with or without search query
         var query: Query = firestore.collection(myTags.ads)
         if (searchQuery.isNotEmpty()) {
-            query = query.whereIn(myTags.adName, listOf( searchQuery))
+            query = query.whereArrayContains(myTags.keywords,searchQuery)
         }
 
         query.get().addOnSuccessListener { result ->
