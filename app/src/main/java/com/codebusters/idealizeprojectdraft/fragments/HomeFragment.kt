@@ -58,9 +58,10 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
 
         // Initialize data with an empty search query
-        initData(type, view, "")
+        initData(type, view, searchEditText.text.toString())
 
         refreshButton.setOnRefreshListener {
+            dataList.clear() // Clear previous data
             initData(type, view, searchEditText.text.toString()) // Use search query when refreshing
             refreshButton.isRefreshing = false
         }
@@ -81,6 +82,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 // Update the data based on the search query
+                dataList.clear() // Clear previous data
                 initData(type, view, s.toString())
             }
 
@@ -101,7 +103,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         // Create Firestore query with or without search query
         var query: Query = firestore.collection(myTags.ads)
         if (searchQuery.isNotEmpty()) {
-            query = query.whereArrayContains(myTags.keywords,searchQuery)
+            query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
         }
 
         query.get().addOnSuccessListener { result ->
@@ -111,35 +113,12 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     .document(document.get(myTags.adUser).toString())
                     .get()
                     .addOnSuccessListener { documentSnapshot ->
-                        dataList.add(ModelBuilder().getAdItem(document, documentSnapshot))
+                        val item = ModelBuilder().getAdItem(document, documentSnapshot)
+                        if (!dataList.contains(item)) {
+                            dataList.add(item)
+                        }
                         adapter.notifyDataSetChanged()
                     }
-            }
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun initDataLike(type: Int, view: View, searchQuery: String = "") {
-        dataList = ArrayList()
-        recyclerView.adapter?.notifyDataSetChanged()
-        val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
-
-        // Create Firestore query with or without search query
-        val query: Query = firestore.collection(myTags.ads)
-        query.get().addOnSuccessListener { result ->
-            for (document in result) {
-                val q = document.get(myTags.adName).toString().lowercase()
-                if(q.contains(searchQuery.lowercase())){
-                    firestore.collection(myTags.users)
-                        .document(document.get(myTags.adUser).toString())
-                        .get()
-                        .addOnSuccessListener { documentSnapshot ->
-                            dataList.add(ModelBuilder().getAdItem(document, documentSnapshot))
-                            adapter.notifyDataSetChanged()
-                        }
-                }
             }
         }
     }
