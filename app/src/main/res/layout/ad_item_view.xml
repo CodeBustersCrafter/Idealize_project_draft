@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="184dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:textSize="15sp"
+        tools:ignore="HardcodedText,SpeakableTextPresentCheck,TextContrastCheck" />
+    <LinearLayout
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:elevation="10dp"
+        android:id="@+id/ll_item_view"
+        android:background="@drawable/ad_item_background"
+        tools:ignore="UselessParent">
+        <ImageView
+            android:id="@+id/image_view_item_view"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:contentDescription="Ad image"
+            android:cropToPadding="true"
+            android:adjustViewBounds="true"
+            android:outlineAmbientShadowColor="@color/black"
+            tools:ignore="HardcodedText,ImageContrastCheck"
+            tools:targetApi="p" />
+    <TextView
+        android:paddingHorizontal="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view_item_name"
+        android:text="Item Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:padding="5dp"
+        tools:ignore="HardcodedText" />
+    <RelativeLayout
+        android:paddingHorizontal="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_view_item_phone"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:background="@drawable/ad_item_rating_background"
+            android:backgroundTint="#4CAF50"
+            android:padding="10dp"
+            android:text="Rating"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,TextContrastCheck" />
+        <LinearLayout
+            android:layout_width="115dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="UselessLeaf"
+            android:layout_marginStart="65dp"
+            android:gravity="end"
+            android:padding="5dp">
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="LKR"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText"
+                android:textAlignment="textEnd"/>
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_view_item_price"
+                android:text="Price"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textAlignment="textEnd"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="5dp">
+
+        <ImageButton
+            android:id="@+id/btn_avilable_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/baseline_visibility_24"
+            tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/btn_booking_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/baseline_book_online_24"
+            tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/btn_delete_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/baseline_delete_24"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

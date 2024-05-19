@@ -96,6 +96,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

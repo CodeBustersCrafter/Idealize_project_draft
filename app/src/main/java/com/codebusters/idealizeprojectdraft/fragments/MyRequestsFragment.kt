@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.codebusters.idealizeprojectdraft.ModelBuilder
@@ -76,47 +76,7 @@ class MyRequestsFragment(uid : String) : Fragment() {
         }
 
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = GridLayoutManager(view.context,2)
     }
-   /* @SuppressLint("NotifyDataSetChanged")
-    fun listenForUpdates(){
-        firestore.collection(myTags.users).document(userID).collection(myTags.userMyRequests).addSnapshotListener { querySnapshot, _ ->
-            if (querySnapshot != null) {
-                // Process the updated data (e.g., convert to a list)
-                for(document in querySnapshot){
-                    firestore.collection(myTags.ads).document(document.get(myTags.requestAdID).toString()).get().addOnSuccessListener{
-                            documentSnapshot->
-                        firestore.collection(myTags.users).document(document.get(myTags.requestSellerID).toString()).get().addOnSuccessListener{
-                                documentSnapshotUser->
-                            dataList.add(ModelBuilder().getRequestItem(document,documentSnapshot,documentSnapshotUser))
-                            recyclerView.adapter?.notifyDataSetChanged()
-
-                        }
-
-
-                    }
-                }
-            }
-        }
-    }
-    @SuppressLint("NotifyDataSetChanged")
-    private fun listenForDeletions() {
-        firestore.collection(myTags.users).document(userID).collection(myTags.userMyRequests).addSnapshotListener { querySnapshot: QuerySnapshot?, _ ->
-            querySnapshot?.documentChanges?.forEach { change ->
-                if (change.type == DocumentChange.Type.REMOVED) {
-                    // Handle the deleted document
-                    val deletedDocumentId = change.document.get(myTags.adID)
-                    for (itemModel in dataList) {
-                        if(itemModel.adId==deletedDocumentId) {
-                            dataList.remove(itemModel)
-                            break
-                        }
-                    }
-                    recyclerView.adapter?.notifyDataSetChanged()
-
-                }
-            }
-        }
-    }*/
 }
 

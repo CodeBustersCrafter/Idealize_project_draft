@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -95,7 +96,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         dataList = ArrayList()
         val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = GridLayoutManager(view.context,2)
 
         // Create Firestore query with or without search query
         var query: Query = firestore.collection(myTags.ads)

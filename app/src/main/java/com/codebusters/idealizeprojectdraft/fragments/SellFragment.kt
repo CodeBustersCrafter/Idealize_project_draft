@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codebusters.idealizeprojectdraft.AddingAdsActivity
 import com.codebusters.idealizeprojectdraft.ModelBuilder
@@ -48,7 +48,7 @@ class SellFragment(u : IdealizeUser) : Fragment() {
             val adapter = RecyclerViewAdapter(dataList,1,view.context, user.uid)
             recyclerView.adapter = adapter
             adapter.notifyDataSetChanged()
-            recyclerView.layoutManager = LinearLayoutManager(view.context)
+            recyclerView.layoutManager = GridLayoutManager(view.context,2)
         }
 
         btnAddAdd.setOnClickListener {
