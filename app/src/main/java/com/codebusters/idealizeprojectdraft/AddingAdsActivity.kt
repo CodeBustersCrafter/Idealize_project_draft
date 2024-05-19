@@ -23,6 +23,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @Suppress("DEPRECATION")
 class AddingAdsActivity : AppCompatActivity() {
@@ -87,6 +88,9 @@ class AddingAdsActivity : AppCompatActivity() {
                             idealizeUser.adCount += 1
 
                             val map = ModelBuilder().getItemAsMap(item)
+
+                            // Add keywords to map
+                            map[myTags.keywords] = generateKeywords(item.name)
 
                             firestore.collection(myTags.users).document(idealizeUser.uid).collection(myTags.ads).document(item.adId)
                                 .set(map).addOnCompleteListener {
@@ -216,6 +220,37 @@ class AddingAdsActivity : AppCompatActivity() {
         item.date=currentFormatted
         item.time=currentFormatted2
         return item
+    }
+
+    // Function to generate keywords from ad name
+    private fun generateKeywords(input: String): List<String> {
+        val keywords = mutableListOf<String>()
+        val words = input.toLowerCase(Locale.ROOT).split(" ")
+
+        // Add prefixes for each word
+        for (word in words) {
+            var prefix = ""
+            for (char in word) {
+                prefix += char
+                keywords.add(prefix)
+            }
+            // Add the full word as a keyword
+            keywords.add(word)
+        }
+
+        // Add prefixes for the entire phrase
+        var phrasePrefix = ""
+        for (char in input.toLowerCase(Locale.ROOT)) {
+            if (char != ' ') { // Skip spaces in the phrase prefix
+                phrasePrefix += char
+                keywords.add(phrasePrefix)
+            }
+        }
+
+        // Add the full phrase as a keyword
+        keywords.add(input.toLowerCase(Locale.ROOT))
+
+        return keywords
     }
 
 }

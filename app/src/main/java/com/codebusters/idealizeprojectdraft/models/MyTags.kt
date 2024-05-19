@@ -36,6 +36,7 @@ class MyTags {
     var adTime: String = "Time"
     var adVisibility: String = "Visibility"
     var adQuantity: String = "Quantity"
+    var keywords: String = "Keywords" // New Keywords list
 
     var requestAdID : String = "AD_ID"
     var requestID : String = "Request_ID"
