@@ -209,7 +209,7 @@ class AddingAdsActivity : AppCompatActivity() {
             uri!!,
             binding.autoCompleteTextViewSellScreen.text.toString(),
             myTags.adVisible,
-            uid+"_"+(idealizeUser.adCount+1),
+            uid+"_"+(idealizeUser.adCount.toInt()+1),
             uid
             )
         return getDateTime(item)

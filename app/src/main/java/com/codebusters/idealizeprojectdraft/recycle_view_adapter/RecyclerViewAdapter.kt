@@ -40,7 +40,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         val currentItem = itemList[position]
 
         holder.itemName.text = currentItem.name
-        holder.itemPhone.text = currentItem.phone
+        holder.itemRating.text = currentItem.rating
         holder.itemPrice.text = currentItem.price
         Picasso.get().load(currentItem.photo).into(holder.itemImage)
 
