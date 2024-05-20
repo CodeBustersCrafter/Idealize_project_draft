@@ -24,7 +24,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
     private lateinit var firestore : FirebaseFirestore
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewItemViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.itemview,parent,false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.ad_item_view,parent,false)
         firestore = FirebaseFirestore.getInstance()
         return RecycleViewItemViewHolder(itemView)
     }

@@ -63,7 +63,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         firestore.collection(myTags.appData).document(myTags.tags).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val firebaseArray = document.get(myTags.cities) as? List<String>
+                    val firebaseArray = document.get(myTags.cities) as? List<*>
                     val cities = listOf("All") + (firebaseArray ?: listOf())
 
                     // Set up ArrayAdapter with the cities list
@@ -71,7 +71,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     autoCompleteTextView.setAdapter(adapter)
 
                     // Optional: Set a listener for when a city is selected
-                    autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+                    autoCompleteTextView.setOnItemClickListener { parent, view, position, _ ->
                         selectedCity = parent.getItemAtPosition(position) as String
                         if(parent.getItemAtPosition(position) as String == "All"){
                             selectedCity = ""

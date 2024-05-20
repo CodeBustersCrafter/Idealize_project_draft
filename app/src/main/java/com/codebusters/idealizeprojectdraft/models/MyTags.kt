@@ -45,8 +45,8 @@ class MyTags {
     var requestBuyerID : String = "Buyer_ID"
     var requestIsCancelled : String = "Is_Cancelled"
 
-    var adVisible: Int = 1
-    var adNotVisible: Int = 0
+    var adVisible: String = "1"
+    var adNotVisible: String = "0"
 
     //for Ad class
     var adUser: String = "User"
@@ -54,7 +54,6 @@ class MyTags {
     var appData : String = "App Data"
     var tags : String = "Tags"
     var cities : String = "Cities"
-    var categories : String = "Categories"
 
     val apikey : String  = "AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg"
 }
