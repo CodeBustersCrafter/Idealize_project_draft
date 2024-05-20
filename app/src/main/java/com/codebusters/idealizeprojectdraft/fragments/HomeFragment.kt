@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -36,6 +37,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private val user = idealizeUser
     private var myTags = MyTags()
     private lateinit var searchEditText: TextInputEditText
+    private lateinit var welcomeTextView: TextView
 
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
     override fun onCreateView(
@@ -49,6 +51,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         refreshButton = view.findViewById(R.id.Home_swiper_button)
         searchEditText = view.findViewById(R.id.searchEditText)
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
+        autoCompleteTextView.threshold = 0
         var selectedCity = ""
 
         firestore= FirebaseFirestore.getInstance()
@@ -59,12 +62,26 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             myTags.userViewMode
         }
 
+        // Set welcome message
+        welcomeTextView = view.findViewById(R.id.welcomeTextView)
+        val welcomeMessage = if (type == myTags.guestMode) {
+            "Huttige kolla account ekak hdpn"
+        } else {
+            "Welcome ${user.name}"
+        }
+        welcomeTextView.text = welcomeMessage
+
+
         // Fetch cities from Firebase
         firestore.collection(myTags.appData).document(myTags.tags).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val firebaseArray = document.get(myTags.cities) as? List<*>
                     val cities = listOf("All") + (firebaseArray ?: listOf())
+
+                    autoCompleteTextView.setOnClickListener {
+                        autoCompleteTextView.showDropDown()
+                    }
 
                     // Set up ArrayAdapter with the cities list
                     val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
