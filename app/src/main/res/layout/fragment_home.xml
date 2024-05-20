@@ -76,18 +76,20 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:textSize="18sp"
-            android:hint="Select your city"
             android:autofillHints="Select your city"
+            android:background="@null"
+            android:hint="Select your city"
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
-            android:background="@null"
-            android:textStyle="bold"/>
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageView
             android:id="@+id/Home_request_action_btn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_marginRight="10dp"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/baseline_circle_notifications_50"
@@ -97,8 +99,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.848"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck"
-            android:layout_marginRight="10dp"/>
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     </LinearLayout>
 
