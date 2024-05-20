@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
@@ -36,6 +37,7 @@ class AddingAdsActivity : AppCompatActivity() {
     private lateinit var storage : FirebaseStorage
 
     private lateinit var progressDialog: ProgressDialog
+    private lateinit var imagePicker: ImageView
 
     private var uid = ""
     private lateinit var item : Item
@@ -69,6 +71,7 @@ class AddingAdsActivity : AppCompatActivity() {
                     if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=""){
                         //open the camera
                         imageChooser()
+
                     }else{
                         Toast.makeText(this,"Please insert a category", Toast.LENGTH_SHORT).show()
                     }
