@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:theme="@style/Theme.AppCompat"
+    android:theme="@style/GreenTheme"
     tools:ignore="UseCompoundDrawables">
 
     <FrameLayout
@@ -26,7 +26,8 @@
         app:itemIconTint="#4CAF50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:itemBackground="@color/white"
-        app:menu="@menu/bottom_navigation_menus"/>
+        app:menu="@menu/bottom_navigation_menus"
+        tools:ignore="VisualLintBottomNav" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
