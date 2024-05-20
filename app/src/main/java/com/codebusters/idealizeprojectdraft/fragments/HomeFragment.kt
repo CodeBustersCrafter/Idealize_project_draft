@@ -8,6 +8,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -46,6 +48,8 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         requestsButton = view.findViewById(R.id.Home_request_action_btn)
         refreshButton = view.findViewById(R.id.Home_swiper_button)
         searchEditText = view.findViewById(R.id.searchEditText)
+        val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
+        var selectedCity = ""
 
         firestore= FirebaseFirestore.getInstance()
 
@@ -55,13 +59,39 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             myTags.userViewMode
         }
 
+        // Fetch cities from Firebase
+        firestore.collection(myTags.appData).document(myTags.tags).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val firebaseArray = document.get(myTags.cities) as? List<String>
+                    val cities = listOf("All") + (firebaseArray ?: listOf())
+
+                    // Set up ArrayAdapter with the cities list
+                    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
+                    autoCompleteTextView.setAdapter(adapter)
+
+                    // Optional: Set a listener for when a city is selected
+                    autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+                        selectedCity = parent.getItemAtPosition(position) as String
+                        if(parent.getItemAtPosition(position) as String == "All"){
+                            selectedCity = ""
+                        }
+                        initData(type, view, searchEditText.text.toString(),selectedCity)
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "No cities found", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Failed to load cities: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
 
         // Initialize data with an empty search query
-        initData(type, view, searchEditText.text.toString())
+        initData(type, view, searchEditText.text.toString(),selectedCity)
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
-            initData(type, view, searchEditText.text.toString()) // Use search query when refreshing
+            initData(type, view, searchEditText.text.toString(),selectedCity) // Use search query when refreshing
             refreshButton.isRefreshing = false
         }
 
@@ -82,7 +112,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // Update the data based on the search query
                 dataList.clear() // Clear previous data
-                initData(type, view, s.toString())
+                initData(type, view, s.toString(),selectedCity)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -93,7 +123,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun initData(type: Int, view: View, searchQuery: String = "") {
+    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "") {
         dataList = ArrayList()
         val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
         recyclerView.adapter = adapter
@@ -102,6 +132,9 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
         // Create Firestore query with or without search query
         var query: Query = firestore.collection(myTags.ads)
+        if (location.isNotEmpty()) {
+            query = query.whereEqualTo(myTags.adLocation, location)
+        }
         if (searchQuery.isNotEmpty()) {
             query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
         }
@@ -122,4 +155,12 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
         }
     }
+
+    fun getCity(city : String){
+        val firebaseArray = firestore.collection(myTags.appData).document(myTags.tags).get().result.get(myTags.cities) as List<String>
+        val cities = ArrayList(firebaseArray)
+        val index = cities.indexOf(city)
+
+    }
+
 }
