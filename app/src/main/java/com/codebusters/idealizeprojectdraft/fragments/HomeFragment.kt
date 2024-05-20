@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -30,7 +31,7 @@ import com.google.firebase.firestore.Query
 
 class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var recyclerView : RecyclerView
-    private lateinit var requestsButton : FloatingActionButton
+    private lateinit var requestsButton : ImageView
     private lateinit var refreshButton : SwipeRefreshLayout
     private lateinit var dataList : ArrayList<ItemModel>
     private lateinit var firestore: FirebaseFirestore
