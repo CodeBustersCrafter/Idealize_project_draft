@@ -53,7 +53,8 @@ class MyRequestsFragment(uid : String) : Fragment() {
         dataList = ArrayList()
 
         val adapter = RecyclerViewRequestAdapter(dataList,myTags.myRequestMode,view.context)
-
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = GridLayoutManager(view.context,2)
         firestore.collection(myTags.users).document(userID).collection(myTags.userMyRequests).get().addOnSuccessListener {
                 querySnapshot ->
             if (querySnapshot != null) {
@@ -74,9 +75,6 @@ class MyRequestsFragment(uid : String) : Fragment() {
             }
 
         }
-
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = GridLayoutManager(view.context,2)
     }
 }
 

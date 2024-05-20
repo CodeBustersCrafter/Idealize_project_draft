@@ -91,6 +91,7 @@ class AddingAdsActivity : AppCompatActivity() {
 
                             // Add keywords to map
                             map[myTags.keywords] = generateKeywords(item.name)
+                            map[myTags.userLocation] = idealizeUser.location
 
                             firestore.collection(myTags.users).document(idealizeUser.uid).collection(myTags.ads).document(item.adId)
                                 .set(map).addOnCompleteListener {
