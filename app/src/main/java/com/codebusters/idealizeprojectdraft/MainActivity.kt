@@ -171,7 +171,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_tool_bar_menues,menu)

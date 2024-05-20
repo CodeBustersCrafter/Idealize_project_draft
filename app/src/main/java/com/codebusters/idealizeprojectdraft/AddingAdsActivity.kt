@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
@@ -29,15 +30,18 @@ import java.util.Locale
 class AddingAdsActivity : AppCompatActivity() {
     private var myTags = MyTags()
     private lateinit var binding: ActivityAddingAdsBinding
+
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage : FirebaseStorage
+
     private lateinit var progressDialog: ProgressDialog
 
     private var uid = ""
     private lateinit var item : Item
     private var uri: Uri? = null
     private lateinit var idealizeUser : IdealizeUser
+    private lateinit var categoryList : List<String>
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,23 +49,25 @@ class AddingAdsActivity : AppCompatActivity() {
 
         binding = ActivityAddingAdsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.imageViewSellScreen.visibility = View.GONE
 
         auth= FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
         storage=FirebaseStorage.getInstance()
-        uid = intent.getStringExtra(myTags.intentUID).toString()
 
+        uid = intent.getStringExtra(myTags.intentUID).toString()
 
         firestore =FirebaseFirestore.getInstance()
         firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
                 documentSnapshot ->
             if(documentSnapshot.exists()){
                 idealizeUser = ModelBuilder().getUser(documentSnapshot)
+                var catagories = resources.getStringArray(R.array.categories)
+                var arrayAdapter = ArrayAdapter(this,R.layout.drop_down_menu,catagories)
+                binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
 
                 binding.btnOpenCameraSellScreen.setOnClickListener {
-                    if(binding.ediTextCategorySellScreen.text.toString().trim()!=""){
+                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=""){
                         //open the camera
                         imageChooser()
                     }else{
@@ -71,6 +77,15 @@ class AddingAdsActivity : AppCompatActivity() {
 
 
                 binding.btnSaveSellScreen.setOnClickListener {
+                    if(uri==null || binding.ediTextNameSellScreen.text.toString().trim()=="" || binding.ediTextPriceSellScreen.text.toString().trim()==""){
+                        Toast.makeText(this,"Please fill the required fields", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    if(binding.ediTextPriceSellScreen.text.toString().toDouble()<0 || binding.ediTextQuantitySellScreen.text.toString().toDouble()<=0){
+                        Toast.makeText(this,"Please enter a valid price and quantity", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    //show progress dialog
                     progressDialog = ProgressDialog(this)
                     progressDialog.setCancelable(false)
                     progressDialog.setTitle("Saving...")
@@ -159,7 +174,7 @@ class AddingAdsActivity : AppCompatActivity() {
                     apiKey = BuildConfig.apikey,
                 )
 
-                val prompt = "Recognize this image. If it is strictly related to "+binding.ediTextCategorySellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
+                val prompt = "Recognize this image. If it is strictly related to "+binding.autoCompleteTextViewSellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
                 val bitmap = Converter().getBitmap(it,this)
 
                 val inputContent = content {
@@ -184,14 +199,16 @@ class AddingAdsActivity : AppCompatActivity() {
     }
 
     private fun init(): Item {
-        item =Item(binding.ediTextNameSellScreen.text.toString(),
+
+        item =Item(
+            binding.ediTextNameSellScreen.text.toString(),
             binding.ediTextPriceSellScreen.text.toString(),
             "",
             "",
             binding.ediTextDescriptionSellScreen.text.toString(),
             binding.ediTextQuantitySellScreen.text.toString(),
             uri!!,
-            binding.ediTextCategorySellScreen.text.toString(),
+            binding.autoCompleteTextViewSellScreen.text.toString(),
             myTags.adVisible,
             uid+"_"+(idealizeUser.adCount+1),
             uid
