@@ -49,6 +49,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         refreshButton = view.findViewById(R.id.Home_swiper_button)
         searchEditText = view.findViewById(R.id.searchEditText)
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
+        autoCompleteTextView.setThreshold(0)
         var selectedCity = ""
 
         firestore= FirebaseFirestore.getInstance()
@@ -57,6 +58,12 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             myTags.guestMode
         }else{//User Mode
             myTags.userViewMode
+        }
+
+        autoCompleteTextView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                autoCompleteTextView.showDropDown()
+            }
         }
 
         // Fetch cities from Firebase
@@ -69,6 +76,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     // Set up ArrayAdapter with the cities list
                     val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
                     autoCompleteTextView.setAdapter(adapter)
+                    autoCompleteTextView.hint = "Select All"
 
                     // Optional: Set a listener for when a city is selected
                     autoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
