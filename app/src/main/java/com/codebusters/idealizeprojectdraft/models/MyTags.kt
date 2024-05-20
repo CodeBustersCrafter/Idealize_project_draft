@@ -37,6 +37,7 @@ class MyTags {
     var adVisibility: String = "Visibility"
     var adQuantity: String = "Quantity"
     var keywords: String = "Keywords" // New Keywords list
+    var adLocation: String = "Location"
 
     var requestAdID : String = "AD_ID"
     var requestID : String = "Request_ID"
