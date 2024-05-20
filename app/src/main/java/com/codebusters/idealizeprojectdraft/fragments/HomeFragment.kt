@@ -93,33 +93,166 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
+
     private fun initData(type: Int, view: View, searchQuery: String = "") {
-        dataList = ArrayList()
-        val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
-        recyclerView.adapter = adapter
-        val gl= GridLayoutManager(view.context,2)
-        recyclerView.layoutManager = gl
+            dataList = ArrayList()
+            val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
 
-        // Create Firestore query with or without search query
-        var query: Query = firestore.collection(myTags.ads)
-        if (searchQuery.isNotEmpty()) {
-            query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
-        }
 
-        query.get().addOnSuccessListener { result ->
-            dataList.clear() // Clear previous data
-            for (document in result.documents) {
-                firestore.collection(myTags.users)
-                    .document(document.get(myTags.adUser).toString())
-                    .get()
-                    .addOnSuccessListener { documentSnapshot ->
-                        val item = ModelBuilder().getAdItem(document, documentSnapshot)
-                        if (!dataList.contains(item)) {
-                            dataList.add(item)
+            // Create Firestore query with or without search query
+            var query: Query = firestore.collection(myTags.ads)
+            if (searchQuery.isNotEmpty()) {
+                query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
+            }
+
+            query.get().addOnSuccessListener { result ->
+                dataList.clear() // Clear previous data
+                for (document in result.documents) {
+                    firestore.collection(myTags.users)
+                        .document(document.get(myTags.adUser).toString())
+                        .get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            val item = ModelBuilder().getAdItem(document, documentSnapshot)
+                            if (!dataList.contains(item)) {
+
+                                    dataList.add(item)
+                                adapter.notifyDataSetChanged()
+
+                            }
                         }
-                        adapter.notifyDataSetChanged()
+                }
+                recyclerView.adapter = adapter
+                val gl= GridLayoutManager(view.context,2)
+                recyclerView.layoutManager = gl
+
+            }
+    }
+   /* @SuppressLint("NotifyDataSetChanged")
+
+    private fun initData(type: Int, view: View, searchQuery: String = "") {
+            dataList = ArrayList()
+            val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
+
+
+            // Create Firestore query with or without search query
+            var query: Query = firestore.collection(myTags.ads)
+            if (searchQuery.isNotEmpty()) {
+                query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
+            }
+
+            query.get().addOnSuccessListener { result ->
+                dataList.clear() // Clear previous data
+                for (document in result.documents) {
+                    if(end<result.size()){
+                        if(start<end){
+                            firestore.collection(myTags.users)
+                                .document(document.get(myTags.adUser).toString())
+                                .get()
+                                .addOnSuccessListener { documentSnapshot ->
+                                    val item = ModelBuilder().getAdItem(document, documentSnapshot)
+                                    if (!dataList.contains(item)) {
+                                        dataList.add(item)
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }
+                            start++
+                        }else{
+                            end+=5
+                            break
+                        }
+                    }else if(end>result.size() && start==0){
+                        firestore.collection(myTags.users)
+                            .document(document.get(myTags.adUser).toString())
+                            .get()
+                            .addOnSuccessListener { documentSnapshot ->
+                                val item = ModelBuilder().getAdItem(document, documentSnapshot)
+                                if (!dataList.contains(item)) {
+                                    dataList.add(item)
+                                    adapter.notifyDataSetChanged()
+                                }
+                            }
+                    }else{
+                        if(start<result.size()){
+                            firestore.collection(myTags.users)
+                                .document(document.get(myTags.adUser).toString())
+                                .get()
+                                .addOnSuccessListener { documentSnapshot ->
+                                    val item = ModelBuilder().getAdItem(document, documentSnapshot)
+                                    if (!dataList.contains(item)) {
+                                        dataList.add(item)
+                                        adapter.notifyDataSetChanged()
+                                    }
+                                }
+                            start++
+                        }else{
+                            end=5
+                            start=0
+                            break
+                        }
                     }
+
+                }
+                recyclerView.adapter = adapter
+                val gl= GridLayoutManager(view.context,2)
+                recyclerView.layoutManager = gl
+
+            }
+    }*/
+
+
+    /*
+    @SuppressLint("NotifyDataSetChanged")
+
+    private fun initData(type: Int, view: View, searchQuery: String = "",isContinue : Boolean) {
+        if(!isContinue){
+            dataList = ArrayList()
+            dataShifter = DataShifter(dataList,5)
+            var finalDataList = ArrayList<ItemModel>()
+            val adapter = RecyclerViewAdapter(finalDataList, type, view.context, user.uid)
+
+
+            // Create Firestore query with or without search query
+            var query: Query = firestore.collection(myTags.ads)
+            if (searchQuery.isNotEmpty()) {
+                query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
+            }
+
+            query.get().addOnSuccessListener { result ->
+                dataList.clear() // Clear previous data
+                finalDataList.clear()
+                var count = 0
+                for (document in result.documents) {
+                    firestore.collection(myTags.users)
+                        .document(document.get(myTags.adUser).toString())
+                        .get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            val item = ModelBuilder().getAdItem(document, documentSnapshot)
+                            if (!dataList.contains(item)) {
+                                if(count<5){
+                                    dataList.add(item)
+                                    finalDataList.add(item)
+                                    adapter.notifyDataSetChanged()
+                                }else{
+                                    dataList.add(item)
+                                }
+                                count++
+                            }
+                        }
+                }
+                recyclerView.adapter = adapter
+                val gl= GridLayoutManager(view.context,2)
+                recyclerView.layoutManager = gl
+
+            }
+        }else{
+            dataShifter.setData(dataList)
+            val finalDataList : ArrayList<ItemModel> = dataShifter.getNextDataSet()
+            val adapter = RecyclerViewAdapter(finalDataList, type, view.context, user.uid)
+            recyclerView.adapter = adapter
+            val gl= GridLayoutManager(view.context,2)
+            recyclerView.layoutManager = gl
+            adapter.notifyDataSetChanged()
             }
         }
+*/
     }
-}

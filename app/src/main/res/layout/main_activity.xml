@@ -9,25 +9,138 @@
     android:theme="@style/Theme.AppCompat"
     tools:ignore="UseCompoundDrawables">
 
-    <include layout="@layout/app_bar"/>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/Tab_layout_home_Screen"
-        android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="50dp"
-        app:tabIndicator="@drawable/tab1"
-        app:tabIndicatorAnimationMode="elastic"
-        app:tabIndicatorColor="@null"
-        app:tabIndicatorGravity="stretch"
-        app:tabMode="fixed"
-        app:tabIndicatorFullWidth="true"
-        app:tabTextColor="#5B5B5B"
-        app:tabSelectedTextColor="@color/black"
-        tools:ignore="SpeakableTextPresentCheck" />
     <androidx.viewpager2.widget.ViewPager2
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/view_pager_home_screen"/>
+        android:id="@+id/view_pager_home_screen"
+        android:layout_gravity="top"
+        android:layout_weight="1"/>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:layout_weight="1">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_app_bar"
+            android:background="@color/white">
+            <LinearLayout
+                android:baselineAligned="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:baselineAligned="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/outline_explore_24"
+                        android:layout_weight="1"
+                        tools:ignore="ContentDescription,NestedWeights" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Explore"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textStyle="italic|bold"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:baselineAligned="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/outline_post_add_non_24"
+                        android:layout_weight="1"
+                        tools:ignore="ContentDescription,NestedWeights" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="My Ads"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textStyle="italic|bold"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:baselineAligned="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/outline_live_help_non_24"
+                        android:layout_weight="1"
+                        tools:ignore="ContentDescription,NestedWeights" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="AI Help"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textStyle="italic|bold"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:baselineAligned="true"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/outline_person_non_24"
+                        android:layout_weight="1"
+                        tools:ignore="ContentDescription,NestedWeights" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Profile"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textStyle="italic|bold"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

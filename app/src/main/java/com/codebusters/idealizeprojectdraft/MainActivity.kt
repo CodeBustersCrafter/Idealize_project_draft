@@ -13,7 +13,6 @@ import android.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.codebusters.idealizeprojectdraft.fragment_adapters.FragmentPageAdapter
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -21,7 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -42,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firestore : FirebaseFirestore
     private lateinit var googleCredential : GoogleSignInClient
 
-    private lateinit var tabLayout : TabLayout
+    private lateinit var bottomNavigationBar : BottomNavigationView
     private lateinit var viewpager : ViewPager2
 
     private lateinit var toolbar : Toolbar
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         toolbar.inflateMenu(R.menu.main_tool_bar_menues)
         setActionBar(toolbar)
 
-        tabLayout = findViewById(R.id.Tab_layout_home_Screen)
+        bottomNavigationBar = findViewById(R.id.bottom_app_bar)
         viewpager = findViewById(R.id.view_pager_home_screen)
 
         Firebase.initialize(this)
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        tabLayout.addTab(tabLayout.newTab().setText("Home"))
+        /*tabLayout.addTab(tabLayout.newTab().setText("Home"))
         if(type==myTags.userMode){
             firestore =FirebaseFirestore.getInstance()
             firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
@@ -97,10 +96,10 @@ class MainActivity : AppCompatActivity() {
             }
         }else{
             viewpager.adapter = FragmentPageAdapter(IdealizeUser(),type,supportFragmentManager,lifecycle)
-        }
+        }*/
 
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+        /*tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
                     viewpager.currentItem = tab.position
@@ -113,16 +112,17 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
-        })
+        })*/
 
-        viewpager.registerOnPageChangeCallback(object :
+        /*viewpager.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                bottomNavigationBar.
                 tabLayout.selectTab(tabLayout.getTabAt(position))
             }
 
-        })
+        })*/
     }
 
     private fun signIn(){
