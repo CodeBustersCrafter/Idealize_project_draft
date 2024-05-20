@@ -89,5 +89,17 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="category">Category</string>
+    <string name="select_one">select one</string>
+
+    <string-array name="categories">
+        <item>Fruits</item>
+        <item>Vegetables</item>
+        <item>Flowers</item>
+        <item>Herbals</item>
+        <item>Spices</item>
+        <item>Plants</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>
