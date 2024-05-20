@@ -9,9 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="yellow">#FFEB3B</color>
     <color name="green">#00FF00</color>
+    <color name="grey">#808080</color>
     <color name="colorPrimary">#4CAF50</color> <!-- Green 500 -->
     <color name="colorPrimaryDark">#388E3C</color> <!-- Green 700 -->
     <color name="colorAccent">#C8E6C9</color> <!-- Green 100 -->
     <color name="colorBackground">#FFFFFF</color> <!-- White -->
-
 </resources>

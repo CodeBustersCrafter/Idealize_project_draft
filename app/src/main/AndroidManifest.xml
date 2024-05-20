@@ -5,6 +5,8 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.CAMERA"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -20,7 +22,8 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/GreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.HOME" />
 
@@ -35,7 +38,8 @@
         <activity
             android:name=".RequestActivity"
             android:exported="false"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/GreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.REQUEST" />
 
@@ -45,12 +49,12 @@
         <activity
             android:name=".AddingAdsActivity"
             android:exported="false"
-            android:theme="@style/Theme.IdealizeProjectDraft" />
+            android:theme="@style/GreenTheme"/>
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
             android:noHistory="true"
-            android:theme="@style/Theme.IdealizeProjectDraft">
+            android:theme="@style/GreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,7 +64,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/GreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.EXPLORE" />
 
