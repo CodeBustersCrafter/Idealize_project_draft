@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="My Requests"
+        android:id="@+id/menu_my_requests"
+        android:icon="@drawable/outline_send_24"
+        tools:ignore="HardcodedText" />
+    <item android:title="Requests"
+        android:id="@+id/menu_requests"
+        android:icon="@drawable/outline_approval_24"
+        tools:ignore="HardcodedText" />
+</menu>
