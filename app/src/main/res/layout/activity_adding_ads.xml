@@ -106,7 +106,6 @@
             android:textColorHint="@color/grey"
             android:layout_weight="3"
             android:hint="Quantity *"
-            android:inputType="number"
             android:textAlignment="viewStart"
             android:textColor="@color/black"
             android:textStyle="italic"
