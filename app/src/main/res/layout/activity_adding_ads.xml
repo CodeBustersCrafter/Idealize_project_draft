@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
+    android:theme="@style/GreenTheme"
     android:orientation="vertical"
     tools:context=".AddingAdsActivity">
 
@@ -125,9 +126,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/description"
-            android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textAlignment="viewStart"
+            android:textColor="@color/black"
             android:textStyle="italic"
             android:minHeight="100dp"
             tools:ignore="TouchTargetSizeCheck" />
@@ -139,8 +140,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/category"
+        app:hintTextAppearance="@color/black"
+        app:hintTextColor="@color/black"
         android:padding="10dp"
-        android:background="@android:color/white"
         app:startIconDrawable="@drawable/category">
 
         <AutoCompleteTextView
@@ -149,11 +151,9 @@
             android:layout_height="match_parent"
             android:text="@string/select_one"
             android:textStyle="italic"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:background="@android:color/white"
             android:inputType="none"
             android:layout_weight="1"
+            android:background="@color/white"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
