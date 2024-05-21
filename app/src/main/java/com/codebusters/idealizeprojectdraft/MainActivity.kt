@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTheme(R.style.Theme_IdealizeProjectDraft)
         setContentView(R.layout.main_activity)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()

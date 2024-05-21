@@ -4,7 +4,6 @@ package com.codebusters.idealizeprojectdraft
 
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
@@ -75,7 +74,7 @@ class AddingAdsActivity : AppCompatActivity() {
                 binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
 
                 binding.btnOpenCameraSellScreen.setOnClickListener {
-                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=""){
+                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=resources.getString(R.string.select_one)){
                         //open the camera
                         imageChooser()
                     }else{
