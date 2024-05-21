@@ -4,4 +4,6 @@
         android:title="Filter by Date" />
     <item android:id="@+id/filter_price"
         android:title="Filter by Price" />
+    <item android:id="@+id/filter_rating"
+        android:title="Filter by Rating" />
 </menu>
