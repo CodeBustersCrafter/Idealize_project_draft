@@ -1,6 +1,10 @@
 package com.codebusters.idealizeprojectdraft
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,16 +13,19 @@ import com.codebusters.idealizeprojectdraft.databinding.ActivityRequestBinding
 import com.codebusters.idealizeprojectdraft.fragments.MyRequestsFragment
 import com.codebusters.idealizeprojectdraft.fragments.RequestsFragment
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 
 class RequestActivity : AppCompatActivity() {
     private lateinit var binding : ActivityRequestBinding
     private var myTags = MyTags()
     private var uid = ""
+    private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRequestBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         uid=intent.getStringExtra(myTags.intentUID).toString()
 
         replaceFragment(MyRequestsFragment(uid))
@@ -47,5 +54,17 @@ class RequestActivity : AppCompatActivity() {
         i.putExtra(myTags.intentUID,uid)
         i.putExtra(myTags.intentType,myTags.userMode)
         startActivity(i)
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
     }
 }

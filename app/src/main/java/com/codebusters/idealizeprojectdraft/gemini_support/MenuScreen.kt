@@ -28,6 +28,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,7 +40,22 @@ data class MenuItem(
     val titleResId: Int,
     val descriptionResId: Int
 )
-
+@Composable
+fun GreenTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = colorResource(id = R.color.colorPrimary),
+            onPrimary = Color.White,
+            secondary = colorResource(id = R.color.colorAccent),
+            onSecondary = Color.Black,
+            background = colorResource(id = R.color.colorBackground),
+            onBackground = Color.Black,
+            surface = colorResource(id = R.color.colorBackground),
+            onSurface = Color.Black,
+        ),
+        content = content
+    )
+}
 @Composable
 fun MenuScreen(
     onItemClicked: (String) -> Unit = { }
@@ -89,5 +106,7 @@ fun MenuScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun MenuScreenPreview() {
-    MenuScreen()
+    GreenTheme {
+        MenuScreen()
+    }
 }

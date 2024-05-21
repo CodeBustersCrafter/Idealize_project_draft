@@ -2,7 +2,11 @@
 
 package com.codebusters.idealizeprojectdraft
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -11,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.codebusters.idealizeprojectdraft.databinding.ActivityHomeBinding
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -29,10 +34,14 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var firestore : FirebaseFirestore
     private lateinit var googleCredential : GoogleSignInClient
     private lateinit var binding : ActivityHomeBinding
+    private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         Firebase.initialize(this)
         firestore = FirebaseFirestore.getInstance()
@@ -146,5 +155,16 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+    }
+    @Suppress("DEPRECATION")
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
     }
 }
