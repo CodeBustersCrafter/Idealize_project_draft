@@ -12,6 +12,10 @@
         <item name="colorControlActivated">@color/green</item>
     </style>
 
+    <style name="CustomDialogTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <style name="GreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
