@@ -4,7 +4,6 @@ package com.codebusters.idealizeprojectdraft
 
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
@@ -75,7 +74,7 @@ class AddingAdsActivity : AppCompatActivity() {
                 binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
 
                 binding.btnOpenCameraSellScreen.setOnClickListener {
-                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=""){
+                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=resources.getString(R.string.select_one)){
                         //open the camera
                         imageChooser()
                     }else{
@@ -192,8 +191,12 @@ class AddingAdsActivity : AppCompatActivity() {
                     modelName = "gemini-1.0-pro-vision-latest",
                     apiKey = BuildConfig.apikey,
                 )
-
-                val prompt = "Recognize this image. If it is strictly related to "+binding.autoCompleteTextViewSellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
+                var temp = binding.autoCompleteTextViewSellScreen.text.toString()
+                if(temp=="Other"){
+                    temp = "Legal Products in market"
+                }
+                val prompt =
+                    "Recognize this image. If it is strictly related to $temp category ,a clear image and mostly important fact is the image do not contain human bodies or animal bodies, say \"YES\" otherwise \"NO\". Don't give me descriptions."
                 val bitmap = Converter().getBitmap(it,this)
 
                 val inputContent = content {
@@ -208,7 +211,7 @@ class AddingAdsActivity : AppCompatActivity() {
                         binding.imageViewSellScreen.visibility = View.VISIBLE
                         uri=it
                     }else{
-                        Toast.makeText(this@AddingAdsActivity,"Select a valid and clear image",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@AddingAdsActivity,"Select a valid and clear image (Image should not contain human or animal body parts)",Toast.LENGTH_SHORT).show()
                         uri = null
                     }
 //                    progressDialog.cancel()

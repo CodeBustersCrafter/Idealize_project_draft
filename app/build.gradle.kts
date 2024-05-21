@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.codebusters.idealizeprojectdraft"
-        minSdk = 23
+        minSdk = 26
         //noinspection ExpiredTargetSdkVersion
         targetSdk = 26
         versionCode = 1

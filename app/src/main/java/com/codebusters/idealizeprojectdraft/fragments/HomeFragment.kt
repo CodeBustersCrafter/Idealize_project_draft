@@ -26,7 +26,6 @@ import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -236,7 +235,6 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         if(filtering != "price") {
                             dataList.reverse()
                         }
-
                         adapter.notifyDataSetChanged()
                     }
             }
