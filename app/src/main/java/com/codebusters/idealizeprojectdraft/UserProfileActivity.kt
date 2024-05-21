@@ -6,7 +6,12 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.codebusters.idealizeprojectdraft.models.MyTags
@@ -86,7 +91,7 @@ class UserProfileActivity : AppCompatActivity() {
             map[MyTags().userName]=editTextName.text.toString()
             map[MyTags().userPhone]=editTextName.text.toString()
             map[MyTags().userLocation]=editTextName.text.toString()
-            FirebaseFirestore.getInstance().collection(MyTags().users).document(auth.currentUser!!.uid).update()
+            //FirebaseFirestore.getInstance().collection(MyTags().users).document(auth.currentUser!!.uid).update()
         }
 
         val builder = AlertDialog.Builder(this)

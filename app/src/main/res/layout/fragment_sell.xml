@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/appgreeen"
         android:backgroundTintMode="src_atop"
-        android:src="@drawable/add1"
+        android:src="@drawable/baseline_add_circle_outline_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.954"
