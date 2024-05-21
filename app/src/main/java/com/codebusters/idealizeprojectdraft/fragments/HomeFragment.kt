@@ -26,7 +26,6 @@ import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -43,6 +42,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var welcomeTextView: TextView
     private lateinit var cities: List<*>
 
+    @Suppress("NAME_SHADOWING")
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -111,7 +111,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
-            var temp = autoCompleteTextView.text.toString()
+            val temp = autoCompleteTextView.text.toString()
             if(temp == ""){
                 selectedCity = ""
             }
@@ -222,18 +222,22 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         dataList.reverse()
                         // Filter by date or price
                         if(filtering.isNotEmpty()){
-                            if(filtering == "date"){
-                                dataList.sortBy { it.time}
-                                dataList.sortBy { it.date }
-                                dataList.reverse()
-                            }else if(filtering == "price"){
-                                dataList.sortBy { it.time}
-                                dataList.reverse()
-                                dataList.sortBy { it.price.toLong() }
-                            }else if(filtering == "rating"){
-                                dataList.sortBy { it.time}
-                                dataList.sortBy { it.rating }
-                                dataList.reverse()
+                            when (filtering) {
+                                "date" -> {
+                                    dataList.sortBy { it.time}
+                                    dataList.sortBy { it.date }
+                                    dataList.reverse()
+                                }
+                                "price" -> {
+                                    dataList.sortBy { it.time}
+                                    dataList.reverse()
+                                    dataList.sortBy { it.price.toLong() }
+                                }
+                                "rating" -> {
+                                    dataList.sortBy { it.time}
+                                    dataList.sortBy { it.rating }
+                                    dataList.reverse()
+                                }
                             }
                         }
                         adapter.notifyDataSetChanged()
