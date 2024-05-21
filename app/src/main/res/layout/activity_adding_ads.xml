@@ -154,6 +154,7 @@
             android:inputType="none"
             android:layout_weight="1"
             android:background="@color/white"
+            android:textColor="@color/black"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
