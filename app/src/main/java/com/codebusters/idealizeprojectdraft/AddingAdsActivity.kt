@@ -6,6 +6,9 @@ package com.codebusters.idealizeprojectdraft
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -16,6 +19,7 @@ import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.Item
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.firebase.auth.FirebaseAuth
@@ -44,12 +48,15 @@ class AddingAdsActivity : AppCompatActivity() {
     private var uri: Uri? = null
     private lateinit var idealizeUser : IdealizeUser
 
-    @SuppressLint("SuspiciousIndentation")
+    private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+
+    @SuppressLint("SuspiciousIndentation", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddingAdsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding.imageViewSellScreen.visibility = View.GONE
 
         auth= FirebaseAuth.getInstance()
@@ -290,4 +297,15 @@ class AddingAdsActivity : AppCompatActivity() {
         return keywords
     }
 
+    @Suppress("DEPRECATION")
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 }

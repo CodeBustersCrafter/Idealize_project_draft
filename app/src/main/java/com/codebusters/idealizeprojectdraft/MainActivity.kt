@@ -2,6 +2,9 @@ package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -14,6 +17,7 @@ import com.codebusters.idealizeprojectdraft.fragments.SellFragment
 import com.codebusters.idealizeprojectdraft.gemini_support.GeminiFragment
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -35,15 +39,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationBar : BottomNavigationView
     private lateinit var frameLayout : FrameLayout
 
+    private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+
     @SuppressLint("UseCompatLoadingForDrawables", "MissingInflatedId", "UseSupportActionBar",
-        "ResourceType"
+        "ResourceType", "SourceLockedOrientationActivity"
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setTheme(R.style.Theme_IdealizeProjectDraft)
         setContentView(R.layout.main_activity)
-
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()
 
         bottomNavigationBar = findViewById(R.id.bottom_app_bar)
@@ -97,6 +103,17 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    @Suppress("DEPRECATION")
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 
 
 }

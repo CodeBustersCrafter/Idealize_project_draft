@@ -47,6 +47,9 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         holder.itemDelete.visibility = View.GONE
         holder.itemVisible.visibility = View.GONE
         holder.itemBooking.visibility = View.VISIBLE
+        holder.itemReteReview.visibility = View.GONE
+        holder.itemRequestRate.visibility = View.GONE
+
 
         holder.itemLl.setOnClickListener {
             val d = Dialog(context)
@@ -129,7 +132,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
             }
             myTags.userViewMode -> {//
                 holder.itemBooking.setOnClickListener{
-                    val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
+                    val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0","0","0","0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
                     sendRequests(request)
                 }
             }
@@ -144,7 +147,11 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
 
     private fun sendRequests(requestModel: RequestModel){
         firestore = FirebaseFirestore.getInstance()
-        firestore.collection(myTags.users).document(requestModel.sellerId).collection(myTags.userRequests).document(requestModel.requestID).set(ModelBuilder().getRequestAsMap(requestModel)).addOnCompleteListener{
+        firestore.collection(myTags.users)
+            .document(requestModel.sellerId)
+            .collection(myTags.userRequests)
+            .document(requestModel.requestID)
+            .set(ModelBuilder().getRequestAsMap(requestModel)).addOnCompleteListener{
                 result ->
             if(result.isSuccessful){
                 Toast.makeText(context,"Request is sent to user", Toast.LENGTH_SHORT).show()

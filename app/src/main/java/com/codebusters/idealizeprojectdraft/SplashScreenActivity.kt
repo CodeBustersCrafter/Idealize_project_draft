@@ -2,11 +2,15 @@ package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.codebusters.idealizeprojectdraft.databinding.ActivitySplashScreenBinding
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.initialize
@@ -15,11 +19,14 @@ import com.google.firebase.initialize
 class SplashScreenActivity : ComponentActivity() {
     private lateinit var binding : ActivitySplashScreenBinding
     private val myTags = MyTags()
+    private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         val path = "android.resource://"+packageName+"/"+R.raw.updatedlogo
         binding.videoViewSplash.setVideoURI(Uri.parse(path))
@@ -41,5 +48,16 @@ class SplashScreenActivity : ComponentActivity() {
             }
         }
 
+    }
+    @Suppress("DEPRECATION")
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
     }
 }
