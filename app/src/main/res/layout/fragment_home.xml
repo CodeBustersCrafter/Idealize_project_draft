@@ -117,7 +117,7 @@
             android:layout_width="40dp"
             android:layout_height="38dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/baseline_search_24"
+            android:src="@drawable/searchicon"
             android:layout_marginRight="4dp"/>
 
         <com.google.android.material.card.MaterialCardView
