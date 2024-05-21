@@ -106,42 +106,33 @@
             android:textColorHint="@color/grey"
             android:layout_weight="3"
             android:hint="Quantity *"
-            android:inputType="number"
             android:textAlignment="viewStart"
             android:textColor="@color/black"
             android:textStyle="italic"
             tools:ignore="Autofill,HardcodedText,TouchTargetSizeCheck" />
     </LinearLayout>
-    <LinearLayout
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="15dp"
-        android:layout_marginHorizontal="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:layout_marginTop="10dp"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_weight="1"
-            tools:ignore="HardcodedText" />
+        android:layout_marginHorizontal="10dp"
+        app:boxStrokeColor="@color/black"
+        app:hintTextColor="@color/grey"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edi_text_description_sell_screen"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_weight="3"
-            android:hint="Description"
-            android:textColorHint="@color/grey"
+            android:hint="@string/description"
+            android:textColorHint="@color/black"
             android:textAlignment="viewStart"
             android:textColor="@color/black"
             android:textStyle="italic"
+            android:minHeight="100dp"
             tools:ignore="TouchTargetSizeCheck" />
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"

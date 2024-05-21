@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -24,6 +25,8 @@ import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -54,6 +57,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
         autoCompleteTextView.threshold = 0
         var selectedCity = ""
+        var filterdBy = ""
 
         firestore= FirebaseFirestore.getInstance()
 
@@ -92,7 +96,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     // Optional: Set a listener for when a city is selected
                     autoCompleteTextView.setOnItemClickListener { parent, view, position, _ ->
                         selectedCity = parent.getItemAtPosition(position) as String
-                        initData(type, view, searchEditText.text.toString(),selectedCity)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy)
                     }
                 } else {
                     Toast.makeText(requireContext(), "No cities found", Toast.LENGTH_SHORT).show()
@@ -103,15 +107,15 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
 
         // Initialize data with an empty search query
-        initData(type, view, searchEditText.text.toString(),selectedCity)
+        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy)
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
-            val temp = autoCompleteTextView.text.toString()
+            var temp = autoCompleteTextView.text.toString()
             if(temp == ""){
                 selectedCity = ""
             }
-            initData(type, view, searchEditText.text.toString(),selectedCity) // Use search query when refreshing
+            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy) // Use search query when refreshing
             refreshButton.isRefreshing = false
         }
 
@@ -132,18 +136,52 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // Update the data based on the search query
                 dataList.clear() // Clear previous data
-                initData(type, view, s.toString(),selectedCity)
+                initData(type, view, s.toString(),selectedCity,filterdBy)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        val filterButton: MaterialButton = view.findViewById(R.id.settings_filter_button)
+        filterButton.setOnClickListener { view ->
+
+            val popupMenu = PopupMenu(requireActivity(), view)
+            popupMenu.inflate(R.menu.filter_menu) // Create a filter_menu.xml
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.filter_date -> {
+                        filterdBy = "date"
+                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy)
+                        true
+                    }
+                    R.id.filter_price -> {
+                        filterdBy = "price"
+                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy)
+                        true
+                    }
+                    R.id.filter_rating -> {
+                        filterdBy = "rating"
+                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy)
+                        true
+                    }
+                    else -> {
+                        initData(type, view, searchEditText.text.toString(),selectedCity,"")
+                        true
+                    }
+                }
+            }
+            popupMenu.show()
+        }
+
+
         return view
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "") {
+    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "") {
         dataList = ArrayList()
         val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
         recyclerView.adapter = adapter
@@ -158,13 +196,15 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             val nearbyCities = mutableListOf<String>()
             nearbyCities.add(cities[index].toString())
             for (i in 1..5) {
-                nearbyCities.add(cities[index - i].toString())
-                nearbyCities.add(cities[index + i].toString())
+                if((index - i >= 0) && (index + i < cities.size)){
+                    nearbyCities.add(cities[index - i].toString())
+                    nearbyCities.add(cities[index + i].toString())
+                }
             }
             query = query.whereIn(myTags.adLocation, nearbyCities)
         }
         if (searchQuery.isNotEmpty()) {
-            query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase()).orderBy(myTags.adTime)
+            query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
         }
 
         query.get().addOnSuccessListener { result ->
@@ -177,6 +217,24 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         val item = ModelBuilder().getAdItem(document, documentSnapshot)
                         if (!dataList.contains(item)) {
                             dataList.add(item)
+                        }
+                        dataList.sortBy { it.time}
+                        dataList.reverse()
+                        // Filter by date or price
+                        if(filtering.isNotEmpty()){
+                            if(filtering == "date"){
+                                dataList.sortBy { it.time}
+                                dataList.sortBy { it.date }
+                                dataList.reverse()
+                            }else if(filtering == "price"){
+                                dataList.sortBy { it.time}
+                                dataList.reverse()
+                                dataList.sortBy { it.price.toLong() }
+                            }else if(filtering == "rating"){
+                                dataList.sortBy { it.time}
+                                dataList.sortBy { it.rating }
+                                dataList.reverse()
+                            }
                         }
                         adapter.notifyDataSetChanged()
                     }

@@ -92,6 +92,7 @@
     <string name="category"><font size="20">Category</font></string>
     <string name="select_one">select one</string>
     <string name="new_ad">New Ad</string>
+    <string name="description">Description</string>
 
     <string-array name="categories">
         <item>Fruits</item>
