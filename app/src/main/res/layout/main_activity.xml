@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:theme="@style/Theme.AppCompat"
+    android:theme="@style/GreenTheme"
     tools:ignore="UseCompoundDrawables">
 
-    <include layout="@layout/app_bar"/>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/Tab_layout_home_Screen"
+    <FrameLayout
+        android:id="@+id/main_frame_layout"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:background="@color/white"
-        android:layout_height="50dp"
-        app:tabIndicator="@drawable/tab1"
-        app:tabIndicatorAnimationMode="elastic"
-        app:tabIndicatorColor="@null"
-        app:tabIndicatorGravity="stretch"
-        app:tabMode="fixed"
-        app:tabIndicatorFullWidth="true"
-        app:tabTextColor="#5B5B5B"
-        app:tabSelectedTextColor="@color/black"
-        tools:ignore="SpeakableTextPresentCheck" />
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/view_pager_home_screen"/>
+        app:layout_constraintBottom_toTopOf="@+id/bottom_app_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="InefficientWeight" />
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemIconTint="#4CAF50"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:itemBackground="@color/white"
+        app:menu="@menu/bottom_navigation_menus"
+        tools:ignore="VisualLintBottomNav" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

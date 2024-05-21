@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Explore"
+        android:id="@+id/menu_explore"
+        android:icon="@drawable/outline_explore_24"
+        tools:ignore="HardcodedText" />
+    <item android:title="My Ads"
+        android:id="@+id/menu_my_ads"
+        android:icon="@drawable/outline_post_add_24"
+        tools:ignore="HardcodedText" />
+    <item android:title="AI Help"
+        android:id="@+id/menu_ai_help"
+        android:icon="@drawable/outline_live_help_24"
+        tools:ignore="HardcodedText" />
+    <item android:title="Profile"
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/outline_person_24"
+        tools:ignore="HardcodedText" />
+
+
+</menu>

@@ -89,12 +89,5 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="edit_details" />
-    <string name="loading">\n</string>
-    <string name="location" />
-    <string name="mobile" />
-    <string name="email" />
-    <string name="name" />
-    <string name="user_display_picture" />
 
 </resources>

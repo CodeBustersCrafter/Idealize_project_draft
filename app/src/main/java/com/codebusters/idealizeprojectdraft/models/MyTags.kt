@@ -37,15 +37,19 @@ class MyTags {
     var adVisibility: String = "Visibility"
     var adQuantity: String = "Quantity"
     var keywords: String = "Keywords" // New Keywords list
+    var adLocation: String = "Location"
 
     var requestAdID : String = "AD_ID"
     var requestID : String = "Request_ID"
     var requestSellerID : String = "Seller_ID"
     var requestBuyerID : String = "Buyer_ID"
     var requestIsCancelled : String = "Is_Cancelled"
+    var requestReview : String = "Is_Request_Sent"
+    var requestReviewSubmit : String = "Is_Review_Done"
+    var requestReviewRate : String = "Rate"
 
-    var adVisible: Int = 1
-    var adNotVisible: Int = 0
+    var adVisible: String = "1"
+    var adNotVisible: String = "0"
 
     //for Ad class
     var adUser: String = "User"
@@ -53,7 +57,6 @@ class MyTags {
     var appData : String = "App Data"
     var tags : String = "Tags"
     var cities : String = "Cities"
-    var categories : String = "Categories"
 
     val apikey : String  = "AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg"
 }

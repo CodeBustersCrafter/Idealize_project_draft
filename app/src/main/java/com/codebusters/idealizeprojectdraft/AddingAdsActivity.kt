@@ -2,18 +2,24 @@
 
 package com.codebusters.idealizeprojectdraft
 
+
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.Item
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.firebase.auth.FirebaseAuth
@@ -29,39 +35,47 @@ import java.util.Locale
 class AddingAdsActivity : AppCompatActivity() {
     private var myTags = MyTags()
     private lateinit var binding: ActivityAddingAdsBinding
+
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var storage : FirebaseStorage
-    private lateinit var progressDialog: ProgressDialog
+
+//    private lateinit var progressDialog: ProgressDialog
+    private val progressDialog by lazy { CustomProgressDialog(this) }
 
     private var uid = ""
     private lateinit var item : Item
     private var uri: Uri? = null
     private lateinit var idealizeUser : IdealizeUser
 
-    @SuppressLint("SuspiciousIndentation")
+    private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+
+    @SuppressLint("SuspiciousIndentation", "SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityAddingAdsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding.imageViewSellScreen.visibility = View.GONE
 
         auth= FirebaseAuth.getInstance()
         firestore=FirebaseFirestore.getInstance()
         storage=FirebaseStorage.getInstance()
-        uid = intent.getStringExtra(myTags.intentUID).toString()
 
+        uid = intent.getStringExtra(myTags.intentUID).toString()
 
         firestore =FirebaseFirestore.getInstance()
         firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
                 documentSnapshot ->
             if(documentSnapshot.exists()){
                 idealizeUser = ModelBuilder().getUser(documentSnapshot)
+                val catagories = resources.getStringArray(R.array.categories)
+                val arrayAdapter = ArrayAdapter(this,R.layout.drop_down_menu,catagories)
+                binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
 
                 binding.btnOpenCameraSellScreen.setOnClickListener {
-                    if(binding.ediTextCategorySellScreen.text.toString().trim()!=""){
+                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=""){
                         //open the camera
                         imageChooser()
                     }else{
@@ -71,11 +85,25 @@ class AddingAdsActivity : AppCompatActivity() {
 
 
                 binding.btnSaveSellScreen.setOnClickListener {
-                    progressDialog = ProgressDialog(this)
-                    progressDialog.setCancelable(false)
-                    progressDialog.setTitle("Saving...")
-                    progressDialog.create()
-                    progressDialog.show()
+                    if(uri==null || binding.ediTextNameSellScreen.text.toString().trim()=="" || binding.ediTextPriceSellScreen.text.toString().trim()==""){
+                        Toast.makeText(this,"Please fill the required fields", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+                    if(binding.ediTextPriceSellScreen.text.toString().toDouble()<0 || binding.ediTextQuantitySellScreen.text.toString().toDouble()<=0){
+                        Toast.makeText(this,"Please enter a valid price and quantity", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+//                    show progress dialog
+//                    progressDialog = ProgressDialog(this)
+//                    progressDialog.setCancelable(false)
+//                    progressDialog.setTitle("Please wait...")
+//                    progressDialog.setMessage("uploading the ad...")
+//                    progressDialog.create()
+//                    progressDialog.show()
+
+                    progressDialog.start("uploading the ad...")
+
+
                     item = init()
                     //validate inputs
                     //upload
@@ -85,12 +113,14 @@ class AddingAdsActivity : AppCompatActivity() {
                         imgRef.downloadUrl.addOnSuccessListener{
                             uri ->
                             item.photo = uri
-                            idealizeUser.adCount += 1
+                            val count = idealizeUser.adCount.toInt()
+                            idealizeUser.adCount = (count+1).toString()
 
                             val map = ModelBuilder().getItemAsMap(item)
 
                             // Add keywords to map
                             map[myTags.keywords] = generateKeywords(item.name)
+                            map[myTags.adLocation] = idealizeUser.location
 
                             firestore.collection(myTags.users).document(idealizeUser.uid).collection(myTags.ads).document(item.adId)
                                 .set(map).addOnCompleteListener {
@@ -117,7 +147,10 @@ class AddingAdsActivity : AppCompatActivity() {
                                         task ->
                                     if(task.isSuccessful){
                                         Toast.makeText(this,"Updated! from user", Toast.LENGTH_SHORT).show()
-                                        progressDialog.cancel()
+//                                        progressDialog.cancel()
+                                        progressDialog.stop()
+
+
                                         val intent = Intent(baseContext,MainActivity::class.java)
                                         intent.putExtra(myTags.intentType,myTags.userMode)
                                         intent.putExtra(myTags.intentUID,uid)
@@ -146,18 +179,21 @@ class AddingAdsActivity : AppCompatActivity() {
             val imageUri: Uri? = data?.data
             imageUri?.let {
                 // Display the selected image in the ImageView
-                progressDialog = ProgressDialog(this)
-                progressDialog.setCancelable(false)
-                progressDialog.setTitle("Verifying the image...")
-                progressDialog.create()
-                progressDialog.show()
+//                progressDialog = ProgressDialog(this)
+//                progressDialog.setCancelable(false)
+//                progressDialog.setTitle("Please wait...")
+//                progressDialog.setMessage("Verifying the image...")
+//                progressDialog.create()
+//                progressDialog.show()
+                progressDialog.start("verifying the image")
+
 
                 val generativeModel = GenerativeModel(
                     modelName = "gemini-1.0-pro-vision-latest",
                     apiKey = BuildConfig.apikey,
                 )
 
-                val prompt = "Recognize this image. If it is strictly related to "+binding.ediTextCategorySellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
+                val prompt = "Recognize this image. If it is strictly related to "+binding.autoCompleteTextViewSellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
                 val bitmap = Converter().getBitmap(it,this)
 
                 val inputContent = content {
@@ -175,23 +211,30 @@ class AddingAdsActivity : AppCompatActivity() {
                         Toast.makeText(this@AddingAdsActivity,"Select a valid and clear image",Toast.LENGTH_SHORT).show()
                         uri = null
                     }
-                    progressDialog.cancel()
+//                    progressDialog.cancel()
+                    progressDialog.stop()
+
+
+
+
                 }
             }
         }
     }
 
     private fun init(): Item {
-        item =Item(binding.ediTextNameSellScreen.text.toString(),
+
+        item =Item(
+            binding.ediTextNameSellScreen.text.toString(),
             binding.ediTextPriceSellScreen.text.toString(),
             "",
             "",
             binding.ediTextDescriptionSellScreen.text.toString(),
             binding.ediTextQuantitySellScreen.text.toString(),
             uri!!,
-            binding.ediTextCategorySellScreen.text.toString(),
+            binding.autoCompleteTextViewSellScreen.text.toString(),
             myTags.adVisible,
-            uid+"_"+(idealizeUser.adCount+1),
+            uid+"_"+(idealizeUser.adCount.toInt()+1),
             uid
             )
         return getDateTime(item)
@@ -204,6 +247,7 @@ class AddingAdsActivity : AppCompatActivity() {
         intent.putExtra(myTags.intentType,myTags.userMode)
         intent.putExtra(myTags.intentUID,uid)
         startActivity(intent)
+        finish()
 
     }
 
@@ -213,7 +257,7 @@ class AddingAdsActivity : AppCompatActivity() {
         val currentDate = Date()
         val currentFormatted = formatter.format(currentDate)
 
-        val formatter2 = SimpleDateFormat("hh:mm")
+        val formatter2 = SimpleDateFormat("HH:mm")
         val currentTime = Date()
         val currentFormatted2 = formatter2.format(currentTime)
 
@@ -253,4 +297,15 @@ class AddingAdsActivity : AppCompatActivity() {
         return keywords
     }
 
+    @Suppress("DEPRECATION")
+    override fun onStart() {
+        val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkChangeListener, intentFilter)
+        super.onStart()
+    }
+
+    override fun onStop() {
+        unregisterReceiver(networkChangeListener)
+        super.onStop()
+    }
 }

@@ -1,28 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/sellFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.codebusters.idealizeprojectdraft.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
+        android:id="@+id/sellFragment"
+        android:name="com.codebusters.idealizeprojectdraft.fragments.SellFragment"
+        android:label="fragment_sell"
+        tools:layout="@layout/fragment_sell" >
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_sellFragment_to_geminiFragment"
+            app:destination="@id/geminiFragment" />
+        <action
+            android:id="@+id/action_sellFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.codebusters.idealizeprojectdraft.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/myRequestsFragment"
+        android:name="com.codebusters.idealizeprojectdraft.fragments.MyRequestsFragment"
+        android:label="MyRequestsFragment" >
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_myRequestsFragment_to_requestsFragment"
+            app:destination="@id/requestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestsFragment"
+        android:name="com.codebusters.idealizeprojectdraft.fragments.RequestsFragment"
+        android:label="RequestsFragment" >
+        <action
+            android:id="@+id/action_requestsFragment_to_myRequestsFragment"
+            app:destination="@id/myRequestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.codebusters.idealizeprojectdraft.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_sellFragment"
+            app:destination="@id/sellFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.codebusters.idealizeprojectdraft.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_geminiFragment"
+            app:destination="@id/geminiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/geminiFragment"
+        android:name="com.codebusters.idealizeprojectdraft.gemini_support.GeminiFragment"
+        android:label="GeminiFragment" >
+        <action
+            android:id="@+id/action_geminiFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_geminiFragment_to_sellFragment"
+            app:destination="@id/sellFragment" />
     </fragment>
 </navigation>

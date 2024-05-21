@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:theme="@style/Theme.AppCompat"
-    tools:ignore="UseCompoundDrawables">
+    tools:ignore="UseCompoundDrawables"
+    android:theme="@style/GreenTheme">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/Tab_layout_request_Screen"
+    <FrameLayout
+        android:id="@+id/request_frame_layout"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:background="@color/white"
-        android:layout_height="50dp"
-        app:tabIndicator="@drawable/tab1"
-        app:tabIndicatorAnimationMode="elastic"
-        app:tabIndicatorColor="@null"
-        app:tabIndicatorGravity="stretch"
-        app:tabMode="fixed"
-        app:tabIndicatorFullWidth="true"
-        app:tabTextColor="#5B5B5B"
-        app:tabSelectedTextColor="@color/black"
-        tools:ignore="SpeakableTextPresentCheck" />
-    <androidx.viewpager2.widget.ViewPager2
+        app:layout_constraintBottom_toTopOf="@+id/bottom_app_bar_request_screen"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_app_bar_request_screen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/view_pager_request_screen"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_navigation_menus_requests"
+        tools:layout_editor_absoluteX="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

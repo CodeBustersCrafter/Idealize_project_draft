@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.SellFragment"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:theme="@style/GreenTheme">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Sell_Recycler_view"
@@ -19,13 +20,15 @@
         android:id="@+id/btn_add_ad_sell_screen"
         android:layout_width="52dp"
         android:layout_height="55dp"
-        android:background="@drawable/baseline_add_circle_24"
+        android:backgroundTint="@color/white"
+        android:backgroundTintMode="src_atop"
+        android:src="@drawable/baseline_add_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.835"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.866"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

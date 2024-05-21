@@ -11,7 +11,7 @@ data class ItemRequestModel(
     var quantity: String = "",
     var photo : Uri = Uri.parse(""),
     var category : String = "",
-    var visibility : Int = 0,
+    var visibility : String = "0",
     var adId : String = "",
     var idealizeUserID : String = "",
     var email : String = "",
@@ -23,5 +23,8 @@ data class ItemRequestModel(
     var username : String = "",
     var requestBuyerID : String = "",
     var requestID: String = "",
-    var requestIsCancelled : String = "0"
+    var requestIsCancelled : String = "0",
+    var requestReview : String = "0",
+    var isReviewDone : String = "0",// not yet
+    var reviewRate : String = "0"
 )
