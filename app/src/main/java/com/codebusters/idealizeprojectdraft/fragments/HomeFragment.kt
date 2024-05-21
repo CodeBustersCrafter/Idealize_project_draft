@@ -238,6 +238,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         if(filtering != "price") {
                             dataList.reverse()
                         }
+
                         adapter.notifyDataSetChanged()
                     }
             }

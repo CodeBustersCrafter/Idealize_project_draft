@@ -191,12 +191,8 @@ class AddingAdsActivity : AppCompatActivity() {
                     modelName = "gemini-1.0-pro-vision-latest",
                     apiKey = BuildConfig.apikey,
                 )
-                var temp = binding.autoCompleteTextViewSellScreen.text.toString()
-                if(temp=="Other"){
-                    temp = "Legal Products in market"
-                }
-                val prompt =
-                    "Recognize this image. If it is strictly related to $temp category ,a clear image and mostly important fact is the image do not contain human bodies or animal bodies, say \"YES\" otherwise \"NO\". Don't give me descriptions."
+
+                val prompt = "Recognize this image. If it is strictly related to "+binding.autoCompleteTextViewSellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
                 val bitmap = Converter().getBitmap(it,this)
 
                 val inputContent = content {
@@ -211,7 +207,7 @@ class AddingAdsActivity : AppCompatActivity() {
                         binding.imageViewSellScreen.visibility = View.VISIBLE
                         uri=it
                     }else{
-                        Toast.makeText(this@AddingAdsActivity,"Select a valid and clear image (Image should not contain human or animal body parts)",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@AddingAdsActivity,"Select a valid and clear image",Toast.LENGTH_SHORT).show()
                         uri = null
                     }
 //                    progressDialog.cancel()
