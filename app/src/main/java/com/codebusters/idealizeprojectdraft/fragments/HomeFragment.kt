@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.codebusters.idealizeprojectdraft.CustomProgressDialog
 import com.codebusters.idealizeprojectdraft.ModelBuilder
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.RequestActivity
@@ -42,6 +43,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var searchEditText: TextInputEditText
     private lateinit var welcomeTextView: TextView
     private lateinit var cities: List<*>
+    private val progressDialog by lazy { context?.let { CustomProgressDialog(it) } }
 
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
     override fun onCreateView(
@@ -49,6 +51,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        progressDialog?.start("Loading...")
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         recyclerView = view.findViewById(R.id.Home_Recycler_view)
         requestsButton = view.findViewById(R.id.Home_request_action_btn)
@@ -240,6 +243,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         adapter.notifyDataSetChanged()
                     }
             }
+            progressDialog?.stop()
         }
     }
 }
