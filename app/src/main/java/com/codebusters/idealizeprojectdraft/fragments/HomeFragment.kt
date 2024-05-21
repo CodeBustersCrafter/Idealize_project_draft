@@ -223,11 +223,15 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         // Filter by date or price
                         if(filtering.isNotEmpty()){
                             if(filtering == "date"){
+                                dataList.sortBy { it.time}
                                 dataList.sortBy { it.date }
                                 dataList.reverse()
                             }else if(filtering == "price"){
+                                dataList.sortBy { it.time}
+                                dataList.reverse()
                                 dataList.sortBy { it.price.toLong() }
                             }else if(filtering == "rating"){
+                                dataList.sortBy { it.time}
                                 dataList.sortBy { it.rating }
                                 dataList.reverse()
                             }
