@@ -9,7 +9,8 @@
     android:backgroundTintMode="multiply"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:ignore="TextSizeCheck">
+    tools:ignore="TextSizeCheck"
+    android:theme="@style/GreenTheme">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:theme="@style/GreenTheme"
+    android:orientation="vertical"
     tools:context=".AddingAdsActivity">
 
     <TextView
@@ -152,20 +152,18 @@
         app:hintTextAppearance="@color/black"
         app:hintTextColor="@color/black"
         android:padding="10dp"
-        app:startIconDrawable="@drawable/category"
-        >
+        app:startIconDrawable="@drawable/category">
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_text_view_sell_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:text="@string/select_one"
+            android:textStyle="italic"
+            android:inputType="none"
             android:layout_weight="1"
             android:background="@color/white"
-            android:inputType="none"
-            android:text="@string/select_one"
-            android:textColor="@color/grey"
-            android:textStyle="italic"
-            tools:ignore="TextContrastCheck" />
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
     <Button
