@@ -35,6 +35,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var googleCredential : GoogleSignInClient
     private lateinit var binding : ActivityHomeBinding
     private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+
+    private val progressDialog by lazy { CustomProgressDialog(this) }
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +87,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun handleResults(task : Task<GoogleSignInAccount>){
         if(task.isSuccessful){
+            progressDialog.start("Loading...")
+
             val account : GoogleSignInAccount? = task.result
             if(account!=null){
                 //Success
@@ -111,6 +116,7 @@ class HomeActivity : AppCompatActivity() {
             for(document in documentSnapshot){
                 if(document.id==auth.uid.toString()){
                     isFound = true
+                    progressDialog.stop()
                     val intent = Intent(this,MainActivity::class.java)
                     intent.putExtra(myTags.intentType,myTags.userMode)
                     intent.putExtra(myTags.intentUID,auth.currentUser?.uid)
@@ -147,6 +153,7 @@ class HomeActivity : AppCompatActivity() {
                 result->
             if(result.isSuccessful){
                 Toast.makeText(this, "Account is successfully created!", Toast.LENGTH_SHORT).show()
+                progressDialog.stop()
                 val intent = Intent(this,MainActivity::class.java)
                 intent.putExtra(myTags.intentType,myTags.userMode)
                 intent.putExtra(myTags.intentUID,auth.currentUser?.uid)
