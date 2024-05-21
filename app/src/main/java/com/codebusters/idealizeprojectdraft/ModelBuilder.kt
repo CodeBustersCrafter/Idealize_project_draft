@@ -111,7 +111,10 @@ class ModelBuilder {
         map[myTags.requestSellerID] = request.sellerId
         map[myTags.requestBuyerID] = request.buyerId
         map[myTags.requestIsCancelled] = request.isCancelled
+        map[myTags.requestReview] = request.requestReview
         map[myTags.requestID] = request.requestID
+        map[myTags.requestReviewSubmit] = request.isReviewDone
+        map[myTags.requestReviewRate] = request.reviewRate
         return map
     }
     fun getRequestItem(request :DocumentSnapshot,document: DocumentSnapshot, user: DocumentSnapshot): ItemRequestModel {
@@ -136,7 +139,10 @@ class ModelBuilder {
             user.get(myTags.userName).toString(),
             request.get(myTags.requestBuyerID).toString(),
             request.get(myTags.requestID).toString(),
-            request.get(myTags.requestIsCancelled).toString()
+            request.get(myTags.requestIsCancelled).toString(),
+            request.get(myTags.requestReview).toString(),
+            request.get(myTags.requestReviewSubmit).toString(),
+            request.get(myTags.requestReviewRate).toString()
         )
     }
 }

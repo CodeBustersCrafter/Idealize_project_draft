@@ -44,6 +44,9 @@ class MyTags {
     var requestSellerID : String = "Seller_ID"
     var requestBuyerID : String = "Buyer_ID"
     var requestIsCancelled : String = "Is_Cancelled"
+    var requestReview : String = "Is_Request_Sent"
+    var requestReviewSubmit : String = "Is_Review_Done"
+    var requestReviewRate : String = "Rate"
 
     var adVisible: String = "1"
     var adNotVisible: String = "0"

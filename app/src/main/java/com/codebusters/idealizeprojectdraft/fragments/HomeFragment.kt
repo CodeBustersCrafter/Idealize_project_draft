@@ -24,7 +24,6 @@ import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -108,7 +107,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
-            var temp = autoCompleteTextView.text.toString()
+            val temp = autoCompleteTextView.text.toString()
             if(temp == ""){
                 selectedCity = ""
             }
@@ -165,7 +164,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             query = query.whereIn(myTags.adLocation, nearbyCities)
         }
         if (searchQuery.isNotEmpty()) {
-            query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
+            query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase()).orderBy(myTags.adTime)
         }
 
         query.get().addOnSuccessListener { result ->

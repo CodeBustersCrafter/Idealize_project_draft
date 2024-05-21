@@ -12,6 +12,7 @@
     <color name="grey">#808080</color>
     <color name="colorPrimary">#4CAF50</color> <!-- Green 500 -->
     <color name="colorPrimaryDark">#388E3C</color> <!-- Green 700 -->
-    <color name="colorAccent">#C8E6C9</color> <!-- Green 100 -->
+    <color name="colorAccent">#6F926F</color> <!-- Green 100 -->
     <color name="colorBackground">#FFFFFF</color> <!-- White -->
+    <color name="colorSecondary">#00FF00</color>
 </resources>
