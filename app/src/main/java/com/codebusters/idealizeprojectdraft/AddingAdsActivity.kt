@@ -257,7 +257,7 @@ class AddingAdsActivity : AppCompatActivity() {
         val currentDate = Date()
         val currentFormatted = formatter.format(currentDate)
 
-        val formatter2 = SimpleDateFormat("hh:mm")
+        val formatter2 = SimpleDateFormat("HH:mm")
         val currentTime = Date()
         val currentFormatted2 = formatter2.format(currentTime)
 
