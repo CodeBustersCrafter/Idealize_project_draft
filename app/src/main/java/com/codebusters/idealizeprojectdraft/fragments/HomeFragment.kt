@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
@@ -140,11 +142,38 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        val filterButton: MaterialButton = view.findViewById(R.id.settings_filter_button)
+        filterButton.setOnClickListener { view ->
+
+            val popupMenu = PopupMenu(requireActivity(), view)
+            popupMenu.inflate(R.menu.filter_menu) // Create a filter_menu.xml
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.filter_date -> {
+                        initData(type, view, searchEditText.text.toString(),selectedCity, "date")
+                        true
+                    }
+                    R.id.filter_price -> {
+                        initData(type, view, searchEditText.text.toString(),selectedCity, "price")
+                        true
+                    }
+                    else -> {
+                        initData(type, view, searchEditText.text.toString(),selectedCity)
+                        true
+                    }
+                }
+            }
+            popupMenu.show()
+        }
+
+
         return view
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "") {
+    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "") {
         dataList = ArrayList()
         val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
         recyclerView.adapter = adapter
@@ -166,6 +195,16 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         }
         if (searchQuery.isNotEmpty()) {
             query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
+        }
+
+        if(filtering.isNotEmpty()){
+            if(filtering == "date"){
+                query = query.orderBy(myTags.adDate,Query.Direction.DESCENDING)
+            }else if(filtering == "price"){
+                query = query.orderBy(myTags.adPrice,Query.Direction.ASCENDING)
+            }
+        }else{
+            query = query.orderBy(myTags.adTime,Query.Direction.DESCENDING)
         }
 
         query.get().addOnSuccessListener { result ->
