@@ -25,6 +25,7 @@
         app:itemIconTint="#4CAF50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:itemBackground="@color/white"
+        app:itemTextColor="@color/black"
         app:menu="@menu/bottom_navigation_menus"
         tools:ignore="VisualLintBottomNav" />
 

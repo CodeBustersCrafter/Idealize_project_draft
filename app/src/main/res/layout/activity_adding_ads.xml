@@ -123,9 +123,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/description"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/grey"
             android:textAlignment="viewStart"
-            android:textColor="@color/black"
+            android:foregroundTint="@color/appgreeen"
             android:textStyle="italic"
             android:minHeight="100dp"
             tools:ignore="TouchTargetSizeCheck" />
@@ -137,8 +137,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/category"
-        app:hintTextAppearance="@color/black"
-        app:hintTextColor="@color/black"
+        android:textColorHint="@color/appgreeen"
         android:padding="10dp"
         app:startIconDrawable="@drawable/category">
 
@@ -148,10 +147,11 @@
             android:layout_height="match_parent"
             android:text="@string/select_one"
             android:textStyle="italic"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:inputType="none"
             android:layout_weight="1"
             android:background="@color/white"
-            android:textColor="@color/black"
             />
 
     </com.google.android.material.textfield.TextInputLayout>
