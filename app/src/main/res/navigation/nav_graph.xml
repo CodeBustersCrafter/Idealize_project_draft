@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.codebusters.idealizeprojectdraft.fragments.ProfileFragment"
+        android:name="com.codebusters.idealizeprojectdraft.fragments.ProfileFragmentOld"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action

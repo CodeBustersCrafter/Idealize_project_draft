@@ -18,6 +18,15 @@
         android:theme="@style/Theme.IdealizeProjectDraft"
         tools:targetApi="31">
         <activity
+            android:name=".ProfileDetailUpdates"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.PROFILE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:noHistory="true">
