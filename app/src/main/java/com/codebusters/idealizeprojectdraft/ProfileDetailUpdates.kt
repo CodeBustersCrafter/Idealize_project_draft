@@ -26,6 +26,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
     private lateinit var imageUri : Uri
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    private val progressDialog by lazy { CustomProgressDialog(this) }
 
     private val requestImageCapture = 1
     private val requestImagePick = 2
@@ -55,6 +56,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
             val location = binding.editTextEditLocation.text.toString()
 
             if(name.isNotEmpty() and phone.isNotEmpty() and location.isNotEmpty()){
+                progressDialog.start("updating the profile...")
                 if(isImageUpdated){
                     val imgRef = FirebaseStorage.getInstance().getReference(myTags.users).child(auth.currentUser!!.uid).child("img")
                     val uploadTask=imgRef.putFile(dialogImageUri)
@@ -69,6 +71,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
 
                             firestore.collection(myTags.users).document(auth.currentUser!!.uid).update(map).addOnCompleteListener{
                                     task ->
+                                progressDialog.stop()
                                 if(task.isSuccessful){
                                     Toast.makeText(this,"Updated!", Toast.LENGTH_SHORT).show()
                                     val intent = Intent(this,MainActivity::class.java)
@@ -90,6 +93,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
 
                     firestore.collection(myTags.users).document(auth.currentUser!!.uid).update(map).addOnCompleteListener{
                             task ->
+                        progressDialog.stop()
                         if(task.isSuccessful){
                             Toast.makeText(this,"Updated!", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this,MainActivity::class.java)
