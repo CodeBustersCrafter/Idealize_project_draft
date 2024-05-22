@@ -49,9 +49,9 @@ fun GreenTheme(content: @Composable () -> Unit) {
             secondary = colorResource(id = R.color.colorAccent),
             onSecondary = Color.Black,
             background = colorResource(id = R.color.colorBackground),
-            onBackground = Color.Black,
+            onBackground = Color.White,
             surface = colorResource(id = R.color.colorBackground),
-            onSurface = Color.Black,
+            onSurface = Color.White,
         ),
         content = content
     )

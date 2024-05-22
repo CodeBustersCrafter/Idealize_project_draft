@@ -1,0 +1,32 @@
+com.airbnb.lottie
+attr lottieAnimationViewStyle
+attr lottie_asyncUpdates
+attr lottie_autoPlay
+attr lottie_cacheComposition
+attr lottie_clipTextToBoundingBox
+attr lottie_clipToCompositionBounds
+attr lottie_colorFilter
+attr lottie_defaultFontFileExtension
+attr lottie_enableMergePathsForKitKatAndAbove
+attr lottie_fallbackRes
+attr lottie_fileName
+attr lottie_ignoreDisabledSystemAnimations
+attr lottie_imageAssetsFolder
+attr lottie_loop
+attr lottie_progress
+attr lottie_rawRes
+attr lottie_renderMode
+attr lottie_repeatCount
+attr lottie_repeatMode
+attr lottie_speed
+attr lottie_url
+attr lottie_useCompositionFrameRate
+id automatic
+id disabled
+id enabled
+id hardware
+id lottie_layer_name
+id restart
+id reverse
+id software
+styleable LottieAnimationView lottie_asyncUpdates lottie_autoPlay lottie_cacheComposition lottie_clipTextToBoundingBox lottie_clipToCompositionBounds lottie_colorFilter lottie_defaultFontFileExtension lottie_enableMergePathsForKitKatAndAbove lottie_fallbackRes lottie_fileName lottie_ignoreDisabledSystemAnimations lottie_imageAssetsFolder lottie_loop lottie_progress lottie_rawRes lottie_renderMode lottie_repeatCount lottie_repeatMode lottie_speed lottie_url lottie_useCompositionFrameRate
