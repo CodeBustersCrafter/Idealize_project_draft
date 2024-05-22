@@ -88,7 +88,7 @@ class AddingAdsActivity : AppCompatActivity() {
                         Toast.makeText(this,"Please fill the required fields", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
-                    if(binding.ediTextPriceSellScreen.text.toString().toDouble()<0 || binding.ediTextQuantitySellScreen.text.toString().toDouble()<=0){
+                    if(binding.ediTextPriceSellScreen.text.toString()[0] == '-' || binding.ediTextQuantitySellScreen.text.toString()[0] == '-'){
                         Toast.makeText(this,"Please enter a valid price and quantity", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
