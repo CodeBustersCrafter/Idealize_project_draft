@@ -16,4 +16,9 @@
     <color name="colorBackground">#FFFFFF</color> <!-- White -->
     <color name="colorSecondary">#00FF00</color>
     <color name="appgreeen">#00DE04</color> <!-- White -->
+    <color name="primaryBlue">#6200EE</color>
+    <color name="primaryDarkBlue">#3700B3</color>
+    <color name="accentTeal">#03DAC5</color>
+    <color name="lightBackground">#F5F5F5</color>
+    <color name="lightgrey">#BDBDBD</color> <!-- White -->
 </resources>

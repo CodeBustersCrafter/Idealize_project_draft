@@ -3,12 +3,16 @@
 package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -124,17 +128,48 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
             if (!isFound){
-                val idealizeUser = IdealizeUser(account.email.toString(),
-                    auth.uid.toString(),
-                    "0",
-                    Uri.parse(account.photoUrl.toString()),
-                    "",
-                    "",
-                    "0.0",
-                    account.displayName.toString()
-                )
-                saveUser(idealizeUser)
+                val d = Dialog(this)
+                d.setContentView(R.layout.sign_in_form)
+                d.setCancelable(false)
+                val location = d.findViewById<EditText>(R.id.editText_edit_location)
+                val phone = d.findViewById<EditText>(R.id.editText_edit_mobile)
+                val button = d.findViewById<Button>(R.id.button_save)
+                button.setOnClickListener{
+                    val phoneNumber = phone.text.toString().trim()
+                    val city = location.text.toString().trim()
+                    if(validatePhoneNumber(phoneNumber) && validateCity(city)){
+                        val idealizeUser = IdealizeUser(
+                            account.email.toString(),
+                            auth.uid.toString(),
+                            "0",
+                            Uri.parse(account.photoUrl.toString()),
+                            city,
+                            phoneNumber,
+                            "0.0",
+                            account.displayName.toString()
+                        )
+                        saveUser(idealizeUser)
+                    }
+                }
+                d.create()
+                d.show()
             }
+        }
+    }
+
+    private fun validatePhoneNumber(phoneNumber: String): Boolean {
+        return if (phoneNumber.length == 10 && phoneNumber.startsWith("0")) {
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun validateCity(city: String): Boolean {
+        return if (city.isNotEmpty()) {
+            true
+        } else {
+            false
         }
     }
 

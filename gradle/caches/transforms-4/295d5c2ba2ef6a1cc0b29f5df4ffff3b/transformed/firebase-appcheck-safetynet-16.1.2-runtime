@@ -1,0 +1,5 @@
+com.google.firebase.appcheck.safetynet.BuildConfig
+com.google.firebase.appcheck.safetynet.FirebaseAppCheckSafetyNetRegistrar
+com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
+com.google.firebase.appcheck.safetynet.internal.ExchangeSafetyNetTokenRequest
+com.google.firebase.appcheck.safetynet.internal.SafetyNetAppCheckProvider
