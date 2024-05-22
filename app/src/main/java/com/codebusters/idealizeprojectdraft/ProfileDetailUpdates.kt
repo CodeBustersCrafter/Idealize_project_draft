@@ -30,7 +30,6 @@ class ProfileDetailUpdates : AppCompatActivity() {
     private lateinit var imageUri: Uri
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-
     private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickPhotoLauncher: ActivityResultLauncher<Intent>
 
