@@ -221,8 +221,9 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                             dataList.add(item)
                         }
 
-                        // Sort the list by time in ascending order
+                        // Sort by date and time
                         dataList.sortBy { it.time }
+                        dataList.sortBy { it.date }
 
                         if(filtering == "price") {
                             dataList.reverse()
@@ -237,6 +238,17 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
                         if(filtering != "price") {
                             dataList.reverse()
+                        }
+
+                        if(location.isNotEmpty()){
+                            var j = 0
+                            for(i in 0 until dataList.size){
+                                if(dataList[i].location == location){
+                                    dataList.add(j,dataList[i])
+                                    dataList.removeAt(i+1)
+                                    j++
+                                }
+                            }
                         }
 
                         adapter.notifyDataSetChanged()
