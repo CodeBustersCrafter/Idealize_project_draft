@@ -1,5 +1,6 @@
 package com.codebusters.idealizeprojectdraft.fragments
 
+import CategoryAdapter
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.codebusters.idealizeprojectdraft.CustomProgressDialog
@@ -30,11 +32,13 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.util.Locale
 
 class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var recyclerView : RecyclerView
     private lateinit var requestsButton : ImageView
     private lateinit var refreshButton : SwipeRefreshLayout
+    private lateinit var refreshButton2 : SwipeRefreshLayout
     private lateinit var dataList : ArrayList<ItemModel>
     private lateinit var firestore: FirebaseFirestore
     private val user = idealizeUser
@@ -43,6 +47,9 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var welcomeTextView: TextView
     private lateinit var cities: List<*>
     private val progressDialog by lazy { context?.let { CustomProgressDialog(it) } }
+    private lateinit var categoryRecyclerView: RecyclerView
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var categoryList: ArrayList<Category>
 
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
     override fun onCreateView(
@@ -53,13 +60,18 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         progressDialog?.start("Loading...")
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         recyclerView = view.findViewById(R.id.Home_Recycler_view)
+        categoryRecyclerView = view.findViewById(R.id.Category_Recycler_view)
         requestsButton = view.findViewById(R.id.Home_request_action_btn)
         refreshButton = view.findViewById(R.id.Home_swiper_button)
+        refreshButton2 = view.findViewById(R.id.Category_swiper_button)
+        refreshButton2.isEnabled = false
         searchEditText = view.findViewById(R.id.searchEditText)
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
         autoCompleteTextView.threshold = 0
         var selectedCity = ""
         var filterdBy = ""
+        var itemcategory = ""
+
 
         firestore= FirebaseFirestore.getInstance()
 
@@ -77,6 +89,25 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             "Welcome ${user.name}"
         }
         welcomeTextView.text = welcomeMessage
+
+
+        categoryList = arrayListOf(
+            Category("Fruits", R.drawable.cat1),
+            Category("Vegetables", R.drawable.cat2),
+            Category("Flowers", R.drawable.c3),
+            Category("Herbals", R.drawable.c4),
+            Category("Spices", R.drawable.c5),
+            Category("Plants", R.drawable.c6),
+            Category("Diary", R.drawable.cat7)
+        )
+
+        categoryAdapter = CategoryAdapter(categoryList) { category ->
+            itemcategory = category.name
+            initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
+        }
+
+        categoryRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        categoryRecyclerView.adapter = categoryAdapter
 
 
         // Fetch cities from Firebase
@@ -98,7 +129,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     // Optional: Set a listener for when a city is selected
                     autoCompleteTextView.setOnItemClickListener { parent, view, position, _ ->
                         selectedCity = parent.getItemAtPosition(position) as String
-                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory)
                     }
                 } else {
                     Toast.makeText(requireContext(), "No cities found", Toast.LENGTH_SHORT).show()
@@ -109,7 +140,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
 
         // Initialize data with an empty search query
-        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy)
+        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory)
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
@@ -117,7 +148,11 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             if(temp == ""){
                 selectedCity = ""
             }
-            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy) // Use search query when refreshing
+            itemcategory = ""
+            categoryAdapter.selectedPosition = RecyclerView.NO_POSITION
+            categoryAdapter.notifyDataSetChanged()
+
+            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory) // Use search query when refreshing
             refreshButton.isRefreshing = false
         }
 
@@ -138,7 +173,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // Update the data based on the search query
                 dataList.clear() // Clear previous data
-                initData(type, view, s.toString(),selectedCity,filterdBy)
+                initData(type, view, s.toString(),selectedCity,filterdBy,itemcategory)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -155,35 +190,36 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                 when (item.itemId) {
                     R.id.filter_date -> {
                         filterdBy = "date"
-                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy)
+                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
                         true
                     }
                     R.id.filter_price -> {
                         filterdBy = "price"
-                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy)
+                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
                         true
                     }
                     R.id.filter_rating -> {
                         filterdBy = "rating"
-                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy)
+                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
                         true
                     }
                     else -> {
-                        initData(type, view, searchEditText.text.toString(),selectedCity,"")
+                        initData(type, view, searchEditText.text.toString(),selectedCity,"",itemcategory)
                         true
                     }
                 }
             }
             popupMenu.show()
         }
-
-
         return view
     }
 
 
+    data class Category(val name: String, val imageResId: Int)
+
+
     @SuppressLint("NotifyDataSetChanged")
-    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "") {
+    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "",itemcategory: String = "") {
         dataList = ArrayList()
         val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
         recyclerView.adapter = adapter
@@ -193,6 +229,11 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
         // Create Firestore query with or without search query
         var query: Query = firestore.collection(myTags.ads)
+
+        if(itemcategory.isNotEmpty()){
+            query = query.whereEqualTo(myTags.adCategory, itemcategory)
+        }
+
         if (location.isNotEmpty()) {
             val index = cities.indexOf(location)
             val nearbyCities = mutableListOf<String>()

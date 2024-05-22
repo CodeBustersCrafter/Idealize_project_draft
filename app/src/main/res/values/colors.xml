@@ -15,5 +15,6 @@
     <color name="colorAccent">#6F926F</color> <!-- Green 100 -->
     <color name="colorBackground">#FFFFFF</color> <!-- White -->
     <color name="colorSecondary">#00FF00</color>
-    <color name="appgreeen">#00DE04</color> <!-- White -->
+    <color name="appgreeen">#00DE04</color>
+    <color name="lightgrey">#BDBDBD</color> <!-- White -->
 </resources>
