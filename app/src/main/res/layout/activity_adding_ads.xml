@@ -124,6 +124,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/description"
             android:textColorHint="@color/grey"
+            android:textColor="@color/black"
             android:textAlignment="viewStart"
             android:foregroundTint="@color/appgreeen"
             android:textStyle="italic"
