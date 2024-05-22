@@ -93,6 +93,8 @@
     <string name="select_one">select one</string>
     <string name="new_ad">New Ad</string>
     <string name="description">Description</string>
+    <string name="best_healthy_grocery"><![CDATA[Best & Healthy Grocery]]></string>
+    <string name="let_s_find_the">Let\'s Find the</string>
 
     <string-array name="categories">
         <item>Fruits</item>
