@@ -153,6 +153,7 @@
             android:layout_marginLeft="4dp"
             android:backgroundTint="@color/appgreeen"
             app:icon="@drawable/sorrt"
+            app:iconTint="@color/white"
             style="@style/Widget.MaterialComponents.Button.Icon"/>
 
     </LinearLayout>

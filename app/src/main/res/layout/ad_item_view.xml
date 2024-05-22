@@ -52,7 +52,7 @@
             android:id="@+id/text_view_item_rating"
             android:layout_width="42dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
+            android:layout_marginStart="20dp"
             android:padding="10dp"
             android:text="5.0"
             android:textColor="@color/black"
@@ -92,7 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/baseline_star_24"
-            android:padding="7dp"/>
+            android:padding="1dp"
+            android:layout_marginTop="8dp"/>
 
     </RelativeLayout>
     <LinearLayout
