@@ -4,7 +4,6 @@ package com.codebusters.idealizeprojectdraft
 
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
@@ -75,7 +74,7 @@ class AddingAdsActivity : AppCompatActivity() {
                 binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
 
                 binding.btnOpenCameraSellScreen.setOnClickListener {
-                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=""){
+                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=resources.getString(R.string.select_one)){
                         //open the camera
                         imageChooser()
                     }else{
@@ -193,7 +192,11 @@ class AddingAdsActivity : AppCompatActivity() {
                     apiKey = BuildConfig.apikey,
                 )
 
-                val prompt = "Recognize this image. If it is strictly related to "+binding.autoCompleteTextViewSellScreen.text.toString()+" category and a clear image, say \"YES\" otherwise \"NO\". Don't give me descriptions."
+                var temp = binding.autoCompleteTextViewSellScreen.text.toString()
+                if(temp=="select one"){
+                    temp = "legal products in market"
+                }
+                val prompt = "Recognize this image. If it is strictly related to $temp category ,a clear image and the most important fact is, the image should not contain any human bodies or animal bodies, say \"YES\" otherwise \"NO\". Don't give me descriptions."
                 val bitmap = Converter().getBitmap(it,this)
 
                 val inputContent = content {

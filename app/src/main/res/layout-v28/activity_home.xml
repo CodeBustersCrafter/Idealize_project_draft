@@ -45,8 +45,6 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:gravity="center"
-        android:layout_marginHorizontal="10dp"
-
         android:text="\nWadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak \n "
         android:textColor="@color/black"
         android:textSize="15dp" />
@@ -64,7 +62,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="0dp"
+        android:lastBaselineToBottomHeight="10dp"
         android:text="Guest Mode"
         tools:ignore="HardcodedText" />
 

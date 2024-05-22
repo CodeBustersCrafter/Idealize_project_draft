@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ProfileFragment"
+    tools:context=".fragments.ProfileFragmentOld"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:theme="@style/GreenTheme">
+    android:background="@color/white">
 
     <ImageView
         android:layout_width="200dp"

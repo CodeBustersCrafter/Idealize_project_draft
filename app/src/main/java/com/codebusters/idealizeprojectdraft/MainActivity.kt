@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setTheme(R.style.Theme_IdealizeProjectDraft)
         setContentView(R.layout.main_activity)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_explore -> replaceFragment(HomeFragment(idealizeUser))
                 R.id.menu_my_ads -> replaceFragment(SellFragment(idealizeUser))
                 R.id.menu_ai_help -> replaceFragment(GeminiFragment())
-                else -> replaceFragment(ProfileFragment(idealizeUser))
+                else -> replaceFragment(ProfileFragment())
             }
             true
         }
