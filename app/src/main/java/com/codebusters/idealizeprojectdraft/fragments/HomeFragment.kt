@@ -80,6 +80,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
 
         // Fetch cities from Firebase
+
         firestore.collection(myTags.appData).document(myTags.tags).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
@@ -94,6 +95,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     // Set up ArrayAdapter with the cities list
                     val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
                     autoCompleteTextView.setAdapter(adapter)
+
 
                     // Optional: Set a listener for when a city is selected
                     autoCompleteTextView.setOnItemClickListener { parent, view, position, _ ->
