@@ -1,7 +1,0 @@
-com.google.firebase.appcheck.debug.BuildConfig
-com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
-com.google.firebase.appcheck.debug.FirebaseAppCheckDebugRegistrar
-com.google.firebase.appcheck.debug.InternalDebugSecretProvider
-com.google.firebase.appcheck.debug.internal.DebugAppCheckProvider
-com.google.firebase.appcheck.debug.internal.ExchangeDebugTokenRequest
-com.google.firebase.appcheck.debug.internal.StorageHelper
