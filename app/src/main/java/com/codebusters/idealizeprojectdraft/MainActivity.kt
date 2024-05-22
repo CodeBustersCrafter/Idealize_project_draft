@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_explore -> replaceFragment(HomeFragment(idealizeUser))
                 R.id.menu_my_ads -> replaceFragment(SellFragment(idealizeUser))
                 R.id.menu_ai_help -> replaceFragment(GeminiFragment())
-                else -> replaceFragment(ProfileFragment(idealizeUser))
+                else -> replaceFragment(ProfileFragment())
             }
             true
         }

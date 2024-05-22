@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".UserProfileActivity">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,7 +21,7 @@
                 android:id="@+id/layout_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_700"
+                android:background="@color/colorPrimaryDark"
                 android:padding="16dp">
 
                 <androidx.cardview.widget.CardView
@@ -34,11 +33,13 @@
                     app:cardCornerRadius="80dp">
 
                     <ImageView
+                        android:elevation="50dp"
                         android:id="@+id/imageView_profile_dp"
                         android:layout_width="160dp"
                         android:layout_height="160dp"
                         android:background="@drawable/no_profile_pic"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        tools:ignore="ContentDescription" />
                 </androidx.cardview.widget.CardView>
 
                 <ProgressBar
@@ -89,6 +90,8 @@
                         android:id="@+id/textView_show_full_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey"
                         android:layout_toEndOf="@id/ic_profile"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
@@ -105,6 +108,7 @@
                 <RelativeLayout
                     android:id="@+id/RL_email"
                     android:layout_width="match_parent"
+                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp">
 
@@ -120,6 +124,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/ic_email"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
                         android:hint="Email" />
@@ -143,13 +149,16 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_mobile" />
+                        android:src="@drawable/ic_mobile"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/textView_show_mobile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/ic_mobile"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
                         android:hint="Loading" />
@@ -173,13 +182,16 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_location" />
+                        android:src="@drawable/ic_location"
+                        tools:ignore="ContentDescription" />
 
                     <TextView
                         android:id="@+id/textView_show_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/ic_location"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
                         android:hint="Loading" />
@@ -193,10 +205,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/purple_700"
+                android:backgroundTint="@color/appgreeen"
                 android:text="Edit Details"
                 android:textColor="@android:color/white"
-                tools:ignore="SpeakableTextPresentCheck,VisualLintButtonSize" />
+                tools:ignore="HardcodedText,SpeakableTextPresentCheck,VisualLintButtonSize" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
