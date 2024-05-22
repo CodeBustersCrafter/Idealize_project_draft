@@ -78,17 +78,17 @@
         android:padding="10dp"
         tools:ignore="Autofill,HardcodedText,TouchTargetSizeCheck,VisualLintTextFieldSize,TextContrastCheck" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editText_edit_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:autofillHints="Location"
         android:hint="Location"
-        android:inputType="textPostalAddress"
         android:textColor="@color/black"
+        android:textSize="18sp"
         android:padding="10dp"
-        tools:ignore="Autofill,HardcodedText,TouchTargetSizeCheck,TextContrastCheck,VisualLintTextFieldSize" />
-
+        tools:ignore="TouchTargetSizeCheck" />
     <Button
         android:id="@+id/button_save"
         android:layout_width="match_parent"

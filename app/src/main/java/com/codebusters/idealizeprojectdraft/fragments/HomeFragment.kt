@@ -96,9 +96,11 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             Category("Vegetables", R.drawable.cat2),
             Category("Flowers", R.drawable.c3),
             Category("Herbals", R.drawable.c4),
-            Category("Spices", R.drawable.c5),
+            Category("Spices", R.drawable.cat5),
             Category("Plants", R.drawable.c6),
-            Category("Diary", R.drawable.cat7)
+            Category("Diary", R.drawable.cat7),
+            Category("Hand Crafts", R.drawable.cat8),
+            Category("Other", R.drawable.cat9)
         )
 
         categoryAdapter = CategoryAdapter(categoryList) { category ->
