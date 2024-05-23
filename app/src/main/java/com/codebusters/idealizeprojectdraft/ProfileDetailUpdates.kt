@@ -17,6 +17,7 @@ import com.codebusters.idealizeprojectdraft.databinding.ActivityProfileDetailUpd
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
@@ -74,20 +75,21 @@ class ProfileDetailUpdates : AppCompatActivity() {
             }
         }
 
-        fetchCities(autoCompleteTextView)
+        fetchCities { firebaseArray ->
+            val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, firebaseArray)
+            autoCompleteTextView.setAdapter(adapter)
+            autoCompleteTextView.setOnClickListener {
+                autoCompleteTextView.showDropDown()
+            }
+        }
     }
 
-    private fun fetchCities(autoCompleteTextView: AutoCompleteTextView) {
+    private fun fetchCities(callback: (List<String>) -> Unit) {
         firestore.collection(myTags.appData).document(myTags.tags).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val firebaseArray = document.get(myTags.cities) as? List<String>
-                    val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, firebaseArray ?: emptyList())
-                    autoCompleteTextView.setAdapter(adapter)
-
-                    autoCompleteTextView.setOnClickListener {
-                        autoCompleteTextView.showDropDown()
-                    }
+                    val firebaseArray = document.get(myTags.cities) as? List<String> ?: emptyList()
+                    callback(firebaseArray)
                 }
             }
             .addOnFailureListener { e ->
@@ -103,35 +105,67 @@ class ProfileDetailUpdates : AppCompatActivity() {
 
         if (name.isNotEmpty() && phone.isNotEmpty() && location.isNotEmpty()) {
             if (isPhoneNumberValid(phone)) {
-                if (isImageUpdated && dialogImageUri != null) {
-                    val imgRef = FirebaseStorage.getInstance().getReference(myTags.users).child(auth.currentUser!!.uid).child("img")
-                    val uploadTask = imgRef.putFile(dialogImageUri!!)
-                    uploadTask.addOnSuccessListener {
-                        imgRef.downloadUrl.addOnSuccessListener { uri ->
-                            dialogImageUri = uri
+                fetchCities { firebaseArray ->
+                    if (validateCity(location, firebaseArray)) {
+                        if (isImageUpdated && dialogImageUri != null) {
+                            val imgRef = FirebaseStorage.getInstance().getReference(myTags.users).child(auth.currentUser!!.uid).child("img")
+                            val uploadTask = imgRef.putFile(dialogImageUri!!)
+                            uploadTask.addOnSuccessListener {
+                                imgRef.downloadUrl.addOnSuccessListener { uri ->
+                                    dialogImageUri = uri
+                                    map[myTags.userName] = name
+                                    map[myTags.userPhone] = phone
+                                    map[myTags.userLocation] = location
+                                    map[myTags.userPhoto] = dialogImageUri.toString()
+                                    updateAdsLocation(location) { success ->
+                                        if (success) {
+                                            updateFirestore(map)
+                                        } else {
+                                            Toast.makeText(this, "Failed to update ads location", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }.addOnFailureListener {
+                                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
                             map[myTags.userName] = name
                             map[myTags.userPhone] = phone
                             map[myTags.userLocation] = location
-                            map[myTags.userPhoto] = dialogImageUri.toString()
-
-                            updateFirestore(map)
+                            map[myTags.userPhoto] = imageUri.toString()
+                            updateAdsLocation(location) { success ->
+                                if (success) {
+                                    updateFirestore(map)
+                                } else {
+                                    Toast.makeText(this, "Failed to update ads location", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
-                    }.addOnFailureListener {
-                        Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Invalid city. Please select a city from the list.", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    map[myTags.userName] = name
-                    map[myTags.userPhone] = phone
-                    map[myTags.userLocation] = location
-                    map[myTags.userPhoto] = imageUri.toString()
-
-                    updateFirestore(map)
                 }
             } else {
                 Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show()
             }
         } else {
             Toast.makeText(this, "Add valid information", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateAdsLocation(location: String, callback: (Boolean) -> Unit) {
+        val query: Query = firestore.collection(myTags.ads).whereEqualTo(myTags.adUser, auth.currentUser!!.uid)
+        query.get().addOnSuccessListener { result ->
+            for (document in result.documents) {
+                firestore.collection(myTags.ads).document(document.id).update(myTags.adLocation, location)
+                    .addOnFailureListener {
+                        callback(false)
+                        return@addOnFailureListener
+                    }
+            }
+            callback(true)
+        }.addOnFailureListener {
+            callback(false)
         }
     }
 
@@ -182,6 +216,14 @@ class ProfileDetailUpdates : AppCompatActivity() {
     private fun isPhoneNumberValid(phone: String): Boolean {
         val regex = "^0[0-9]{9}$"
         return phone.matches(regex.toRegex())
+    }
+
+    private fun validateCity(city: String, firebaseArray: List<String>): Boolean {
+        val isValid = firebaseArray.contains(city)
+        if (!isValid) {
+            Toast.makeText(this, "Invalid city. Please select a city from the list.", Toast.LENGTH_SHORT).show()
+        }
+        return isValid
     }
 
     override fun onBackPressed() {
