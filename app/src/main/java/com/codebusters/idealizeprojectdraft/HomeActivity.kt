@@ -10,6 +10,8 @@ import android.content.pm.ActivityInfo
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -131,24 +133,34 @@ class HomeActivity : AppCompatActivity() {
                 val d = Dialog(this)
                 d.setContentView(R.layout.sign_in_form)
                 d.setCancelable(false)
-                val location = d.findViewById<EditText>(R.id.editText_edit_location)
+                val location = d.findViewById<AutoCompleteTextView>(R.id.editText_edit_location)
                 val phone = d.findViewById<EditText>(R.id.editText_edit_mobile)
                 val button = d.findViewById<Button>(R.id.button_save)
                 button.setOnClickListener{
                     val phoneNumber = phone.text.toString().trim()
                     val city = location.text.toString().trim()
-                    if(validatePhoneNumber(phoneNumber) && validateCity(city)){
-                        val idealizeUser = IdealizeUser(
-                            account.email.toString(),
-                            auth.uid.toString(),
-                            "0",
-                            Uri.parse(account.photoUrl.toString()),
-                            city,
-                            phoneNumber,
-                            "0.0",
-                            account.displayName.toString()
-                        )
-                        saveUser(idealizeUser)
+                    fetchCities { firebaseArray ->
+                        if (validatePhoneNumber(phoneNumber) && validateCity(city, firebaseArray)) {
+                            val idealizeUser = IdealizeUser(
+                                account.email.toString(),
+                                auth.uid.toString(),
+                                "0",
+                                Uri.parse(account.photoUrl.toString()),
+                                city,
+                                phoneNumber,
+                                "0.0",
+                                account.displayName.toString()
+                            )
+                            saveUser(idealizeUser)
+                        }
+                    }
+                }
+                fetchCities { firebaseArray ->
+                    val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, firebaseArray)
+                    location.setAdapter(adapter)
+                    location.threshold = 0
+                    location.setOnClickListener {
+                        location.showDropDown()
                     }
                 }
                 d.create()
@@ -158,19 +170,19 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun validatePhoneNumber(phoneNumber: String): Boolean {
-        return if (phoneNumber.length == 10 && phoneNumber.startsWith("0")) {
-            true
-        } else {
-            false
+        val isValid = phoneNumber.length == 10 && phoneNumber.startsWith("0")
+        if (!isValid) {
+            Toast.makeText(this, "Invalid phone number. It should be 10 digits and start with 0.", Toast.LENGTH_SHORT).show()
         }
+        return isValid
     }
 
-    private fun validateCity(city: String): Boolean {
-        return if (city.isNotEmpty()) {
-            true
-        } else {
-            false
+    private fun validateCity(city: String, firebaseArray: List<String>): Boolean {
+        val isValid = firebaseArray.contains(city)
+        if (!isValid) {
+            Toast.makeText(this, "Invalid city. Please select a city from the list.", Toast.LENGTH_SHORT).show()
         }
+        return isValid
     }
 
     private fun saveUser(idealizeUser : IdealizeUser){
@@ -198,6 +210,24 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+
+
+    private fun fetchCities(callback: (List<String>) -> Unit) {
+        firestore.collection(myTags.appData).document(myTags.tags).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val firebaseArray = document.get(myTags.cities) as? List<String> ?: emptyList()
+                    callback(firebaseArray)
+                } else {
+                    callback(emptyList())
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to load cities: ${e.message}", Toast.LENGTH_SHORT).show()
+                callback(emptyList())
+            }
+    }
+
     @Suppress("DEPRECATION")
     override fun onStart() {
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
