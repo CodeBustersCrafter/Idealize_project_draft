@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationBar : BottomNavigationView
     private lateinit var frameLayout : FrameLayout
 
+    private var nonChangingFragment : Boolean = false
+
     private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
 
     @SuppressLint("UseCompatLoadingForDrawables", "MissingInflatedId", "UseSupportActionBar",
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         ActivityCompat.requestPermissions(
             this@MainActivity,
-            arrayOf<String>(
+            arrayOf(
                 android.Manifest.permission.CALL_PHONE
             ), PackageManager.PERMISSION_GRANTED
         )
@@ -87,10 +89,15 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_explore -> replaceFragment(HomeFragment(idealizeUser))
-                R.id.menu_my_ads -> replaceFragment(SellFragment(idealizeUser))
-                R.id.menu_ai_help -> replaceFragment(GeminiFragment())
-                else -> replaceFragment(ProfileFragment())
+                R.id.menu_explore -> {replaceFragment(HomeFragment(idealizeUser))
+                nonChangingFragment =false}
+                R.id.menu_my_ads -> {replaceFragment(SellFragment(idealizeUser))
+                    nonChangingFragment =false}
+                R.id.menu_ai_help -> {replaceFragment(GeminiFragment(idealizeUser.name))
+                                        nonChangingFragment = true
+                                        }
+                else ->{ replaceFragment(ProfileFragment())
+                    nonChangingFragment =false}
             }
             true
         }
@@ -101,14 +108,19 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.main_frame_layout,fragment)
         fragmentTransaction.commit()
     }
-
     @SuppressLint("MissingSuperCall")
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
-        auth.signOut()
-        val intent = Intent(this,HomeActivity::class.java)
-        startActivity(intent)
-        finish()
+        if(nonChangingFragment){
+            replaceFragment(GeminiFragment(idealizeUser.name))
+            nonChangingFragment = false
+        }else{
+            auth.signOut()
+            val intent = Intent(this,HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     @Suppress("DEPRECATION")

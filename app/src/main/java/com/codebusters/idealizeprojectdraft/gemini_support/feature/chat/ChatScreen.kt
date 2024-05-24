@@ -1,21 +1,6 @@
-/*
- * Copyright 2023 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.codebusters.idealizeprojectdraft.gemini_support.feature.chat
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -41,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,18 +37,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.gemini_support.GenerativeViewModelFactory
 import kotlinx.coroutines.launch
 
+@Preview
 @Composable
 internal fun ChatRoute(
-    chatViewModel: ChatViewModel = viewModel(factory = GenerativeViewModelFactory)
+    user : String = "#Code_Busters",chatViewModel: ChatViewModel = viewModel(factory = GenerativeViewModelFactory)
 ) {
+    chatViewModel.setUSer(user)
     val chatUiState by chatViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -79,6 +75,7 @@ internal fun ChatRoute(
                 }
             )
         }
+        , containerColor = colorResource(id = R.color.white)
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -105,7 +102,6 @@ fun ChatList(
         }
     }
 }
-
 @Composable
 fun ChatBubbleItem(
     chatMessage: ChatMessage
@@ -114,9 +110,21 @@ fun ChatBubbleItem(
             chatMessage.participant == Participant.ERROR
 
     val backgroundColor = when (chatMessage.participant) {
-        Participant.MODEL -> MaterialTheme.colorScheme.primaryContainer
-        Participant.USER -> MaterialTheme.colorScheme.tertiaryContainer
+        Participant.MODEL -> colorResource(id = R.color.colorSecondary)
+        Participant.USER -> colorResource(id = R.color.accentTeal)
         Participant.ERROR -> MaterialTheme.colorScheme.errorContainer
+    }
+
+    val fontFamily = when (chatMessage.participant){
+        Participant.MODEL -> FontFamily.Monospace
+        Participant.USER -> FontFamily.Default
+        Participant.ERROR -> FontFamily.Monospace
+    }
+
+    @Suppress("DEPRECATION") val fontStyle = when (chatMessage.participant){
+        Participant.MODEL -> FontStyle(0)
+        Participant.USER -> FontStyle(1)
+        Participant.ERROR -> FontStyle(1)
     }
 
     val bubbleShape = if (isModelMessage) {
@@ -138,9 +146,13 @@ fun ChatBubbleItem(
             .fillMaxWidth()
     ) {
         Text(
-            text = chatMessage.participant.name,
+            text = chatMessage.participantName,
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp),
+            color = colorResource(id = R.color.black),
+            fontFamily = FontFamily.Cursive,
+            fontSize = TextUnit(15f,TextUnitType.Sp),
+            fontWeight = FontWeight(600)
         )
         Row {
             if (chatMessage.isPending) {
@@ -148,6 +160,7 @@ fun ChatBubbleItem(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(all = 8.dp)
+                    ,color = colorResource(id = R.color.colorSecondary)
                 )
             }
             BoxWithConstraints {
@@ -158,7 +171,12 @@ fun ChatBubbleItem(
                 ) {
                     Text(
                         text = chatMessage.text,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(16.dp),
+                        color = colorResource(id = R.color.black),
+                        fontStyle = fontStyle,
+                        fontFamily = fontFamily,
+                        fontWeight = FontWeight(600),
+                        fontSize = TextUnit(18f, TextUnitType.Sp)
                     )
                 }
             }
@@ -175,7 +193,12 @@ fun MessageInput(
 
     ElevatedCard(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        colors = CardColors(containerColor = colorResource(id = R.color.lightgreyv2),
+            contentColor = colorResource(id = R.color.colorPrimary),
+            disabledContentColor = colorResource(id = R.color.grey),
+            disabledContainerColor = colorResource(id = R.color.colorSecondary))
+
     ) {
         Row(
             modifier = Modifier
@@ -184,15 +207,26 @@ fun MessageInput(
         ) {
             OutlinedTextField(
                 value = userMessage,
-                label = { Text(stringResource(R.string.chat_label)) },
+                label = { Text(stringResource(R.string.chat_label)
+                    , fontSize = TextUnit(18f,TextUnitType.Sp)
+                    ,color = colorResource(id = R.color.colorPrimaryDark)) },
                 onValueChange = { userMessage = it },
                 keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
+                    capitalization = KeyboardCapitalization.Sentences
                 ),
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .fillMaxWidth()
                     .weight(0.85f)
+                    .background(color = colorResource(id = R.color.lightgreyv2)),
+                colors = TextFieldDefaults.colors().copy(focusedTextColor = colorResource(id = R.color.black),
+                    disabledContainerColor = colorResource(id = R.color.lightgreyv2),
+                    focusedContainerColor = colorResource(id = R.color.lightgreyv2),
+                    unfocusedLabelColor = colorResource(id = R.color.black),
+                    unfocusedContainerColor = colorResource(id = R.color.lightgreyv2),
+                    cursorColor = colorResource(id = R.color.colorPrimary),
+                    focusedIndicatorColor = colorResource(id = R.color.colorPrimary),
+                    unfocusedIndicatorColor = colorResource(id = R.color.colorPrimaryDark))
             )
             IconButton(
                 onClick = {

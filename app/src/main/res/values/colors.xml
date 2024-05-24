@@ -21,4 +21,5 @@
     <color name="accentTeal">#03DAC5</color>
     <color name="lightBackground">#F5F5F5</color>
     <color name="lightgrey">#BDBDBD</color> <!-- White -->
+    <color name="lightgreyv2">#D5FFD6</color>
 </resources>

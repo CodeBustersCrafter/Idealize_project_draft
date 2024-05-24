@@ -18,7 +18,7 @@ import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.ChatRout
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal.PhotoReasoningRoute
 import com.codebusters.idealizeprojectdraft.ui.theme.GenerativeAISample
 
-class GeminiFragment : Fragment() {
+class GeminiFragment(private val user : String ="Guest") : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,10 +44,10 @@ class GeminiFragment : Fragment() {
                                 SummarizeRoute()
                             }*/
                             composable("photo_reasoning") {
-                                PhotoReasoningRoute()
+                                PhotoReasoningRoute(user)
                             }
                             composable("chat") {
-                                ChatRoute()
+                                ChatRoute(user)
                             }
                         }
                     }

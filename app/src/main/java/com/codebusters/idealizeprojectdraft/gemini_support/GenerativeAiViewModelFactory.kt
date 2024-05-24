@@ -20,13 +20,11 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.codebusters.idealizeprojectdraft.BuildConfig
-import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.generationConfig
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.ChatViewModel
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal.PhotoReasoningViewModel
-import com.codebusters.idealizeprojectdraft.gemini_support.feature.text.SummarizeViewModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.generationConfig
 
 val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
     @SuppressLint("SecretInSource")
@@ -42,17 +40,6 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
 
         return with(modelClass) {
             when {
-                isAssignableFrom(SummarizeViewModel::class.java) -> {
-                    // Initialize a GenerativeModel with the `gemini-pro` AI model
-                    // for text generation
-                    val generativeModel = GenerativeModel(
-                        modelName = "gemini-1.0-pro",
-                        apiKey = myTags.apikey,
-                        generationConfig = config
-                    )
-                    SummarizeViewModel(generativeModel)
-                }
-
                 isAssignableFrom(PhotoReasoningViewModel::class.java) -> {
                     // Initialize a GenerativeModel with the `gemini-pro-vision` AI model
                     // for multimodal text generation

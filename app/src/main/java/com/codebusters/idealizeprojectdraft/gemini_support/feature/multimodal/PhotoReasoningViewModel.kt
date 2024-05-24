@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class PhotoReasoningViewModel(
-    private val generativeModel: GenerativeModel
+    private val generativeModel: GenerativeModel,private var user: String? = "Guest"
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<PhotoReasoningUiState> =
@@ -63,5 +63,8 @@ class PhotoReasoningViewModel(
                 _uiState.value = PhotoReasoningUiState.Error(e.localizedMessage ?: "")
             }
         }
+    }
+    fun setUser(u : String){
+        user=u
     }
 }

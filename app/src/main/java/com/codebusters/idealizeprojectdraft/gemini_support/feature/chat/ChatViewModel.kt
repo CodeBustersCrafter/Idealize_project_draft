@@ -27,11 +27,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    generativeModel: GenerativeModel
+    generativeModel: GenerativeModel,private var user : String = "#Code_Busters"
 ) : ViewModel() {
     private val chat = generativeModel.startChat(
         history = listOf(
-            content(role = "user") { text("Hello, I have 2 dogs in my house.") },
             content(role = "model") { text("Great to meet you. What would you like to know?") }
         )
     )
@@ -41,7 +40,8 @@ class ChatViewModel(
             // Map the initial messages
             ChatMessage(
                 text = content.parts.first().asTextOrNull() ?: "",
-                participant = if (content.role == "user") Participant.USER else Participant.MODEL,
+                participant = if (content.role == user) Participant.USER else Participant.MODEL,
+                participantName = user,
                 isPending = false
             )
         }))
@@ -55,6 +55,7 @@ class ChatViewModel(
             ChatMessage(
                 text = userMessage,
                 participant = Participant.USER,
+                participantName = user,
                 isPending = true
             )
         )
@@ -70,6 +71,7 @@ class ChatViewModel(
                         ChatMessage(
                             text = modelResponse,
                             participant = Participant.MODEL,
+                            participantName = "#Code_Busters",
                             isPending = false
                         )
                     )
@@ -79,10 +81,14 @@ class ChatViewModel(
                 _uiState.value.addMessage(
                     ChatMessage(
                         text = e.localizedMessage!!,
+                        participantName = user,
                         participant = Participant.ERROR
                     )
                 )
             }
         }
+    }
+    fun setUSer(u : String){
+        user = u
     }
 }
