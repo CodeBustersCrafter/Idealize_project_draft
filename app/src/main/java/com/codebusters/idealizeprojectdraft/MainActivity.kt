@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.codebusters.idealizeprojectdraft.fragments.HomeFragment
@@ -50,6 +52,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()
+
+        ActivityCompat.requestPermissions(
+            this@MainActivity,
+            arrayOf<String>(
+                android.Manifest.permission.CALL_PHONE
+            ), PackageManager.PERMISSION_GRANTED
+        )
 
         bottomNavigationBar = findViewById(R.id.bottom_app_bar)
         frameLayout = findViewById(R.id.main_frame_layout)

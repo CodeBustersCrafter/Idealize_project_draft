@@ -73,6 +73,13 @@
             android:text="Quantity: 1"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/call_dialogue"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/baseline_call_24"
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
     </LinearLayout>
 

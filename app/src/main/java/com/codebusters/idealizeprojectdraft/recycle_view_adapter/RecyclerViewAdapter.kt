@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.codebusters.idealizeprojectdraft.ModelBuilder
+import com.codebusters.idealizeprojectdraft.NormalCalls
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
@@ -67,6 +68,20 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
             val image = d.findViewById<ImageView>(R.id.dialogue_image)
             val close = d.findViewById<ImageView>(R.id.dialogue_btn_close)
             val category = d.findViewById<TextView>(R.id.dialog_category)
+            val call = d.findViewById<ImageView>(R.id.call_dialogue)
+
+            call.setOnClickListener{
+                try {
+                    val normalCalls = NormalCalls(currentItem.phone)
+                    context.startActivity(normalCalls.call())
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        "Number is not assigned yet to profile"+e.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
 
             name.text = currentItem.name
             price.text = "Price : LKR . " + currentItem.price
