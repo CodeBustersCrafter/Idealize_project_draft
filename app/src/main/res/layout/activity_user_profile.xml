@@ -17,6 +17,14 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:background="@drawable/baseline_leaderboard_24"
+                android:contentDescription="Leaderboard"
+                tools:ignore="HardcodedText"
+                android:id="@+id/imageview_leaderboard"/>
             <RelativeLayout
                 android:id="@+id/layout_head"
                 android:layout_width="match_parent"

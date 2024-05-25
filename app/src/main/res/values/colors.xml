@@ -22,4 +22,7 @@
     <color name="lightBackground">#F5F5F5</color>
     <color name="lightgrey">#BDBDBD</color> <!-- White -->
     <color name="lightgreyv2">#D5FFD6</color>
+    <color name="gold">#FFBF00</color>
+    <color name="silver">#B8B6B6</color>
+    <color name="bronze">#AA4401</color>
 </resources>

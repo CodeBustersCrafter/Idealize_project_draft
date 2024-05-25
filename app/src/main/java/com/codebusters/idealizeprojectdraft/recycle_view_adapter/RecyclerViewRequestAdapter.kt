@@ -146,6 +146,9 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                             "5.0"
                         }
                         currentItem.reviewRate =rate
+
+                        //Calculate new rate
+
                         submitRate(rate, currentItem,holder)
                         dialog.cancel()
                     }

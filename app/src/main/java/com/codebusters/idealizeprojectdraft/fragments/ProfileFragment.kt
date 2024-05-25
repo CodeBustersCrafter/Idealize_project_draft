@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.codebusters.idealizeprojectdraft.LeaderboardActivity
 import com.codebusters.idealizeprojectdraft.ProfileDetailUpdates
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.MyTags
@@ -26,6 +27,7 @@ class ProfileFragment : Fragment() {
     private lateinit var textViewShowMobile: TextView
     private lateinit var textViewShowLocation: TextView
     private lateinit var buttonEditDetails: Button
+    private lateinit var imageViewLeaderboard : ImageView
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -53,11 +55,17 @@ class ProfileFragment : Fragment() {
         textViewShowMobile = view.findViewById(R.id.textView_show_mobile)
         textViewShowLocation = view.findViewById(R.id.textView_show_location)
         buttonEditDetails = view.findViewById(R.id.button_edit_details)
+        imageViewLeaderboard = view.findViewById(R.id.imageview_leaderboard)
 
         loadUserData()
 
         buttonEditDetails.setOnClickListener {
             showEditDetailsDialog()
+        }
+
+        imageViewLeaderboard.setOnClickListener{
+            val i = Intent(context,LeaderboardActivity::class.java)
+            startActivity(i)
         }
 
         return view
