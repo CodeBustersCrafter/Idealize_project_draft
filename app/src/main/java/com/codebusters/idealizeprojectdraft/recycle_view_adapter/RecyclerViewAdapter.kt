@@ -372,17 +372,17 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                     firestore.collection(myTags.users).document(keyList[0]).collection(myTags.userMyRequests).document(key).delete().addOnCompleteListener {
                     }
                 }
+                firestore.collection(myTags.adRequest).document(adId).delete().addOnCompleteListener {
+                        result ->
+                    if(result.isSuccessful){
+                        Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
-        firestore.collection(myTags.adRequest).document(adId).delete().addOnCompleteListener {
-            result ->
-            if(result.isSuccessful){
-                Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
     private fun decodeKey(key : String):List<String>{
         return key.split("_")
