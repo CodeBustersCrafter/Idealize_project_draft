@@ -13,6 +13,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.codebusters.idealizeprojectdraft.CustomProgressDialog
 import com.codebusters.idealizeprojectdraft.NormalCalls
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.ItemRequestModel
@@ -26,6 +27,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
     private var myTags = MyTags()
     private val context = con
     private lateinit var firestore : FirebaseFirestore
+    private val progressDialog by lazy { CustomProgressDialog(context) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleViewItemViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.ad_item_view,parent,false)
@@ -214,6 +216,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun submitRate(rate : Float, request: ItemRequestModel,holder : RecycleViewItemViewHolder){
+        progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
         val map=HashMap<String,Any>()
@@ -254,11 +257,13 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }else{
                 Toast.makeText(context,"Not Updated! from Seller Side. Try Again", Toast.LENGTH_SHORT).show()
             }
+            progressDialog.stop()
         }
 
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun sendRequestToReview(request: ItemRequestModel, holder : RecycleViewItemViewHolder){
+        progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(myTags.users).document(request.idealizeUserID).collection(myTags.userRequests).document(request.requestID).update(myTags.requestReview,"1").addOnCompleteListener {
@@ -281,11 +286,13 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }else{
                 Toast.makeText(context,"Not Updated! from Other Side. Try Again", Toast.LENGTH_SHORT).show()
             }
+            progressDialog.stop()
         }
 
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteRequestOnlyFromMySide(request : ItemRequestModel, context : Context){
+        progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(myTags.users).document(request.requestBuyerID).collection(myTags.userMyRequests).document(request.requestID).delete().addOnCompleteListener {
@@ -297,10 +304,12 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }else{
                 Toast.makeText(context,"Not Deleted! from My Side. Try Again", Toast.LENGTH_SHORT).show()
             }
+            progressDialog.stop()
         }
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteRequest(request : ItemRequestModel, context : Context){
+        progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(myTags.users).document(request.idealizeUserID).collection(myTags.userRequests).document(request.requestID).delete().addOnCompleteListener {
@@ -323,10 +332,12 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }else{
                 Toast.makeText(context,"Not Updated! from buyer. Try Again", Toast.LENGTH_SHORT).show()
             }
+            progressDialog.stop()
         }
     }
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun deleteRequestFromHistory(request: ItemRequestModel, context: Context){
+        progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(myTags.users).document(request.idealizeUserID).collection(myTags.userRequests).document(request.requestID).delete().addOnCompleteListener {
@@ -338,6 +349,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }else{
                 Toast.makeText(context,"Not Deleted! from user. Try Again", Toast.LENGTH_SHORT).show()
             }
+            progressDialog.stop()
         }
     }
 }

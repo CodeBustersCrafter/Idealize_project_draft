@@ -33,6 +33,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickPhotoLauncher: ActivityResultLauncher<Intent>
+    private val progressDialog by lazy { CustomProgressDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +99,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
     }
 
     private fun saveProfile() {
+        progressDialog.start("Updating Profile...")
         val map = HashMap<String, Any>()
         val name = binding.editTextEditFullName.text.toString()
         val phone = binding.editTextEditMobile.text.toString()
@@ -173,6 +175,7 @@ class ProfileDetailUpdates : AppCompatActivity() {
         firestore.collection(myTags.users).document(auth.currentUser!!.uid).update(map).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
+                progressDialog.stop()
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra(myTags.intentType, myTags.userMode)
                 intent.putExtra(myTags.intentUID, auth.currentUser?.uid)

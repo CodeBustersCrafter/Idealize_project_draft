@@ -84,7 +84,7 @@ class AddingAdsActivity : AppCompatActivity() {
 
 
                 binding.btnSaveSellScreen.setOnClickListener {
-                    if(uri==null || binding.ediTextNameSellScreen.text.toString().trim()=="" || binding.ediTextPriceSellScreen.text.toString().trim()==""){
+                    if(uri==null || binding.ediTextNameSellScreen.text.toString().trim()=="" || binding.ediTextPriceSellScreen.text.toString().trim()=="" || binding.ediTextQuantitySellScreen.text.toString().trim()=="" || binding.autoCompleteTextViewSellScreen.text.toString().trim()==""){
                         Toast.makeText(this,"Please fill the required fields", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
