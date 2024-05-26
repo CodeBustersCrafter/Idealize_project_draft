@@ -18,6 +18,7 @@ import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.models.RequestModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.squareup.picasso.Picasso
 
 
@@ -278,7 +279,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
 
         val map = HashMap<String,Any>()
         map[requestModel.adId] = requestModel.adId
-        firestore.collection(myTags.adRequest).document(requestModel.adId).update(map).addOnSuccessListener {
+        firestore.collection(myTags.adRequest).document(requestModel.adId).set(map, SetOptions.merge()).addOnSuccessListener {
             //request is added to the queue
         }
     }
