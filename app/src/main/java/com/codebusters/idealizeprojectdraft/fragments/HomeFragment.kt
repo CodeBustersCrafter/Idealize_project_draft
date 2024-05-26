@@ -84,7 +84,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         // Set welcome message
         welcomeTextView = view.findViewById(R.id.welcomeTextView)
         val welcomeMessage = if (type == myTags.guestMode) {
-            "Huttige kolla account ekak hdpn"
+            "Welcone Guest User"
         } else {
             "Welcome ${user.name}"
         }
