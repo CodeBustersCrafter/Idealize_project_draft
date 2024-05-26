@@ -161,6 +161,7 @@ class LeaderboardActivity : AppCompatActivity() {
             intent.putExtra(myTags.intentType,myTags.userMode)
             intent.putExtra(myTags.intentUID,FirebaseAuth.getInstance().currentUser?.uid)
             startActivity(intent)
+            finish()
         }else{
         super.onBackPressed()
         }
