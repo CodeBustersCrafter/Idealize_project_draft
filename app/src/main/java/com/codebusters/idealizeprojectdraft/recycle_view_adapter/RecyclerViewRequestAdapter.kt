@@ -235,7 +235,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                 Toast.makeText(context,"Not Updated! from Other Side. Try Again", Toast.LENGTH_SHORT).show()
             }
         }
-        val newRate = ((rate+(request.rating.toFloat()*request.rateCount))/(request.rateCount+1)).toString()
+        val newRate = ((rate+(request.rating.toFloat()*(request.rateCount-1)))/(request.rateCount)).toString()
         Toast.makeText(context,newRate,Toast.LENGTH_SHORT).show()
         val map2=HashMap<String,Any>()
         map2[myTags.userRating] = newRate
