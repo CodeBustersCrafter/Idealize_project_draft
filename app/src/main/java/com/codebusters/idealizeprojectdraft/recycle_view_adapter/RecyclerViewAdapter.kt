@@ -278,7 +278,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         }
 
         val map = HashMap<String,Any>()
-        map[requestModel.adId] = requestModel.adId
+        map[requestModel.requestID] = requestModel.requestID
         firestore.collection(myTags.adRequest).document(requestModel.adId).set(map, SetOptions.merge()).addOnSuccessListener {
             //request is added to the queue
         }
