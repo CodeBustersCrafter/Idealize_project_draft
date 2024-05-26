@@ -6,6 +6,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -39,81 +40,128 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onBindViewHolder(holder: RecycleViewItemViewHolder, position: Int) {
         val currentItem = itemList[position]
+        createUI(holder,currentItem)
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun dialogueCreate(currentItem: ItemModel){
+        val d = Dialog(context)
+        d.setContentView(R.layout.item_dialogue)
+        d.setCancelable(false)
+
+        val name = d.findViewById<TextView>(R.id.dialogue_name)
+        val price = d.findViewById<TextView>(R.id.dialogue_price)
+        val quantity = d.findViewById<TextView>(R.id.dialogue_quantity)
+        val location = d.findViewById<TextView>(R.id.dialogue_location)
+        val phone = d.findViewById<TextView>(R.id.dialogue_phone)
+        val seller = d.findViewById<TextView>(R.id.dialogue_seller)
+        val dateTime = d.findViewById<TextView>(R.id.dialogue_date_time)
+        val description = d.findViewById<TextView>(R.id.dialogue_description)
+        val userRate = d.findViewById<TextView>(R.id.dialogue_user_rate)
+        val adRate = d.findViewById<TextView>(R.id.dialogue_ad_rate)
+        val image = d.findViewById<ImageView>(R.id.dialogue_image)
+        val close = d.findViewById<ImageView>(R.id.dialogue_btn_close)
+        val category = d.findViewById<TextView>(R.id.dialog_category)
+        val call = d.findViewById<ImageView>(R.id.call_dialogue)
+        val itemBooking: ImageButton = d.findViewById(R.id.btn_booking_item_view)
+
+        when (type){
+            myTags.userMode->{
+                itemBooking.visibility = View.GONE
+            }
+            myTags.userViewMode -> {//
+                itemBooking.visibility = View.VISIBLE
+                itemBooking.setOnClickListener{
+                    val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0","0","0","0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
+                    sendRequests(request)
+
+                    //increment the request count
+                    currentItem.requestCount++
+                    currentItem.rateCount++
+                    incrementRequests(currentItem)
+                }
+            }
+            else -> {
+                itemBooking.visibility = View.VISIBLE
+                itemBooking.setOnClickListener{
+                    Toast.makeText(context,"You need to sign in to your account before requesting",Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+
+        call.setOnClickListener{
+            try {
+                val normalCalls = NormalCalls(currentItem.phone)
+                context.startActivity(normalCalls.call())
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    "Number is not assigned yet to profile"+e.message.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        name.text = currentItem.name
+        price.text = "Price : LKR . " + currentItem.price
+        quantity.text = "Quantity : " + currentItem.quantity
+        location.text = currentItem.location
+        phone.text = currentItem.phone
+        seller.text = currentItem.username
+        dateTime.text = currentItem.date + "__" + currentItem.time
+        description.text = currentItem.description
+        category.text = currentItem.category
+        Picasso.get().load(currentItem.photo).into(image)
+        adRate.text = currentItem.rate
+        userRate.text = currentItem.rating
+
+        close.setOnClickListener {
+            d.cancel()
+        }
+
+        d.create()
+        d.show()
+    }
+
+    private fun addNewTag(holder: RecycleViewItemViewHolder,currentItem : ItemModel){
+        if(currentItem.viewCount==0){
+            holder.itemRating.visibility = View.GONE
+            holder.itemNew.visibility = View.VISIBLE
+        }else{
+            holder.itemRating.visibility = View.VISIBLE
+            holder.itemNew.visibility = View.GONE
+            holder.itemRating.text = currentItem.rate
+        }
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun createUI(holder: RecycleViewItemViewHolder, currentItem : ItemModel){
         holder.itemName.text = currentItem.name
-        holder.itemRating.text = currentItem.rating
         holder.itemPrice.text = currentItem.price
         Picasso.get().load(currentItem.photo).into(holder.itemImage)
 
         holder.itemDelete.visibility = View.GONE
         holder.itemVisible.visibility = View.GONE
-        holder.itemBooking.visibility = View.VISIBLE
         holder.itemReteReview.visibility = View.GONE
         holder.itemRequestRate.visibility = View.GONE
+        holder.itemRating.visibility = View.GONE
+        holder.itemNew.visibility = View.GONE
 
+        addNewTag(holder,currentItem)
 
-        holder.itemLl.setOnClickListener {
-            val d = Dialog(context)
-            d.setContentView(R.layout.item_dialogue)
-            d.setCancelable(false)
-
-            val name = d.findViewById<TextView>(R.id.dialogue_name)
-            val price = d.findViewById<TextView>(R.id.dialogue_price)
-            val quantity = d.findViewById<TextView>(R.id.dialogue_quantity)
-            val location = d.findViewById<TextView>(R.id.dialogue_location)
-            val phone = d.findViewById<TextView>(R.id.dialogue_phone)
-            val seller = d.findViewById<TextView>(R.id.dialogue_seller)
-            val dateTime = d.findViewById<TextView>(R.id.dialogue_date_time)
-            val description = d.findViewById<TextView>(R.id.dialogue_description)
-            val image = d.findViewById<ImageView>(R.id.dialogue_image)
-            val close = d.findViewById<ImageView>(R.id.dialogue_btn_close)
-            val category = d.findViewById<TextView>(R.id.dialog_category)
-            val call = d.findViewById<ImageView>(R.id.call_dialogue)
-
-            call.setOnClickListener{
-                try {
-                    val normalCalls = NormalCalls(currentItem.phone)
-                    context.startActivity(normalCalls.call())
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        context,
-                        "Number is not assigned yet to profile"+e.message.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            name.text = currentItem.name
-            price.text = "Price : LKR . " + currentItem.price
-            quantity.text = "Quantity : " + currentItem.quantity
-            location.text = currentItem.location
-            phone.text = currentItem.phone
-            seller.text = currentItem.username
-            dateTime.text = currentItem.date + "__" + currentItem.time
-            description.text = currentItem.description
-            category.text = currentItem.category
-            Picasso.get().load(currentItem.photo).into(image)
-            close.setOnClickListener {
-                d.cancel()
-            }
-            d.create()
-            d.show()
-
-        }
-
-        when (type) {
-            myTags.userMode -> {
-
+        when(type){
+            myTags.userMode->{
                 holder.itemDelete.visibility = View.VISIBLE
                 holder.itemVisible.visibility = View.VISIBLE
-                holder.itemBooking.visibility = View.GONE
 
+                //initialize visibility
                 if(currentItem.visibility==myTags.adVisible){
                     Picasso.get().load(R.drawable.baseline_visibility_24).into(holder.itemVisible)
                 }else{
                     Picasso.get().load(R.drawable.baseline_visibility_off_24).into(holder.itemVisible)
                 }
 
+                //delete
                 holder.itemDelete.setOnClickListener {
                     //deleteItem()
                     deleteAd(currentItem.idealizeUserID, currentItem.adId, context)
@@ -121,6 +169,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                     this.notifyDataSetChanged()
                 }
 
+                //visibility
                 holder.itemVisible.setOnClickListener {
                     //set visibility
                     //flipVisibility()
@@ -144,22 +193,66 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                         this.notifyDataSetChanged()
                     }
                 }
-            }
-            myTags.userViewMode -> {//
-                holder.itemBooking.setOnClickListener{
-                    val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0","0","0","0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
-                    sendRequests(request)
+                holder.itemLl.setOnClickListener {
+                    dialogueCreate(currentItem)
                 }
+
             }
-            else -> {
-                holder.itemBooking.setOnClickListener{
-                    Toast.makeText(context,"You need to sign in to your account before requesting",Toast.LENGTH_SHORT).show()
+            myTags.userViewMode->{
+                holder.itemLl.setOnClickListener {
+
+                    //increment the view count
+                    currentItem.viewCount++
+                    incrementViews(currentItem)
+
+                    dialogueCreate(currentItem)
+
                 }
+            }else->{
+            holder.itemLl.setOnClickListener {
+
+                //increment the view count
+                currentItem.viewCount++
+                incrementViews(currentItem)
+
+                dialogueCreate(currentItem)
+
+            }
+            }
+        }
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun incrementViews(item : ItemModel){
+        item.rate=(item.requestCount.toFloat()/item.viewCount.toFloat()).toString()
+        val map = HashMap<String,Any>()
+        map[myTags.adViewCount] = item.viewCount
+        map[myTags.adRate] = item.rate
+        firestore.collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
+            firestore.collection(myTags.users).document(myTags.adUser).collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
+                //View Count updated
+                this.notifyDataSetChanged()
             }
         }
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
+    private fun incrementRequests(item : ItemModel){
+        item.rate=(item.requestCount.toFloat()/item.viewCount.toFloat()).toString()
+        val map = HashMap<String,Any>()
+        map[myTags.adRequestCount] = item.requestCount
+        map[myTags.adRate] = item.rate
+        firestore.collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
+            firestore.collection(myTags.users).document(myTags.adUser).collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
+                //request Count updated
+            }
+        }
+        firestore.collection(myTags.users).document(myTags.adUser).update(myTags.userRateCount,item.rateCount).addOnSuccessListener {
+            //request Count updated
+            this.notifyDataSetChanged()
+        }
+    }
     private fun sendRequests(requestModel: RequestModel){
         firestore = FirebaseFirestore.getInstance()
         firestore.collection(myTags.users)

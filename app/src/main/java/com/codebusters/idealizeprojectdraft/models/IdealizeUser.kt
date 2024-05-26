@@ -10,5 +10,6 @@ data class IdealizeUser(
     var location : String = "",
     var phone : String = "",
     var rating : String = "0.0",
-    var name : String = ""
+    var name : String = "",
+    var rateCount : Int = 1
     )

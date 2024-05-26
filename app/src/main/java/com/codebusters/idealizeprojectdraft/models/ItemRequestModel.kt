@@ -26,5 +26,9 @@ data class ItemRequestModel(
     var requestIsCancelled : String = "0",
     var requestReview : String = "0",
     var isReviewDone : String = "0",// not yet
-    var reviewRate : String = "0"
+    var reviewRate : String = "0",
+    var viewCount : Int = 0,
+    var requestCount : Int =0,
+    var rate : String = "0.0",
+    var rateCount : Int = 1
 )

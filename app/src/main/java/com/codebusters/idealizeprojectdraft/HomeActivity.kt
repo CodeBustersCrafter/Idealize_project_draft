@@ -149,7 +149,8 @@ class HomeActivity : AppCompatActivity() {
                                 city,
                                 phoneNumber,
                                 "0.0",
-                                account.displayName.toString()
+                                account.displayName.toString(),
+                                0
                             )
                             saveUser(idealizeUser)
                         }
@@ -195,6 +196,7 @@ class HomeActivity : AppCompatActivity() {
         map[myTags.userPhone] = idealizeUser.phone
         map[myTags.userPhoto] = idealizeUser.profile
         map[myTags.userUID] = idealizeUser.uid
+        map[myTags.userRateCount] = idealizeUser.rateCount
 
         firestore.collection(myTags.users).document(auth.uid.toString()).set(map).addOnCompleteListener{
                 result->

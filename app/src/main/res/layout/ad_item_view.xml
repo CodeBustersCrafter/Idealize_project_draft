@@ -20,16 +20,44 @@
         android:id="@+id/ll_item_view"
         android:background="@drawable/ad_item_background"
         tools:ignore="UselessParent">
-        <ImageView
-            android:id="@+id/image_view_item_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:contentDescription="Ad image"
-            android:cropToPadding="true"
-            android:adjustViewBounds="true"
-            android:outlineAmbientShadowColor="@color/black"
-            tools:ignore="HardcodedText,ImageContrastCheck"
-            tools:targetApi="p" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/image_view_new"
+                android:layout_width="85dp"
+                android:layout_height="62dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/baseline_fiber_new_24"
+                android:contentDescription="Ad image"
+                android:cropToPadding="true"
+                android:elevation="50dp"
+                android:outlineAmbientShadowColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="HardcodedText,ImageContrastCheck"
+                tools:targetApi="p" />
+
+            <ImageView
+                android:id="@+id/image_view_item_view"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Ad image"
+                android:cropToPadding="true"
+                android:outlineAmbientShadowColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText,ImageContrastCheck"
+                tools:targetApi="p" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:paddingHorizontal="5dp"
@@ -91,9 +119,10 @@
             android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/baseline_star_24"
+            android:layout_marginTop="8dp"
             android:padding="1dp"
-            android:layout_marginTop="8dp"/>
+            app:srcCompat="@drawable/baseline_star_24"
+            tools:ignore="ContentDescription,ImageContrastCheck" />
 
     </RelativeLayout>
     <LinearLayout
@@ -112,27 +141,20 @@
             tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
 
         <ImageButton
-            android:id="@+id/btn_booking_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:background="@drawable/baseline_book_online_24"
-            tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
-
-        <ImageButton
             android:id="@+id/btn_delete_item_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:background="@drawable/baseline_delete_24"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
         <ImageButton
             android:id="@+id/btn_rate_request_item_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:background="@drawable/baseline_request_page_24"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
         <ImageButton
             android:id="@+id/btn_rate_accept_item_view"
             android:layout_width="wrap_content"

@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="500dp"
+    android:layout_height="550dp"
     android:layout_gravity="center"
-    android:background="@drawable/nature"
-    android:backgroundTint="#65FFFFFF"
+    android:background="@drawable/camp"
+    android:backgroundTint="#30FFFFFF"
     android:backgroundTintMode="multiply"
     android:orientation="vertical"
     android:padding="16dp"
@@ -49,6 +49,23 @@
         android:textSize="18sp"
         android:textStyle="bold"
         tools:ignore="HardcodedText" />
+    <TextView
+        android:id="@+id/dialogue_ad_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:text="Ad Rate"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText" />
+    <ImageButton
+        android:id="@+id/btn_booking_item_view"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:background="@drawable/baseline_book_online_24"
+        tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,13 +90,14 @@
             android:text="Quantity: 1"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
+
         <ImageView
+            android:id="@+id/call_dialogue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/call_dialogue"
             android:layout_marginLeft="10dp"
             android:background="@drawable/baseline_call_24"
-            tools:ignore="ContentDescription,RtlHardcoded" />
+            tools:ignore="ContentDescription,RtlHardcoded,ImageContrastCheck" />
 
     </LinearLayout>
 
@@ -111,52 +129,14 @@
         android:textSize="16sp"
         tools:ignore="HardcodedText" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/dialogue_user_rate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/dialogue_rating1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/baseline_star_rate1_24"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
-
-        <ImageView
-            android:id="@+id/dialogue_rating2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/baseline_star_rate_24"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
-
-        <ImageView
-            android:id="@+id/dialogue_rating3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/baseline_star_rate_24"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
-
-        <ImageView
-            android:id="@+id/dialogue_rating4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/baseline_star_rate_24"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
-
-        <ImageView
-            android:id="@+id/dialogue_rating5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/baseline_star_rate_24"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
-
-    </LinearLayout>
+        android:layout_marginTop="8dp"
+        android:text="Seller rate"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/dialogue_date_time"

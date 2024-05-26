@@ -23,6 +23,7 @@ class MyTags {
     var userUID: String = "User ID"
     var userRequests = "Requests"
     var userMyRequests = "My Requests"
+    var userRateCount = "Rate Count"
 
     //Ads
     var ads: String = "Ads"
@@ -38,6 +39,9 @@ class MyTags {
     var adQuantity: String = "Quantity"
     var keywords: String = "Keywords" // New Keywords list
     var adLocation: String = "Location"
+    var adViewCount : String = "Views"
+    var adRequestCount : String = "Requests"
+    var adRate : String = "Rating"
 
     var requestAdID : String = "AD_ID"
     var requestID : String = "Request_ID"

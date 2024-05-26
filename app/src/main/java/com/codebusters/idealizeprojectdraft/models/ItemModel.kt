@@ -21,5 +21,9 @@ data class ItemModel(
     var location : String = "",
     var phone : String = "",
     var rating : String = "0.0",
-    var username : String = ""
+    var username : String = "",
+    var viewCount : Int = 0,
+    var requestCount : Int =0,
+    var rate : String = "0.0",
+    var rateCount : Int = 1
 )

@@ -13,5 +13,8 @@ data class Item(
     var category : String = "",
     var visibility : String = "0",
     var adId : String = "",
-    var idealizeUserID : String = ""
+    var idealizeUserID : String = "",
+    var viewCount : Int = 0,
+    var requestCount : Int =0,
+    var rate : String = "0.0"
 )

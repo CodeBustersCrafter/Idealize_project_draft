@@ -32,7 +32,11 @@ class ModelBuilder {
             user.get(myTags.userLocation).toString(),
             user.get(myTags.userPhone).toString(),
             user.get(myTags.userRating).toString(),
-            user.get(myTags.userName).toString()
+            user.get(myTags.userName).toString(),
+            document.get(myTags.adViewCount).toString().trim().toInt(),
+            document.get(myTags.adRequestCount).toString().trim().toInt(),
+            document.get(myTags.adRate).toString(),
+            user.get(myTags.userRateCount).toString().trim().toInt()
         )
     }
     fun getAdItem(document: DocumentSnapshot, user: IdealizeUser): ItemModel {
@@ -55,7 +59,11 @@ class ModelBuilder {
             user.location,
             user.phone,
             user.rating,
-            user.name
+            user.name,
+            document.get(myTags.adViewCount).toString().trim().toInt(),
+            document.get(myTags.adRequestCount).toString().trim().toInt(),
+            document.get(myTags.adRate).toString(),
+            user.rateCount
         )
     }
 
@@ -68,7 +76,8 @@ class ModelBuilder {
             documentSnapshot.get(myTags.userLocation).toString(),
             documentSnapshot.get(myTags.userPhone).toString(),
             documentSnapshot.get(myTags.userRating).toString(),
-            documentSnapshot.get(myTags.userName).toString()
+            documentSnapshot.get(myTags.userName).toString(),
+            documentSnapshot.get(myTags.userRateCount).toString().trim().toInt()
         )
         return idealizeUser
     }
@@ -86,6 +95,9 @@ class ModelBuilder {
         map[myTags.adVisibility] = ad.visibility
         map[myTags.adID] = ad.adId
         map[myTags.adUser] = ad.idealizeUserID
+        map[myTags.adViewCount] = ad.viewCount
+        map[myTags.adRequestCount] = ad.requestCount
+        map[myTags.adRate] = ad.rate
         return map
     }
 
@@ -102,6 +114,9 @@ class ModelBuilder {
         map[myTags.adVisibility] = ad.visibility
         map[myTags.adID] = ad.adId
         map[myTags.adUser] = ad.idealizeUserID
+        map[myTags.adViewCount] = ad.viewCount
+        map[myTags.adRequestCount] = ad.requestCount
+        map[myTags.adRate] = ad.rate
         return map
     }
 
@@ -142,7 +157,11 @@ class ModelBuilder {
             request.get(myTags.requestIsCancelled).toString(),
             request.get(myTags.requestReview).toString(),
             request.get(myTags.requestReviewSubmit).toString(),
-            request.get(myTags.requestReviewRate).toString()
+            request.get(myTags.requestReviewRate).toString(),
+            document.get(myTags.adViewCount).toString().trim().toInt(),
+            document.get(myTags.adRequestCount).toString().trim().toInt(),
+            document.get(myTags.adRate).toString(),
+            user.get(myTags.userRateCount).toString().trim().toInt()
         )
     }
 }
