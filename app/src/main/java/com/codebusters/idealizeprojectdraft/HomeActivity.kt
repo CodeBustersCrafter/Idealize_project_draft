@@ -122,11 +122,12 @@ class HomeActivity : AppCompatActivity() {
             for(document in documentSnapshot){
                 if(document.id==auth.uid.toString()){
                     isFound = true
-                    progressDialog.stop()
+
                     val intent = Intent(this,MainActivity::class.java)
                     intent.putExtra(myTags.intentType,myTags.userMode)
                     intent.putExtra(myTags.intentUID,auth.currentUser?.uid)
                     startActivity(intent)
+                    progressDialog.stop()
                 }
             }
             if (!isFound){

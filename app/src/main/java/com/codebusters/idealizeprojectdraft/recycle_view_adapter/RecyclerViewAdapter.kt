@@ -275,6 +275,12 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 Toast.makeText(context,"Not Showed! Try Again", Toast.LENGTH_SHORT).show()
             }
         }
+
+        val map = HashMap<String,Any>()
+        map[requestModel.adId] = requestModel.adId
+        firestore.collection(myTags.adRequest).document(requestModel.adId).update(map).addOnSuccessListener {
+            //request is added to the queue
+        }
     }
     private fun makeAdVisible(item: ItemModel, context : Context){
         firestore = FirebaseFirestore.getInstance()
@@ -350,5 +356,34 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 Toast.makeText(context,"Not Deleted! from advertisements. Try Again", Toast.LENGTH_SHORT).show()
             }
         }
+        deleteAllRequests(uid,adId,context)
+    }
+    private fun deleteAllRequests(uid : String,adId : String ,context : Context){
+        firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection(myTags.adRequest).document(adId).get().addOnSuccessListener {
+            val map = it.data
+            if(map!=null){
+                for(key in map.keys){
+                    val keyList = decodeKey(key)
+                    firestore.collection(myTags.users).document(keyList[1]).collection(myTags.userRequests).document(key).delete().addOnCompleteListener {
+                    }
+                    firestore.collection(myTags.users).document(keyList[0]).collection(myTags.userMyRequests).document(key).delete().addOnCompleteListener {
+                    }
+                }
+            }
+        }
+
+        firestore.collection(myTags.adRequest).document(adId).delete().addOnCompleteListener {
+            result ->
+            if(result.isSuccessful){
+                Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun decodeKey(key : String):List<String>{
+        return key.split("_")
     }
 }
