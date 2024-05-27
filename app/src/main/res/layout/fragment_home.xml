@@ -17,9 +17,15 @@
             android:id="@+id/welcomeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:shadowColor="#A9A9A9"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="1.5"
+            android:text="Welcome to the App!" />
+
 
     </LinearLayout>
 
@@ -123,7 +129,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="horizontal">
@@ -131,33 +137,36 @@
         <ImageView
             android:id="@+id/search_icon"
             android:layout_width="40dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/searchicon"
             android:layout_marginRight="4dp"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/searchBarCardView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            app:cardCornerRadius="2dp">
+            app:cardCornerRadius="1dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:background="@android:color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="50dp"
                     android:hint="@string/search_hint"
                     android:inputType="text"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:background="@android:color/white"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:gravity="top|start"
+                    android:paddingTop="8dp" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -165,12 +174,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/settings_filter_button"
             android:layout_width="40dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="5dp"
+            android:layout_height="35dp"
             android:layout_marginLeft="4dp"
-            android:backgroundTint="@color/appgreeen"
+            android:layout_marginTop="2.5dp"
+            android:background="@color/appgreeen"
+            app:backgroundTint="@color/appgreeen"
             app:icon="@drawable/sorrt"
             app:iconTint="@color/white"
+            app:iconSize="20dp"
             style="@style/Widget.MaterialComponents.Button.Icon"/>
 
     </LinearLayout>
