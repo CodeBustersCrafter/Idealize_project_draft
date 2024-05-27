@@ -90,15 +90,39 @@
             android:textSize="18sp"
             android:textStyle="bold"
             tools:ignore="TouchTargetSizeCheck" />
-
-        <ImageView
-            android:id="@+id/Home_request_action_btn"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginRight="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/baseline_circle_notifications_50" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp">
+
+            <ImageView
+                android:id="@+id/Home_request_action_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/baseline_circle_notifications_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.808"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.848"
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <ImageView
+                android:id="@+id/new_tag_home_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/baseline_fiber_new_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/Home_request_action_btn"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

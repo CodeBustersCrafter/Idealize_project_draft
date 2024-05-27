@@ -9,6 +9,7 @@ class MyTags {
 
     var intentType: String = "Type"
     var intentUID: String = "ID"
+    var intentFragmentRequest: String = "Fragment"
 
     //Database
     //Users
@@ -66,4 +67,6 @@ class MyTags {
 
     val adRequest : String = "Ad Request"
     val adRequestID : String = "Request ID"
+
+    val areNewRequests : String = "New Requests"
 }

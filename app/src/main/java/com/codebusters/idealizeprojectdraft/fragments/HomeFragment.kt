@@ -32,13 +32,13 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import java.util.Locale
 
 class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var recyclerView : RecyclerView
     private lateinit var requestsButton : ImageView
     private lateinit var refreshButton : SwipeRefreshLayout
     private lateinit var refreshButton2 : SwipeRefreshLayout
+    private lateinit var newNotificationTag : ImageView
     private lateinit var dataList : ArrayList<ItemModel>
     private lateinit var firestore: FirebaseFirestore
     private val user = idealizeUser
@@ -64,6 +64,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         requestsButton = view.findViewById(R.id.Home_request_action_btn)
         refreshButton = view.findViewById(R.id.Home_swiper_button)
         refreshButton2 = view.findViewById(R.id.Category_swiper_button)
+        newNotificationTag = view.findViewById(R.id.new_tag_home_screen)
         refreshButton2.isEnabled = false
         searchEditText = view.findViewById(R.id.searchEditText)
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
@@ -215,6 +216,9 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
             popupMenu.show()
         }
+
+        newRequestsChecking()
+
         return view
     }
 
@@ -222,6 +226,19 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     data class Category(val name: String, val imageResId: Int)
 
 
+    private fun newRequestsChecking(){
+        firestore.collection(myTags.users).document(user.uid).get().addOnSuccessListener {
+            if(it.get(myTags.areNewRequests)!=null){
+                if(it.get(myTags.areNewRequests).toString().trim().toInt()==1){
+                    newNotificationTag.visibility = View.VISIBLE
+                }else{
+                    newNotificationTag.visibility = View.GONE
+                }
+            }else{
+                newNotificationTag.visibility = View.GONE
+            }
+        }
+    }
     @SuppressLint("NotifyDataSetChanged")
     private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "",itemcategory: String = "") {
         dataList = ArrayList()
@@ -302,4 +319,5 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             progressDialog?.stop()
         }
     }
+
 }

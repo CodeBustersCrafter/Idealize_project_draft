@@ -282,6 +282,10 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         firestore.collection(myTags.adRequest).document(requestModel.adId).set(map, SetOptions.merge()).addOnSuccessListener {
             //request is added to the queue
         }
+
+        val map2 = HashMap<String,Any>()
+        map2[myTags.areNewRequests] = 1
+        firestore.collection(myTags.users).document(requestModel.sellerId).set(map2, SetOptions.merge())
     }
     private fun makeAdVisible(item: ItemModel, context : Context){
         firestore = FirebaseFirestore.getInstance()
@@ -366,18 +370,20 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
             val map = it.data
             if(map!=null){
                 for(key in map.keys){
-                    val keyList = decodeKey(key)
+                    val keyList = decodeKey(key.toString())
                     firestore.collection(myTags.users).document(keyList[1]).collection(myTags.userRequests).document(key).delete().addOnCompleteListener {
                     }
                     firestore.collection(myTags.users).document(keyList[0]).collection(myTags.userMyRequests).document(key).delete().addOnCompleteListener {
-                    }
-                }
-                firestore.collection(myTags.adRequest).document(adId).delete().addOnCompleteListener {
-                        result ->
-                    if(result.isSuccessful){
-                        Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+                        if(map.keys.last()==key){
+                            firestore.collection(myTags.adRequest).document(adId).delete().addOnCompleteListener {
+                                    result ->
+                                if(result.isSuccessful){
+                                    Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     }
                 }
             }

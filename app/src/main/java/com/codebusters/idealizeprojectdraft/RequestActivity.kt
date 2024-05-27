@@ -1,6 +1,8 @@
 package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
@@ -27,8 +29,16 @@ class RequestActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         uid=intent.getStringExtra(myTags.intentUID).toString()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
+        if(intent.getStringExtra(myTags.intentFragmentRequest).toString()=="1"){
+            replaceFragment(RequestsFragment(uid))
+        }else{
+            replaceFragment(MyRequestsFragment(uid))
+        }
 
-        replaceFragment(MyRequestsFragment(uid))
+
+
 
         binding.bottomAppBarRequestScreen.setOnItemSelectedListener {
             when(it.itemId){
@@ -60,6 +70,15 @@ class RequestActivity : AppCompatActivity() {
     override fun onStart() {
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(networkChangeListener, intentFilter)
+        uid=intent.getStringExtra(myTags.intentUID).toString()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
+        if(intent.getStringExtra(myTags.intentFragmentRequest).toString()=="1"){
+            replaceFragment(RequestsFragment(uid))
+            binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_requests
+        }else{
+            replaceFragment(MyRequestsFragment(uid))
+        }
         super.onStart()
     }
 

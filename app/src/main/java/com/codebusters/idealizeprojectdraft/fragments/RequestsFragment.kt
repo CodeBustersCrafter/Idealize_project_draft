@@ -42,14 +42,19 @@ class RequestsFragment(uid : String) : Fragment() {
             initData(view)
             refreshButton.isRefreshing = false
         }
-
+        resetNewRequests()
 
         //listenForUpdates()
         //listenForDeletions()
 
         return view
     }
+    private fun resetNewRequests(){
 
+        val map2 = HashMap<String,Any>()
+        map2[myTags.areNewRequests] = 0
+        firestore.collection(myTags.users).document(userID).update(map2)
+    }
     @SuppressLint("NotifyDataSetChanged")
     private fun initData(view : View){
         dataList = ArrayList()
