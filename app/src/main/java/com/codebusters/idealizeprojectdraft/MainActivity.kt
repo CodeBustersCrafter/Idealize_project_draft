@@ -1,6 +1,8 @@
 package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
@@ -9,6 +11,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -54,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()
+
+        startStopService()
 
         ActivityCompat.requestPermissions(
             this@MainActivity,
@@ -122,6 +127,31 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun startStopService(){
+        if(!isMyServiceRunning(NotificationService::class.java)){
+            Toast.makeText(this,"Started",Toast.LENGTH_SHORT).show()
+            val intent = Intent(this,NotificationService::class.java)
+            startService(intent)
+        }else{
+            Toast.makeText(this,"Running...",Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun isMyServiceRunning(mClass : Class<NotificationService>):Boolean{
+        val manager : ActivityManager = getSystemService(
+            Context.ACTIVITY_SERVICE
+        ) as ActivityManager
+
+        for(services : ActivityManager.RunningServiceInfo in manager.getRunningServices(Integer.MAX_VALUE)){
+            if(mClass.name.equals(services.service.className)){
+                return true
+            }
+        }
+        return false
+    }
+
+
+
 
     @Suppress("DEPRECATION")
     override fun onStart() {

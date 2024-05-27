@@ -60,4 +60,5 @@ class SplashScreenActivity : ComponentActivity() {
         unregisterReceiver(networkChangeListener)
         super.onStop()
     }
+
 }
