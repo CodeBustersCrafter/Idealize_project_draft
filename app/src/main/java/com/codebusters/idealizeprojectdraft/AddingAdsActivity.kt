@@ -154,6 +154,7 @@ class AddingAdsActivity : AppCompatActivity() {
                                         intent.putExtra(myTags.intentType,myTags.userMode)
                                         intent.putExtra(myTags.intentUID,uid)
                                         startActivity(intent)
+                                        finish()
                                     }else{
                                         Toast.makeText(this,"Not Updated! from user. Try Again", Toast.LENGTH_SHORT).show()
                                     }

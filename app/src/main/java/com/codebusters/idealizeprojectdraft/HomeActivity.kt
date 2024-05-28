@@ -242,4 +242,5 @@ class HomeActivity : AppCompatActivity() {
         unregisterReceiver(networkChangeListener)
         super.onStop()
     }
+
 }

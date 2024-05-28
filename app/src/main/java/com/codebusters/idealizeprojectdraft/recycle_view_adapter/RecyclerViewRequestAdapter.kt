@@ -24,6 +24,7 @@ import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.ItemRequestModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import java.math.RoundingMode
@@ -97,7 +98,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                 holder.itemReteReview.visibility = View.GONE
                 holder.itemDelete.visibility =View.VISIBLE
                 holder.itemDelete.setOnClickListener {
-                    deleteRequestFromHistory(currentItem, context)
+                    deleteRequestOnlyFromMySide(currentItem, context)
                 }
                 holder.itemLl.setBackgroundResource(R.color.colorSecondary)
             }else
@@ -143,7 +144,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                             deleteRequestOnlyFromMySide(currentItem, context)
                         }
                     }
-        }
+            }
 
 
         holder.itemLl.setOnClickListener{
@@ -337,6 +338,19 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }
             progressDialog.stop()
         }
+        firestore.collection(myTags.adRequest).document(request.adId).get().addOnSuccessListener {
+                documentSnapshot ->
+            if(documentSnapshot.get(request.requestID)!=null){
+                firestore.collection(myTags.adRequest).document(request.adId).update(hashMapOf<String,Any>(request.requestID to FieldValue.delete())).addOnCompleteListener {
+                        result ->
+                    if(result.isSuccessful){
+                        Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteRequest(request : ItemRequestModel, context : Context){
@@ -365,14 +379,27 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }
             progressDialog.stop()
         }
-    }
+        firestore.collection(myTags.adRequest).document(request.adId).get().addOnSuccessListener {
+                documentSnapshot ->
+            if(documentSnapshot.get(request.requestID)!=null){
+                firestore.collection(myTags.adRequest).document(request.adId).update(hashMapOf<String,Any>(request.requestID to FieldValue.delete())).addOnCompleteListener {
+                        result ->
+                    if(result.isSuccessful){
+                        Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
+    }
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun deleteRequestFromHistory(request: ItemRequestModel, context: Context){
         progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
-        firestore.collection(myTags.users).document(request.requestBuyerID).collection(myTags.userRequests).document(request.requestID).delete().addOnCompleteListener {
+        firestore.collection(myTags.users).document(request.idealizeUserID).collection(myTags.userRequests).document(request.requestID).delete().addOnCompleteListener {
                 result ->
             if(result.isSuccessful){
                 Toast.makeText(context,"Deleted! from user", Toast.LENGTH_SHORT).show()
@@ -382,6 +409,19 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                 Toast.makeText(context,"Not Deleted! from user. Try Again", Toast.LENGTH_SHORT).show()
             }
             progressDialog.stop()
+        }
+        firestore.collection(myTags.adRequest).document(request.adId).get().addOnSuccessListener {
+                documentSnapshot ->
+            if(documentSnapshot.get(request.requestID)!=null){
+                firestore.collection(myTags.adRequest).document(request.adId).update(hashMapOf<String,Any>(request.requestID to FieldValue.delete())).addOnCompleteListener {
+                        result ->
+                    if(result.isSuccessful){
+                        Toast.makeText(context,"Deleted! from Requests", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(context,"Not Deleted! from Requests. Try Again", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 }

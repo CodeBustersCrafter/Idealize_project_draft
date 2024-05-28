@@ -10,6 +10,7 @@ class MyTags {
     var intentType: String = "Type"
     var intentUID: String = "ID"
     var intentFragmentRequest: String = "Fragment"
+    var intentNotificationID :  String = "Notification ID"
 
     //Database
     //Users
@@ -66,7 +67,6 @@ class MyTags {
     val apikey : String  = "AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg"
 
     val adRequest : String = "Ad Request"
-    val adRequestID : String = "Request ID"
 
     val areNewRequests : String = "New Requests"
 }

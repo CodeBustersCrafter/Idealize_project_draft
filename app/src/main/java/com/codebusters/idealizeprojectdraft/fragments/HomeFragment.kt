@@ -3,6 +3,7 @@ package com.codebusters.idealizeprojectdraft.fragments
 import CategoryAdapter
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -30,10 +32,9 @@ import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import android.widget.Button
-import android.graphics.Color
 
 class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var recyclerView : RecyclerView
@@ -97,7 +98,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         }
         welcomeTextView.text = welcomeMessage
 
-        if(type==myTags.userMode){
+        if(type==myTags.userViewMode){
             newRequestsChecking()
         }else{
             newNotificationTag.visibility = View.GONE
@@ -191,9 +192,17 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
         }else{
             requestsButton.setOnClickListener{
-                val i = Intent(context,RequestActivity::class.java)
-                i.putExtra(myTags.intentUID,user.uid)
-                startActivity(i)
+                if(newNotificationTag.visibility==View.VISIBLE){
+                    val i = Intent(context,RequestActivity::class.java)
+                    i.putExtra(myTags.intentUID,user.uid)
+                    i.putExtra(myTags.intentFragmentRequest,"1")
+                    startActivity(i)
+                }else{
+                    val i = Intent(context,RequestActivity::class.java)
+                    i.putExtra(myTags.intentUID,user.uid)
+                    startActivity(i)
+                }
+
             }
         }
 
@@ -249,7 +258,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
 
     private fun newRequestsChecking(){
-        firestore.collection(myTags.users).document(user.uid).get().addOnSuccessListener {
+        firestore.collection(myTags.users).document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
             if(it.get(myTags.areNewRequests)!=null){
                 if(it.get(myTags.areNewRequests).toString().trim().toInt()==1){
                     newNotificationTag.visibility = View.VISIBLE

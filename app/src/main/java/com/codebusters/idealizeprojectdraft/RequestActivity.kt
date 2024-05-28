@@ -29,10 +29,9 @@ class RequestActivity : AppCompatActivity() {
         setContentView(binding.root)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         uid=intent.getStringExtra(myTags.intentUID).toString()
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancelAll()
         if(intent.getStringExtra(myTags.intentFragmentRequest).toString()=="1"){
             replaceFragment(RequestsFragment(uid))
+
         }else{
             replaceFragment(MyRequestsFragment(uid))
         }
@@ -71,11 +70,15 @@ class RequestActivity : AppCompatActivity() {
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(networkChangeListener, intentFilter)
         uid=intent.getStringExtra(myTags.intentUID).toString()
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancelAll()
+
         if(intent.getStringExtra(myTags.intentFragmentRequest).toString()=="1"){
             replaceFragment(RequestsFragment(uid))
             binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_requests
+            stopService(Intent(this,NotificationService::class.java))
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancelAll()
+            val intent = Intent(this,NotificationService::class.java)
+            startService(intent)
         }else{
             replaceFragment(MyRequestsFragment(uid))
         }

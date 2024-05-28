@@ -6,6 +6,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -50,10 +51,13 @@ class NotificationService : Service() {
                                             FirebaseFirestore.getInstance().collection(myTags.ads).document(dc.document.get(myTags.requestAdID).toString())
                                                 .get().addOnSuccessListener { documentSnapshot ->
                                                     notificationId++
-                                                    val notification = buildNotification(documentSnapshot.get(myTags.adName).toString())
+                                                    val notification = buildNotification(documentSnapshot.get(myTags.adName).toString(),notificationId)
 
                                                     // Start the foreground service
-                                                    startForeground(notificationId, notification)
+                                                    //startForeground(notificationId, notification)
+                                                    val notificationManager = getSystemService(
+                                                        Context.NOTIFICATION_SERVICE) as NotificationManager
+                                                    notificationManager.notify(notificationId, notification)
 
                                                 }
                                         }
@@ -84,14 +88,17 @@ class NotificationService : Service() {
         }
     }
 
-    private fun buildNotification(name : String): Notification {
+    private fun buildNotification(name : String,id : Int): Notification {
         val notificationTitle = "New Request"
         val notificationText = "Check out the latest requests!\n$name"
-        val notificationIntent = Intent(this, RequestActivity::class.java)
+        val notificationIntent= Intent(this, RequestActivity::class.java)
         notificationIntent.putExtra(myTags.intentUID, FirebaseAuth.getInstance().currentUser?.uid)
         notificationIntent.putExtra(myTags.intentFragmentRequest, "1")
-        val pendingIntent = PendingIntent.getActivity(this, notificationId, notificationIntent,
-            PendingIntent.FLAG_MUTABLE)
+        notificationIntent.putExtra(myTags.intentNotificationID, id.toString())
+        val pendingIntent = PendingIntent.getActivity(this,
+            id,
+            notificationIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
 
         return NotificationCompat.Builder(this, channelId)
