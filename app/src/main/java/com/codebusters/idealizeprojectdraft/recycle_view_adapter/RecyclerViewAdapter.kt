@@ -281,7 +281,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         }
     }
     private fun sendRequests(requestModel: RequestModel) : Boolean{
-        if(requestModel.buyerId==uid){
+        if(requestModel.sellerId==uid){
             Toast.makeText(context,"You can't request for your goods.",Toast.LENGTH_SHORT).show()
             return false
         }
