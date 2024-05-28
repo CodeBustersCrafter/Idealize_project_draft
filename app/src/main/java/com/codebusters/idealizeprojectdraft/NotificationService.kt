@@ -91,7 +91,7 @@ class NotificationService : Service() {
         notificationIntent.putExtra(myTags.intentUID, FirebaseAuth.getInstance().currentUser?.uid)
         notificationIntent.putExtra(myTags.intentFragmentRequest, "1")
         val pendingIntent = PendingIntent.getActivity(this, notificationId, notificationIntent,
-            PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.FLAG_MUTABLE)
 
 
         return NotificationCompat.Builder(this, channelId)
@@ -99,6 +99,8 @@ class NotificationService : Service() {
             .setContentText(notificationText)
             .setSmallIcon(R.drawable.logo1)
             .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
             .build()
     }
 }

@@ -85,11 +85,17 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         // Set welcome message
         welcomeTextView = view.findViewById(R.id.welcomeTextView)
         val welcomeMessage = if (type == myTags.guestMode) {
-            "Welcone Guest User"
+            "Welcome Guest User"
         } else {
             "Welcome ${user.name}"
         }
         welcomeTextView.text = welcomeMessage
+
+        if(type==myTags.userMode){
+            newRequestsChecking()
+        }else{
+            newNotificationTag.visibility = View.GONE
+        }
 
 
         categoryList = arrayListOf(
@@ -216,8 +222,6 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
             popupMenu.show()
         }
-
-        newRequestsChecking()
 
         return view
     }

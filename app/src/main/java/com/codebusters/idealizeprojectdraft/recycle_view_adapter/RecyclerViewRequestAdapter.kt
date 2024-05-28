@@ -6,20 +6,27 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RadioButton
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.codebusters.idealizeprojectdraft.CustomMaskTransformation
 import com.codebusters.idealizeprojectdraft.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.ModelBuilder
 import com.codebusters.idealizeprojectdraft.NormalCalls
 import com.codebusters.idealizeprojectdraft.R
+import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.ItemRequestModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import java.math.RoundingMode
 
 
 class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestModel>, private val type:Int, con : Context) : RecyclerView.Adapter<RecycleViewItemViewHolder>() {
@@ -45,16 +52,6 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
 
         createUI(holder,currentItem)
     }
-    private fun addNewTag(holder: RecycleViewItemViewHolder,currentItem : ItemRequestModel){
-        if(currentItem.viewCount==0){
-            holder.itemRating.visibility = View.GONE
-            holder.itemNew.visibility = View.VISIBLE
-        }else{
-            holder.itemRating.visibility = View.VISIBLE
-            holder.itemNew.visibility = View.GONE
-            holder.itemRating.text = currentItem.rate
-        }
-    }
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun createUI(holder: RecycleViewItemViewHolder, currentItem : ItemRequestModel){
         holder.itemName.text = currentItem.name
@@ -65,10 +62,10 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
         holder.itemVisible.visibility = View.GONE
         holder.itemReteReview.visibility = View.GONE
         holder.itemRequestRate.visibility = View.GONE
-        holder.itemRating.visibility = View.GONE
+        holder.itemRating.visibility = View.VISIBLE
         holder.itemNew.visibility = View.GONE
 
-        addNewTag(holder,currentItem)
+        holder.itemRating.text = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat().toString()
 
         if (type == myTags.requestMode) {
 
@@ -78,7 +75,6 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                     deleteRequestFromHistory(currentItem, context)
                 }
                 holder.itemDelete.visibility = View.VISIBLE
-                holder.itemRating.text = holder.itemRating.text.toString()+" + "+currentItem.reviewRate
             }else if(currentItem.requestReview == "1"){
                 holder.itemDelete.visibility = View.GONE
                 holder.itemRequestRate.visibility = View.GONE
@@ -103,7 +99,6 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                 holder.itemDelete.setOnClickListener {
                     deleteRequestFromHistory(currentItem, context)
                 }
-                holder.itemRating.text = holder.itemRating.text.toString()+" + "+currentItem.reviewRate
                 holder.itemLl.setBackgroundResource(R.color.colorSecondary)
             }else
                 if(currentItem.requestReview == "1"){
@@ -156,27 +151,31 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
 
         }
     }
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun dialogueCreate(currentItem: ItemRequestModel){
-        val d = Dialog(context)
-        d.setContentView(R.layout.item_dialogue)
+        val d = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        d.setContentView(R.layout.item_view_dialogue_bishma)
         d.setCancelable(false)
+        d.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
 
         val name = d.findViewById<TextView>(R.id.dialogue_name)
         val price = d.findViewById<TextView>(R.id.dialogue_price)
         val quantity = d.findViewById<TextView>(R.id.dialogue_quantity)
         val location = d.findViewById<TextView>(R.id.dialogue_location)
-        val phone = d.findViewById<TextView>(R.id.dialogue_phone)
         val seller = d.findViewById<TextView>(R.id.dialogue_seller)
         val dateTime = d.findViewById<TextView>(R.id.dialogue_date_time)
         val description = d.findViewById<TextView>(R.id.dialogue_description)
         val userRate = d.findViewById<TextView>(R.id.dialogue_user_rate)
         val adRate = d.findViewById<TextView>(R.id.dialogue_ad_rate)
+        val userRateBar = d.findViewById<RatingBar>(R.id.dialogue_user_rate_bar)
+        val adRateBar = d.findViewById<RatingBar>(R.id.dialogue_ad_rate_bar)
         val image = d.findViewById<ImageView>(R.id.dialogue_image)
         val close = d.findViewById<ImageView>(R.id.dialogue_btn_close)
         val category = d.findViewById<TextView>(R.id.dialog_category)
-        val call = d.findViewById<ImageView>(R.id.call_dialogue)
-        val itemBooking: ImageButton = d.findViewById(R.id.btn_booking_item_view)
+        val call = d.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.call_dialogue)
+        val itemBooking = d.findViewById<ImageView>(R.id.btn_booking_item_view)
+
+        val dialogRecyclerView = d.findViewById<RecyclerView>(R.id.dialogue_recycler_view)
 
         itemBooking.visibility = View.GONE
 
@@ -194,17 +193,51 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
         }
 
         name.text = currentItem.name
-        price.text = "Price : LKR . " + currentItem.price
+        price.text = "LKR . " + currentItem.price
         quantity.text = "Quantity : " + currentItem.quantity
         location.text = currentItem.location
-        phone.text = currentItem.phone
-        seller.text = currentItem.username
-        dateTime.text = currentItem.date + "__" + currentItem.time
+        if(type==myTags.requestMode){
+            seller.text = "Buyer Details : \n" + currentItem.username
+            call.text = "Call Buyer"
+        }else{
+            seller.text = "Seller Details : \n" + currentItem.username
+            call.text = "Call Seller"
+        }
+        dateTime.text = "Date : " + currentItem.date + " | Time : " + currentItem.time
         description.text = currentItem.description
         category.text = currentItem.category
-        Picasso.get().load(currentItem.photo).into(image)
-        adRate.text = currentItem.rate
-        userRate.text = currentItem.rating
+
+        Picasso.get().load(currentItem.photo).transform(CustomMaskTransformation(context, R.drawable.grey_background)).into(image)
+
+        adRate.text = "(" + currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
+        adRateBar.rating = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
+        userRateBar.rating = currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
+
+        if(currentItem.isReviewDone=="1"){
+            userRate.text = "(" + currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")" + "\nReview Rate : " + currentItem.reviewRate
+        }else{
+            userRate.text = "(" + currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
+        }
+
+
+        val dataList = ArrayList<ItemModel>()
+        val adapter = RecyclerViewAdapter(dataList, myTags.userViewMode, context, FirebaseAuth.getInstance().currentUser?.uid.toString())
+        dialogRecyclerView.adapter = adapter
+        val ll= LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+        dialogRecyclerView.layoutManager = ll
+
+        firestore.collection(myTags.users).document(currentItem.idealizeUserID).get().addOnSuccessListener {
+                documentSnapshot->
+            firestore.collection(myTags.users).document(currentItem.idealizeUserID).collection(myTags.ads).get().addOnSuccessListener {
+                for(document in it){
+                    if(document.id!=currentItem.adId){
+                        val item = ModelBuilder().getAdItem(document,documentSnapshot)
+                        dataList.add(item)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
 
         close.setOnClickListener {
             d.cancel()

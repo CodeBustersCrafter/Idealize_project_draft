@@ -2,167 +2,171 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="184dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="20dp"
+    android:paddingHorizontal="10dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
-        android:textSize="15sp"
-        tools:ignore="HardcodedText,SpeakableTextPresentCheck,TextContrastCheck" />
-    <LinearLayout
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:elevation="10dp"
-        android:id="@+id/ll_item_view"
-        android:background="@drawable/ad_item_background"
-        tools:ignore="UselessParent">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/image_view_new"
-                android:layout_width="85dp"
-                android:layout_height="62dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/baseline_fiber_new_24"
-                android:contentDescription="Ad image"
-                android:cropToPadding="true"
-                android:elevation="50dp"
-                android:outlineAmbientShadowColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="HardcodedText,ImageContrastCheck"
-                tools:targetApi="p" />
-
-            <ImageView
-                android:id="@+id/image_view_item_view"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="Ad image"
-                android:cropToPadding="true"
-                android:outlineAmbientShadowColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText,ImageContrastCheck"
-                tools:targetApi="p" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:paddingHorizontal="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_view_item_name"
-        android:text="Item Name"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:padding="5dp"
-        tools:ignore="HardcodedText" />
-    <RelativeLayout
-        android:paddingHorizontal="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/text_view_item_rating"
-            android:layout_width="42dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:padding="10dp"
-            android:text="5.0"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText,TextContrastCheck" />
+        app:cardCornerRadius="16dp"
+        android:elevation="50dp">
         <LinearLayout
-            android:layout_width="115dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:ignore="UselessLeaf"
-            android:layout_marginStart="65dp"
-            android:gravity="end"
-            android:padding="5dp">
+            android:elevation="10dp"
+            android:id="@+id/ll_item_view"
+            android:background="@drawable/ad_item_background"
+            tools:ignore="UselessParent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/image_view_new"
+                    android:layout_width="85dp"
+                    android:layout_height="62dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/baseline_fiber_new_24"
+                    android:contentDescription="Ad image"
+                    android:cropToPadding="true"
+                    android:elevation="50dp"
+                    android:outlineAmbientShadowColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="HardcodedText,ImageContrastCheck"
+                    tools:targetApi="p" />
+
+                <ImageView
+                    android:id="@+id/image_view_item_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Ad image"
+                    android:cropToPadding="true"
+                    android:outlineAmbientShadowColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText,ImageContrastCheck"
+                    tools:targetApi="p" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
-                android:layout_width="65dp"
+                android:paddingHorizontal="5dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="LKR"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText"
-                android:textAlignment="textEnd"/>
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/text_view_item_price"
-                android:text="Price"
+                android:id="@+id/text_view_item_name"
+                android:text="Item Name"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="15sp"
-                android:textAlignment="textEnd"
+                android:padding="5dp"
                 tools:ignore="HardcodedText" />
+            <RelativeLayout
+                android:paddingHorizontal="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_item_rating"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:padding="10dp"
+                    android:text="5.0"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText,TextContrastCheck" />
+                <LinearLayout
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:ignore="UselessLeaf"
+                    android:layout_marginStart="65dp"
+                    android:gravity="end"
+                    android:padding="5dp">
+                    <TextView
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:text="LKR"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        tools:ignore="HardcodedText"
+                        android:textAlignment="textEnd"/>
+                    <TextView
+                        android:layout_width="65dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/text_view_item_price"
+                        android:text="Price"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textAlignment="textEnd"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/baseline_star_24"
+                    tools:ignore="ContentDescription,ImageContrastCheck" />
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="5dp">
+
+                <ImageButton
+                    android:id="@+id/btn_avilable_item_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15dp"
+                    android:background="@drawable/baseline_visibility_24"
+                    tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
+
+                <ImageButton
+                    android:id="@+id/btn_delete_item_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15dp"
+                    android:background="@drawable/baseline_delete_24"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <ImageButton
+                    android:id="@+id/btn_rate_request_item_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15dp"
+                    android:background="@drawable/baseline_request_page_24"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
+                <ImageButton
+                    android:id="@+id/btn_rate_accept_item_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15dp"
+                    android:background="@drawable/baseline_rate_review_24"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            </LinearLayout>
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="1dp"
-            app:srcCompat="@drawable/baseline_star_24"
-            tools:ignore="ContentDescription,ImageContrastCheck" />
 
-    </RelativeLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="5dp">
-
-        <ImageButton
-            android:id="@+id/btn_avilable_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:background="@drawable/baseline_visibility_24"
-            tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck,ImageContrastCheck" />
-
-        <ImageButton
-            android:id="@+id/btn_delete_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:background="@drawable/baseline_delete_24"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <ImageButton
-            android:id="@+id/btn_rate_request_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:background="@drawable/baseline_request_page_24"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
-        <ImageButton
-            android:id="@+id/btn_rate_accept_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:background="@drawable/baseline_rate_review_24"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-    </LinearLayout>
-    </LinearLayout>
 </LinearLayout>
