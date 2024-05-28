@@ -58,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         supportActionBar?.hide()
 
-        startStopService()
-
         ActivityCompat.requestPermissions(
             this@MainActivity,
             arrayOf(
@@ -78,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         uid = intent.getStringExtra(myTags.intentUID).toString()
 
         if(type==myTags.userMode){
+            startStopService()
             firestore =FirebaseFirestore.getInstance()
             firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
                     documentSnapshot ->

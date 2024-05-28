@@ -6,11 +6,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.codebusters.idealizeprojectdraft.CustomMaskTransformation
 import com.codebusters.idealizeprojectdraft.ModelBuilder
 import com.codebusters.idealizeprojectdraft.NormalCalls
 import com.codebusters.idealizeprojectdraft.R
@@ -20,6 +23,7 @@ import com.codebusters.idealizeprojectdraft.models.RequestModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.squareup.picasso.Picasso
+import java.math.RoundingMode
 
 
 class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private val type:Int, con : Context,private val uid : String) : RecyclerView.Adapter<RecycleViewItemViewHolder>() {
@@ -44,27 +48,31 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         createUI(holder,currentItem)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun dialogueCreate(currentItem: ItemModel){
-        val d = Dialog(context)
-        d.setContentView(R.layout.item_dialogue)
+        val d = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        d.setContentView(R.layout.item_view_dialogue_bishma)
         d.setCancelable(false)
+        d.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
 
         val name = d.findViewById<TextView>(R.id.dialogue_name)
         val price = d.findViewById<TextView>(R.id.dialogue_price)
         val quantity = d.findViewById<TextView>(R.id.dialogue_quantity)
         val location = d.findViewById<TextView>(R.id.dialogue_location)
-        val phone = d.findViewById<TextView>(R.id.dialogue_phone)
         val seller = d.findViewById<TextView>(R.id.dialogue_seller)
         val dateTime = d.findViewById<TextView>(R.id.dialogue_date_time)
         val description = d.findViewById<TextView>(R.id.dialogue_description)
         val userRate = d.findViewById<TextView>(R.id.dialogue_user_rate)
         val adRate = d.findViewById<TextView>(R.id.dialogue_ad_rate)
+        val userRateBar = d.findViewById<RatingBar>(R.id.dialogue_user_rate_bar)
+        val adRateBar = d.findViewById<RatingBar>(R.id.dialogue_ad_rate_bar)
         val image = d.findViewById<ImageView>(R.id.dialogue_image)
         val close = d.findViewById<ImageView>(R.id.dialogue_btn_close)
         val category = d.findViewById<TextView>(R.id.dialog_category)
-        val call = d.findViewById<ImageView>(R.id.call_dialogue)
-        val itemBooking: ImageButton = d.findViewById(R.id.btn_booking_item_view)
+        val call = d.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.call_dialogue)
+        val itemBooking = d.findViewById<ImageView>(R.id.btn_booking_item_view)
+
+        val dialogRecyclerView = d.findViewById<RecyclerView>(R.id.dialogue_recycler_view)
 
         when (type){
             myTags.userMode->{
@@ -74,12 +82,12 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 itemBooking.visibility = View.VISIBLE
                 itemBooking.setOnClickListener{
                     val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0","0","0","0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
-                    sendRequests(request)
-
-                    //increment the request count
-                    currentItem.requestCount++
-                    currentItem.rateCount++
-                    incrementRequests(currentItem)
+                    if(sendRequests(request)){
+                        //increment the request count
+                        currentItem.requestCount++
+                        currentItem.rateCount++
+                        incrementRequests(currentItem)
+                    }
                 }
             }
             else -> {
@@ -105,17 +113,39 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         }
 
         name.text = currentItem.name
-        price.text = "Price : LKR . " + currentItem.price
+        price.text = "LKR . " + currentItem.price
         quantity.text = "Quantity : " + currentItem.quantity
         location.text = currentItem.location
-        phone.text = currentItem.phone
         seller.text = currentItem.username
-        dateTime.text = currentItem.date + "__" + currentItem.time
+        dateTime.text = "Date : " + currentItem.date + " | Time : " + currentItem.time
         description.text = currentItem.description
         category.text = currentItem.category
-        Picasso.get().load(currentItem.photo).into(image)
-        adRate.text = currentItem.rate
-        userRate.text = currentItem.rating
+
+        Picasso.get().load(currentItem.photo).transform(CustomMaskTransformation(context, R.drawable.grey_background)).into(image)
+
+        adRate.text = "(" + currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
+        userRate.text = "(" + currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
+        adRateBar.rating = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
+        userRateBar.rating = currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
+
+        val dataList = ArrayList<ItemModel>()
+        val adapter = RecyclerViewAdapter(dataList, myTags.userViewMode, context, uid)
+        dialogRecyclerView.adapter = adapter
+        val ll= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        dialogRecyclerView.layoutManager = ll
+
+        firestore.collection(myTags.users).document(currentItem.idealizeUserID).get().addOnSuccessListener {
+            documentSnapshot->
+            firestore.collection(myTags.users).document(currentItem.idealizeUserID).collection(myTags.ads).get().addOnSuccessListener {
+                for(document in it){
+                    if(document.id!=currentItem.adId){
+                        val item = ModelBuilder().getAdItem(document,documentSnapshot)
+                        dataList.add(item)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
 
         close.setOnClickListener {
             d.cancel()
@@ -132,7 +162,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         }else{
             holder.itemRating.visibility = View.VISIBLE
             holder.itemNew.visibility = View.GONE
-            holder.itemRating.text = currentItem.rate
+            holder.itemRating.text = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat().toString()
         }
     }
     @SuppressLint("NotifyDataSetChanged")
@@ -231,7 +261,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         map[myTags.adViewCount] = item.viewCount
         map[myTags.adRate] = item.rate
         firestore.collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
-            firestore.collection(myTags.users).document(myTags.adUser).collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
+            firestore.collection(myTags.users).document(item.uid).collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
                 //View Count updated
                 this.notifyDataSetChanged()
             }
@@ -245,16 +275,16 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         map[myTags.adRequestCount] = item.requestCount
         map[myTags.adRate] = item.rate
         firestore.collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
-            firestore.collection(myTags.users).document(myTags.adUser).collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
+            firestore.collection(myTags.users).document(item.uid).collection(myTags.ads).document(item.adId).update(map).addOnSuccessListener {
                 //request Count updated
             }
         }
-        firestore.collection(myTags.users).document(myTags.adUser).update(myTags.userRateCount,item.rateCount).addOnSuccessListener {
-            //request Count updated
-            this.notifyDataSetChanged()
-        }
     }
-    private fun sendRequests(requestModel: RequestModel){
+    private fun sendRequests(requestModel: RequestModel) : Boolean{
+        if(requestModel.buyerId==uid){
+            Toast.makeText(context,"You can't request for your goods.",Toast.LENGTH_SHORT).show()
+            return false
+        }
         firestore = FirebaseFirestore.getInstance()
         firestore.collection(myTags.users)
             .document(requestModel.sellerId)
@@ -286,6 +316,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         val map2 = HashMap<String,Any>()
         map2[myTags.areNewRequests] = 1
         firestore.collection(myTags.users).document(requestModel.sellerId).set(map2, SetOptions.merge())
+        return true
     }
     private fun makeAdVisible(item: ItemModel, context : Context){
         firestore = FirebaseFirestore.getInstance()
@@ -361,9 +392,9 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 Toast.makeText(context,"Not Deleted! from advertisements. Try Again", Toast.LENGTH_SHORT).show()
             }
         }
-        deleteAllRequests(uid,adId,context)
+        deleteAllRequests(adId,context)
     }
-    private fun deleteAllRequests(uid : String,adId : String ,context : Context){
+    private fun deleteAllRequests(adId : String ,context : Context){
         firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(myTags.adRequest).document(adId).get().addOnSuccessListener {
