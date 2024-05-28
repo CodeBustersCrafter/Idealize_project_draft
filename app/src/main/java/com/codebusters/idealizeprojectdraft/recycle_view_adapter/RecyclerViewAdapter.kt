@@ -123,9 +123,9 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
 
         Picasso.get().load(currentItem.photo).transform(CustomMaskTransformation(context, R.drawable.grey_background)).into(image)
 
-        adRate.text = "(" + currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
+        adRate.text = "(" + (currentItem.rate.toFloat()*5).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
         userRate.text = "(" + currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
-        adRateBar.rating = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
+        adRateBar.rating = (currentItem.rate.toFloat()*5).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
         userRateBar.rating = currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
 
         val dataList = ArrayList<ItemModel>()
@@ -162,7 +162,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         }else{
             holder.itemRating.visibility = View.VISIBLE
             holder.itemNew.visibility = View.GONE
-            holder.itemRating.text = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat().toString()
+            holder.itemRating.text = (currentItem.rate.toFloat()*5).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat().toString()
         }
     }
     @SuppressLint("NotifyDataSetChanged")

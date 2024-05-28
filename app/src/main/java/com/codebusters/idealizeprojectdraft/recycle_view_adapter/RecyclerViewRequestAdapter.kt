@@ -65,7 +65,7 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
         holder.itemRating.visibility = View.VISIBLE
         holder.itemNew.visibility = View.GONE
 
-        holder.itemRating.text = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat().toString()
+        holder.itemRating.text = (currentItem.rate.toFloat()*5).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat().toString()
 
         if (type == myTags.requestMode) {
 
@@ -209,8 +209,8 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
 
         Picasso.get().load(currentItem.photo).transform(CustomMaskTransformation(context, R.drawable.grey_background)).into(image)
 
-        adRate.text = "(" + currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
-        adRateBar.rating = currentItem.rate.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
+        adRate.text = "(" + (currentItem.rate.toFloat()*5).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat() + ")"
+        adRateBar.rating = (currentItem.rate.toFloat()*5).toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
         userRateBar.rating = currentItem.rating.toFloat().toBigDecimal().setScale(1, RoundingMode.HALF_EVEN).toFloat()
 
         if(currentItem.isReviewDone=="1"){
@@ -272,7 +272,6 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             }
         }
         val newRate = ((rate+(request.rating.toFloat()*(request.rateCount-1)))/(request.rateCount)).toString()
-        Toast.makeText(context,newRate,Toast.LENGTH_SHORT).show()
         val map2=HashMap<String,Any>()
         map2[myTags.userRating] = newRate
         map2[myTags.userRateCount] = request.rateCount
@@ -283,7 +282,6 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
                 request.isReviewDone = "1"
                 request.reviewRate=rate.toString()
                 holder.itemLl.setBackgroundResource(R.color.colorSecondary)
-                holder.itemRating.text = holder.itemRating.text.toString()+" + "+rate
                 holder.itemReteReview.visibility =View.GONE
                 holder.itemDelete.visibility = View.VISIBLE
                 this.notifyDataSetChanged()
