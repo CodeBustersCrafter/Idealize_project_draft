@@ -47,6 +47,21 @@
             android:background="@null"
             android:layout_marginLeft="10dp" />
 
+        <Button
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:backgroundTint="@color/appgreeen"
+            android:layout_marginRight="150dp"
+            android:text="Near Me"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:padding="4dp"
+            android:gravity="center"
+            />
+
+
+
         <TextView
             android:paddingTop="10dp"
             android:id="@+id/notification"
@@ -114,10 +129,10 @@
                 android:id="@+id/new_tag_home_screen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/baseline_fiber_new_24"
+                android:background="@drawable/baseline_circle_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/Home_request_action_btn"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0"

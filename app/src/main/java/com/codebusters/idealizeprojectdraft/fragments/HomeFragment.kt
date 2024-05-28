@@ -32,6 +32,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import android.widget.Button
+import android.graphics.Color
 
 class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var recyclerView : RecyclerView
@@ -50,6 +52,8 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
     private lateinit var categoryRecyclerView: RecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var categoryList: ArrayList<Category>
+    private lateinit var toggleButton: Button
+    private var isGreen = true
 
     @SuppressLint("NotifyDataSetChanged", "MissingInflatedId")
     override fun onCreateView(
@@ -67,11 +71,13 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         newNotificationTag = view.findViewById(R.id.new_tag_home_screen)
         refreshButton2.isEnabled = false
         searchEditText = view.findViewById(R.id.searchEditText)
+        toggleButton = view.findViewById(R.id.toggleButton);
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
         autoCompleteTextView.threshold = 0
         var selectedCity = ""
         var filterdBy = ""
         var itemcategory = ""
+        var mycity = ""
 
 
         firestore= FirebaseFirestore.getInstance()
@@ -97,6 +103,18 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             newNotificationTag.visibility = View.GONE
         }
 
+        toggleButton.setOnClickListener {
+            isGreen = !isGreen  // Toggle the variable
+            if (isGreen) {
+                toggleButton.setBackgroundColor(Color.parseColor("#00DE04")) // Green
+                mycity = ""
+            } else {
+                toggleButton.setBackgroundColor(Color.parseColor("#808080")) // Grey
+                mycity = user.location
+            }
+
+            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
+        }
 
         categoryList = arrayListOf(
             Category("Fruits", R.drawable.cat1),
@@ -112,7 +130,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
         categoryAdapter = CategoryAdapter(categoryList) { category ->
             itemcategory = category.name
-            initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
+            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
         }
 
         categoryRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -140,7 +158,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     // Optional: Set a listener for when a city is selected
                     autoCompleteTextView.setOnItemClickListener { parent, view, position, _ ->
                         selectedCity = parent.getItemAtPosition(position) as String
-                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
                     }
                 } else {
                     Toast.makeText(requireContext(), "No cities found", Toast.LENGTH_SHORT).show()
@@ -151,7 +169,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
 
         // Initialize data with an empty search query
-        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory)
+        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
@@ -163,7 +181,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             categoryAdapter.selectedPosition = RecyclerView.NO_POSITION
             categoryAdapter.notifyDataSetChanged()
 
-            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory) // Use search query when refreshing
+            initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity) // Use search query when refreshing
             refreshButton.isRefreshing = false
         }
 
@@ -184,7 +202,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 // Update the data based on the search query
                 dataList.clear() // Clear previous data
-                initData(type, view, s.toString(),selectedCity,filterdBy,itemcategory)
+                initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -201,21 +219,21 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                 when (item.itemId) {
                     R.id.filter_date -> {
                         filterdBy = "date"
-                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
                         true
                     }
                     R.id.filter_price -> {
                         filterdBy = "price"
-                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
                         true
                     }
                     R.id.filter_rating -> {
                         filterdBy = "rating"
-                        initData(type, view, searchEditText.text.toString(),selectedCity, filterdBy,itemcategory)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
                         true
                     }
                     else -> {
-                        initData(type, view, searchEditText.text.toString(),selectedCity,"",itemcategory)
+                        initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
                         true
                     }
                 }
@@ -244,7 +262,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         }
     }
     @SuppressLint("NotifyDataSetChanged")
-    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "",itemcategory: String = "") {
+    private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "",itemcategory: String = "",mycity: String = "") {
         dataList = ArrayList()
         val adapter = RecyclerViewAdapter(dataList, type, view.context, user.uid)
         recyclerView.adapter = adapter
@@ -271,6 +289,11 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             }
             query = query.whereIn(myTags.adLocation, nearbyCities)
         }
+
+        if (mycity.isNotEmpty()) {
+            query = query.whereEqualTo(myTags.adLocation, mycity)
+        }
+
         if (searchQuery.isNotEmpty()) {
             query = query.whereArrayContains(myTags.keywords,searchQuery.lowercase())
         }
