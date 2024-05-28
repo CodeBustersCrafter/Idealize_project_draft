@@ -164,5 +164,7 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-
+    override fun onPause() {
+        super.onPause()
+    }
 }

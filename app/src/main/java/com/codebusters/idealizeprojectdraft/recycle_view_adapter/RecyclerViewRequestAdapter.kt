@@ -366,12 +366,13 @@ class RecyclerViewRequestAdapter(private val itemList: ArrayList<ItemRequestMode
             progressDialog.stop()
         }
     }
+
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun deleteRequestFromHistory(request: ItemRequestModel, context: Context){
         progressDialog.start("Loading...")
         firestore = FirebaseFirestore.getInstance()
 
-        firestore.collection(myTags.users).document(request.idealizeUserID).collection(myTags.userRequests).document(request.requestID).delete().addOnCompleteListener {
+        firestore.collection(myTags.users).document(request.requestBuyerID).collection(myTags.userRequests).document(request.requestID).delete().addOnCompleteListener {
                 result ->
             if(result.isSuccessful){
                 Toast.makeText(context,"Deleted! from user", Toast.LENGTH_SHORT).show()

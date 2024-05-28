@@ -256,7 +256,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
 
     @SuppressLint("NotifyDataSetChanged")
     private fun incrementViews(item : ItemModel){
-        item.rate=(item.requestCount.toFloat()/item.viewCount.toFloat()).toString()
+        item.rate=(item.requestCount.toFloat()/(item.viewCount.toFloat())).toString()
         val map = HashMap<String,Any>()
         map[myTags.adViewCount] = item.viewCount
         map[myTags.adRate] = item.rate
