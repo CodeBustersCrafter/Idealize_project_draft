@@ -155,16 +155,17 @@
 
                     <RatingBar
                         android:id="@+id/dialogue_ad_rate_bar"
+                        android:backgroundTint="#EAEAEA"
                         style="@style/Widget.AppCompat.RatingBar.Indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:progressBackgroundTint="@color/grey"
                         android:numStars="5"
                         android:progress="4"
                         android:progressTint="#FFC106"
-                        android:rating="3"
-                        android:stepSize="0.1"
-                        tools:ignore="UnusedAttribute" />
+                        android:secondaryProgressTint="@android:color/transparent"
+                        android:progressBackgroundTint="#EAEAEA"
+                        android:rating="3.3"
+                        android:stepSize="0.1" />
 
                     <TextView
                         android:id="@+id/dialogue_ad_rate"
@@ -284,7 +285,7 @@ that comhines health and taste"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="6dp"
             android:text="Location"
             android:textColor="@color/black"
             android:textSize="17sp"
@@ -305,14 +306,16 @@ that comhines health and taste"
 
             <RatingBar
                 android:id="@+id/dialogue_user_rate_bar"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="#EAEAEA"
                 style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
                 android:progress="4"
                 android:progressTint="#FFC106"
-                android:rating="3"
+                android:secondaryProgressTint="@android:color/transparent"
+                android:progressBackgroundTint="#EAEAEA"
+                android:rating="3.3"
                 android:stepSize="0.1" />
 
             <TextView
