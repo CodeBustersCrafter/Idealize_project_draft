@@ -134,7 +134,13 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         )
 
         categoryAdapter = CategoryAdapter(categoryList) { category ->
-            itemcategory = category.name
+            if(itemcategory == category.name){
+                categoryAdapter.selectedPosition = RecyclerView.NO_POSITION
+                categoryAdapter.notifyDataSetChanged()
+                itemcategory = ""
+            }else{
+                itemcategory = category.name
+            }
             initData(type, view, searchEditText.text.toString(),selectedCity,filterdBy,itemcategory,mycity)
         }
 
@@ -183,6 +189,9 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                 selectedCity = ""
             }
             itemcategory = ""
+            isGreen = true
+            toggleButton.setBackgroundColor(Color.parseColor("#00DE04")) // Green
+            mycity = ""
             categoryAdapter.selectedPosition = RecyclerView.NO_POSITION
             categoryAdapter.notifyDataSetChanged()
 
@@ -290,8 +299,8 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             query = query.whereEqualTo(myTags.adCategory, itemcategory)
         }
 
-        if (location.isNotEmpty()) {
-            val index = cities.indexOf(location)
+        if (mycity.isNotEmpty()) {
+            val index = cities.indexOf(mycity)
             val nearbyCities = mutableListOf<String>()
             nearbyCities.add(cities[index].toString())
             for (i in 1..5) {
@@ -303,8 +312,8 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
             query = query.whereIn(myTags.adLocation, nearbyCities)
         }
 
-        if (mycity.isNotEmpty()) {
-            query = query.whereEqualTo(myTags.adLocation, mycity)
+        if (location.isNotEmpty()) {
+            query = query.whereEqualTo(myTags.adLocation, location)
         }
 
         if (searchQuery.isNotEmpty()) {
