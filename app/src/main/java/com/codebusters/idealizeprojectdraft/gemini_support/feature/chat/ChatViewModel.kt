@@ -1,53 +1,27 @@
-/*
- * Copyright 2023 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.codebusters.idealizeprojectdraft.gemini_support.feature.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.google.ai.client.generativeai.Chat
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.Content
 import com.google.ai.client.generativeai.type.asTextOrNull
-import com.google.ai.client.generativeai.type.content
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ChatViewModel(
-    generativeModel: GenerativeModel,private var user : String = "#Code_Busters"
+    private val generativeModel: GenerativeModel,private var user : String = "#Code_Busters"
 ) : ViewModel() {
-    private val chat = generativeModel.startChat(
-        history = listOf(
-            content(role = "model") { text("Great to meet you. What would you like to know?") }
-        )
-    )
-
-    private val _uiState: MutableStateFlow<ChatUiState> =
-        MutableStateFlow(ChatUiState(chat.history.map { content ->
-            // Map the initial messages
-            ChatMessage(
-                text = content.parts.first().asTextOrNull() ?: "",
-                participant = if (content.role == user) Participant.USER else Participant.MODEL,
-                participantName = user,
-                isPending = false
-            )
-        }))
-    val uiState: StateFlow<ChatUiState> =
-        _uiState.asStateFlow()
-
+    private lateinit var chat : Chat
+    private lateinit var _uiState: MutableStateFlow<ChatUiState>
+    lateinit var uiState: StateFlow<ChatUiState>
 
     fun sendMessage(userMessage: String) {
         // Add a pending message
@@ -76,12 +50,28 @@ class ChatViewModel(
                         )
                     )
                 }
+
+                val map = HashMap<String, Any>()
+                val data = HashMap<String,Any>()
+
+                data[MyTags().userChatHistoryUSER] = userMessage
+                data[MyTags().timeStamp] = Timestamp.now()
+                map[MyTags().userChatHistoryUSER] = FieldValue.arrayUnion(data)
+
+                val data2 = HashMap<String,Any>()
+                data2[MyTags().userChatHistoryBOT] = response.text?:"No response"
+                data2[MyTags().timeStamp] = Timestamp.now()
+                map[MyTags().userChatHistoryBOT] = FieldValue.arrayUnion(data2)
+
+                FirebaseFirestore.getInstance().collection(MyTags().chats)
+                    .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                    .update(map)
             } catch (e: Exception) {
                 _uiState.value.replaceLastPendingMessage()
                 _uiState.value.addMessage(
                     ChatMessage(
                         text = e.localizedMessage!!,
-                        participantName = user,
+                        participantName = "#Code_Busters",
                         participant = Participant.ERROR
                     )
                 )
@@ -90,5 +80,31 @@ class ChatViewModel(
     }
     fun setUSer(u : String){
         user = u
+    }
+    fun setHistory(h : ArrayList<Content>) {
+
+        chat = generativeModel.startChat(
+            history = h
+        )
+        _uiState =
+        MutableStateFlow(ChatUiState(chat.history.map { content ->
+            // Map the initial messages
+            ChatMessage(
+                text = content.parts.first().asTextOrNull() ?: "",
+                participant = if (content.role == user) Participant.USER else Participant.MODEL,
+                participantName = if (content.role == user) user else "#Code_Busters",
+                isPending = false
+            )
+        }))
+
+        uiState=
+        _uiState.asStateFlow()
+
+    }
+    fun setOnlyHistory(h : ArrayList<Content>) {
+
+        chat = generativeModel.startChat(
+            history = h
+        )
     }
 }

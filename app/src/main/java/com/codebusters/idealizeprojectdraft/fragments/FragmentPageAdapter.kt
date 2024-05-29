@@ -10,7 +10,7 @@ import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 class FragmentPageAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val user: IdealizeUser
+    private val user: IdealizeUser,
     ) :
         FragmentStateAdapter(fragmentManager,lifecycle){
     override fun getItemCount(): Int {

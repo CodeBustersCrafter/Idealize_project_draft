@@ -2,6 +2,7 @@ package com.codebusters.idealizeprojectdraft
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -79,30 +80,37 @@ class MainActivity : AppCompatActivity() {
                 if(documentSnapshot.exists()){
                     idealizeUser = ModelBuilder().getUser(documentSnapshot)
                     bottomNavigationBar.visibility= View.VISIBLE
-                    val fragmentAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle,idealizeUser)
-                    viewPager.adapter = fragmentAdapter
-                    viewPager.registerOnPageChangeCallback(object :
-                        ViewPager2.OnPageChangeCallback() {
-                        override fun onPageSelected(position: Int) {
-                            super.onPageSelected(position)
-                            when(position){
-                                0->{
-                                    bottomNavigationBar.selectedItemId = R.id.menu_explore
+                            val fragmentAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle,idealizeUser)
+                            viewPager.adapter = fragmentAdapter
+                            viewPager.registerOnPageChangeCallback(object :
+                                ViewPager2.OnPageChangeCallback() {
+                                override fun onPageSelected(position: Int) {
+                                    super.onPageSelected(position)
+                                    if (position == 0) {// Disable swiping
+                                        viewPager.isUserInputEnabled = false
+                                    } else {
+                                        // Enable swiping
+                                        viewPager.isUserInputEnabled = true
+                                    }
+                                    when(position){
+                                        0->{
+                                            bottomNavigationBar.selectedItemId = R.id.menu_explore
+                                        }
+                                        1->{
+                                            bottomNavigationBar.selectedItemId = R.id.menu_my_ads
+                                        }
+                                        2->{
+                                            bottomNavigationBar.selectedItemId = R.id.menu_ai_help
+                                        }
+                                        else->{
+                                            bottomNavigationBar.selectedItemId = R.id.menu_profile
+                                        }
+                                    }
                                 }
-                                1->{
-                                    bottomNavigationBar.selectedItemId = R.id.menu_my_ads
                                 }
-                                2->{
-                                    bottomNavigationBar.selectedItemId = R.id.menu_ai_help
-                                }
-                                else->{
-                                    bottomNavigationBar.selectedItemId = R.id.menu_profile
-                                }
-                            }
-                        }
-
-                    })
+                            )
                     viewPager.currentItem = 0
+
                 }
             }
         }else{
@@ -150,10 +158,37 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingSuperCall")
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
-        if(bottomNavigationBar.selectedItemId == R.id.menu_ai_help){
-            //Nothing
+        if(type==myTags.userMode){
+            if(bottomNavigationBar.selectedItemId == R.id.menu_ai_help){
+                viewPager.currentItem = 2
+            }else{
+                //Add a alert dialogue here
+                val builder = AlertDialog.Builder(this)
+
+                // Set the alert dialog title and message
+                builder.setTitle("Sign Out")
+                builder.setMessage("Are you sure you want to sign out?")
+
+                // Add a positive button to the alert dialog
+                builder.setPositiveButton("Yes") { _, _ ->
+                    // Perform sign out and navigate to the HomeActivity
+                    auth.signOut()
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+
+                // Add a negative button to the alert dialog
+                builder.setNegativeButton("No") { dialog, _ ->
+                    // Dismiss the alert dialog
+                    dialog.dismiss()
+                }
+
+                // Create and show the alert dialog
+                val dialog = builder.create()
+                dialog.show()
+            }
         }else{
-            auth.signOut()
             val intent = Intent(this,HomeActivity::class.java)
             startActivity(intent)
             finish()

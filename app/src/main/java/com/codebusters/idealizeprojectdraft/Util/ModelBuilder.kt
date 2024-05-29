@@ -67,6 +67,7 @@ class ModelBuilder {
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getUser(documentSnapshot: DocumentSnapshot): IdealizeUser {
         val idealizeUser = IdealizeUser(
             documentSnapshot.get(myTags.userEmail).toString(),

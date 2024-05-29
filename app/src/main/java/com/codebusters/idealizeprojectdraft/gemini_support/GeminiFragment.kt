@@ -16,7 +16,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.ChatRoute
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal.PhotoReasoningRoute
+import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.ui.theme.GenerativeAISample
+import com.google.ai.client.generativeai.type.Content
+import com.google.ai.client.generativeai.type.TextPart
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class GeminiFragment(private val user : String ="Guest") : Fragment() {
 
@@ -33,21 +38,55 @@ class GeminiFragment(private val user : String ="Guest") : Fragment() {
                         modifier = Modifier.fillMaxSize().background(color = Color.Green),
                     ) {
                         val navController = rememberNavController()
-
+                        var history = ArrayList<Content>()
                         NavHost(navController = navController, startDestination = "menu") {
                             composable("menu") {
                                 MenuScreen(onItemClicked = { routeId ->
-                                    navController.navigate(routeId)
+                                    FirebaseFirestore.getInstance().collection(MyTags().chats)
+                                        .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                        .get().addOnSuccessListener {
+                                            history = ArrayList()
+                                            if(it[MyTags().userChatHistoryUSER]!=null){
+                                                val userChatHistory = it[MyTags().userChatHistoryUSER] as ArrayList<*>
+                                                val botChatHistory = it[MyTags().userChatHistoryBOT] as ArrayList<*>
+                                                var i = 0
+                                                while(i<userChatHistory.size){
+                                                    var temp = userChatHistory[i] as HashMap<*, *>
+                                                    history.add(
+                                                        Content(user,
+                                                            listOf(TextPart(temp[MyTags().userChatHistoryUSER].toString()))
+                                                        )
+                                                    )
+                                                    temp = botChatHistory[i] as HashMap<*, *>
+                                                    history.add(
+                                                        Content("model",
+                                                            listOf(TextPart(temp[MyTags().userChatHistoryBOT].toString()))
+                                                        )
+                                                    )
+                                                    i++
+                                                }
+                                            }else{
+                                                val map = HashMap<String,Any>()
+                                                map[MyTags().userChatHistoryUSER] = ArrayList<Any>()
+                                                map[MyTags().userChatHistoryBOT] = ArrayList<Any>()
+                                                FirebaseFirestore.getInstance().collection(MyTags().chats)
+                                                    .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                                    .set(map)
+                                            }
+                                            history.add(
+                                                Content("model",
+                                                    listOf(TextPart("Great to meet you. What would you like to know?"))
+                                                )
+                                            )
+                                            navController.navigate(routeId)
+                                        }
                                 })
                             }
-                            /*composable("summarize") {
-                                SummarizeRoute()
-                            }*/
                             composable("photo_reasoning") {
                                 PhotoReasoningRoute(user)
                             }
                             composable("chat") {
-                                ChatRoute(user)
+                                ChatRoute(user,history)
                             }
                         }
                     }

@@ -69,4 +69,9 @@ class MyTags {
     val adRequest : String = "Ad Request"
 
     val areNewRequests : String = "New Requests"
+
+    val chats : String = "Chats"
+    val userChatHistoryUSER : String = "Chats User"
+    val userChatHistoryBOT : String = "Chats Bot"
+    val timeStamp : String = "Timestamp"
 }

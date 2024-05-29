@@ -16,11 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +30,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,27 +46,62 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.gemini_support.GenerativeViewModelFactory
+import com.codebusters.idealizeprojectdraft.models.MyTags
+import com.google.ai.client.generativeai.type.Content
+import com.google.ai.client.generativeai.type.TextPart
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 
-@Preview
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChatRoute(
-    user : String = "#Code_Busters",chatViewModel: ChatViewModel = viewModel(factory = GenerativeViewModelFactory)
+    user : String = "#Code_Busters",h : ArrayList<Content> ,chatViewModel: ChatViewModel = viewModel<ChatViewModel>(factory = GenerativeViewModelFactory)
 ) {
     chatViewModel.setUSer(user)
+    chatViewModel.setHistory(h)
     val chatUiState by chatViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Chat with Gemini") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            // Implement logic to delete the message
+                            val map = HashMap<String,Any>()
+                            map[MyTags().userChatHistoryUSER] = ArrayList<Any>()
+                            map[MyTags().userChatHistoryBOT] = ArrayList<Any>()
+                            FirebaseFirestore.getInstance().collection(MyTags().chats)
+                                .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                .set(map).addOnSuccessListener {
+                                    val history = ArrayList<Content>()
+                                    history.add(
+                                        Content("model",
+                                            listOf(TextPart("Great to meet you. What would you like to know?"))
+                                        )
+                                    )
+                                }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete message",
+                            tint = MaterialTheme.colorScheme.error)
+                    }
+                }
+            )
+        },
         bottomBar = {
             MessageInput(
                 onSendMessage = { inputText ->
