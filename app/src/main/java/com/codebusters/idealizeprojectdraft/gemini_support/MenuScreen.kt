@@ -44,12 +44,23 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.codebusters.idealizeprojectdraft.R
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+
 
 data class MenuItem(
     val routeId: String,
     val titleResId: Int,
-    val descriptionResId: Int
+    val descriptionResId: Int,
 )
+
 
 val LocalAppColorPalette = staticCompositionLocalOf {
     AppColorPalette(
@@ -122,65 +133,218 @@ fun GreenTheme(darkTheme: Boolean = false, content: @Composable () -> Unit) {
 fun MenuScreen(
     onItemClicked: (String) -> Unit = { }
 ) {
-    val menuItems = listOf(
-        //MenuItem("summarize", R.string.menu_summarize_title, R.string.menu_summarize_description),
-        MenuItem("photo_reasoning", R.string.menu_reason_title, R.string.menu_reason_description),
+    val menu1 = listOf(
         MenuItem("chat", R.string.menu_chat_title, R.string.menu_chat_description)
     )
+
+    val menu2 = listOf(
+        MenuItem("photo_reasoning", R.string.menu_reason_title, R.string.menu_reason_description),
+    )
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white))
-    ){
-        LazyColumn(
-            Modifier
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(top = 16.dp, bottom = 16.dp)
-        ) {
-            items(menuItems) { menuItem ->
-                Card(
+        )  {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(193.dp)
+                    .padding(bottom = 6.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.AI1),
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.black)
+                    ),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    colors = CardColors(containerColor = colorResource(id = R.color.lightgreyv2),
-                        contentColor = colorResource(id = R.color.colorPrimary),
-                        disabledContentColor = colorResource(id = R.color.grey),
-                        disabledContainerColor = colorResource(id = R.color.colorSecondary))
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(all = 16.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = stringResource(menuItem.titleResId),
-                            style = MaterialTheme.typography.titleMedium
-                            , fontSize = TextUnit(18f, TextUnitType.Sp)
-                            ,color = colorResource(id = R.color.colorPrimaryDark),
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight(600)
+                        .align(Alignment.CenterStart)
+                        .padding(start = 46.dp, top = 30.dp)
+                )
 
+                Image(
+                    painter = painterResource(id = R.drawable.robo),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .size(150.dp)
+                        .height(200.dp)
+                        .padding(end = 16.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.frame2),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 0.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(50.dp))
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(menu1) { menuItem ->
+                    Text(
+                        text = stringResource(id = R.string.Prompts),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = colorResource(id = R.color.black)
+                        ),
+                        modifier = Modifier
+                            .padding(start = 15.dp)
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.tet1),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 10.dp, start = 10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.text2),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 10.dp, start = 10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.End)
+                            .padding(start = 180.dp, end = 10.dp),
+                                colors = CardColors(
+                            containerColor = colorResource(id = R.color.lightgreyv2),
+                            contentColor = colorResource(id = R.color.colorPrimary),
+                            disabledContentColor = colorResource(id = R.color.grey),
+                            disabledContainerColor = colorResource(id = R.color.colorSecondary)
                         )
-                        Text(
-                            text = stringResource(menuItem.descriptionResId),
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 8.dp)
-                            , fontSize = TextUnit(15f, TextUnitType.Sp)
-                            ,color = colorResource(id = R.color.appgreeen),
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight(600)
-                        )
-                        TextButton(
-                            onClick = {
-                                onItemClicked(menuItem.routeId)
-                            },
-                            modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(all = 16.dp)
+                                .fillMaxWidth()
                         ) {
-                            Text(text = "Use"
-                                , fontSize = TextUnit(18f, TextUnitType.Sp)
-                                ,color = colorResource(id = R.color.colorPrimaryDark),
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(50.dp)
+                                    .padding(bottom = 6.dp)
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        onItemClicked(menuItem.routeId)
+                                    },
+                                    modifier = Modifier.align(Alignment.BottomEnd)
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.arrowbutton),
+                                        contentDescription = "Use",
+                                        modifier = Modifier.size(40.dp)
+                                    )
+                                }
+                                Image(
+                                    painter = painterResource(id = R.drawable.f1), // Replace with your green button image resource
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(end = 16.dp, bottom = 0.dp)
+                                )
+                            }
+                            Text(
+                                text = stringResource(menuItem.descriptionResId),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(top = 8.dp),
+                                fontSize = TextUnit(15f, TextUnitType.Sp),
+                                color = colorResource(id = R.color.appgreeen),
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight(600))
+                                fontWeight = FontWeight(600)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+                items(menu2) { menuItem ->
+                    Text(
+                        text = stringResource(id = R.string.Prompts),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            color = colorResource(id = R.color.black)
+                        ),
+                        modifier = Modifier
+                            .padding(start = 15.dp)
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.text3),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 10.dp, start = 10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.text4),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 10.dp, start = 10.dp)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Start)
+                            .padding(start = 10.dp, end = 180.dp),
+                        colors = CardColors(
+                            containerColor = colorResource(id = R.color.lightgreyv2),
+                            contentColor = colorResource(id = R.color.colorPrimary),
+                            disabledContentColor = colorResource(id = R.color.grey),
+                            disabledContainerColor = colorResource(id = R.color.colorSecondary)
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(all = 16.dp)
+                                .fillMaxWidth()
+                        ){
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(50.dp)
+                                    .padding(bottom = 6.dp)
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        onItemClicked(menuItem.routeId)
+                                    },
+                                    modifier = Modifier.align(Alignment.BottomEnd)
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.arrowbutton),
+                                        contentDescription = "Use",
+                                        modifier = Modifier.size(40.dp)
+                                    )
+                                }
+                                Image(
+                                    painter = painterResource(id = R.drawable.f2), // Replace with your green button image resource
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(end = 16.dp, bottom = 0.dp)
+                                )
+                            }
+                            Text(
+                                text = stringResource(menuItem.descriptionResId),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(top = 8.dp),
+                                fontSize = TextUnit(15f, TextUnitType.Sp),
+                                color = colorResource(id = R.color.appgreeen),
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight(600)
+                            )
                         }
                     }
                 }

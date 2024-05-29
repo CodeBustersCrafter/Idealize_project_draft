@@ -105,6 +105,10 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         }
 
         toggleButton.setOnClickListener {
+            if (type == myTags.guestMode) {
+                Toast.makeText(context, "You need to sign in to your account to use this feature", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             isGreen = !isGreen  // Toggle the variable
             if (isGreen) {
                 toggleButton.setBackgroundColor(Color.parseColor("#00DE04")) // Green

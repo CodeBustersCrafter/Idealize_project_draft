@@ -47,9 +47,10 @@
         android:gravity="center"
         android:layout_marginHorizontal="10dp"
 
-        android:text="\nWadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak Wadanak \n "
+        android:text="@string/Wadana"
         android:textColor="@color/black"
         android:textSize="15dp" />
+
 
     <Button
         android:id="@+id/btn_user"
