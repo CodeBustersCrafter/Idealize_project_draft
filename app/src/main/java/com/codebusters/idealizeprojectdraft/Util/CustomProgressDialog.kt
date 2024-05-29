@@ -1,4 +1,4 @@
-package com.codebusters.idealizeprojectdraft
+package com.codebusters.idealizeprojectdraft.Util
 
 import android.app.Activity
 import android.app.Dialog
@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
+import com.codebusters.idealizeprojectdraft.R
 
 class CustomProgressDialog(context: Context) {
 

@@ -9,11 +9,10 @@ import android.content.pm.ActivityInfo
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.viewpager2.widget.ViewPager2
+import com.codebusters.idealizeprojectdraft.Util.NotificationService
 import com.codebusters.idealizeprojectdraft.databinding.ActivityRequestBinding
-import com.codebusters.idealizeprojectdraft.fragments.MyRequestsFragment
-import com.codebusters.idealizeprojectdraft.fragments.RequestsFragment
+import com.codebusters.idealizeprojectdraft.fragments.FragmentRequestPageAdapter
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
 
@@ -28,31 +27,41 @@ class RequestActivity : AppCompatActivity() {
         binding = ActivityRequestBinding.inflate(layoutInflater)
         setContentView(binding.root)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         uid=intent.getStringExtra(myTags.intentUID).toString()
+
+        val fragmentAdapter = FragmentRequestPageAdapter(supportFragmentManager,lifecycle,uid)
+        binding.requestsViewPager.adapter = fragmentAdapter
+        binding.requestsViewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when(position){
+                    0->{
+                        binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_my_requests
+                    }
+                    else->{
+                        binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_requests
+                    }
+                }
+            }
+
+        })
+
         if(intent.getStringExtra(myTags.intentFragmentRequest).toString()=="1"){
-            replaceFragment(RequestsFragment(uid))
-
+            binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_requests
         }else{
-            replaceFragment(MyRequestsFragment(uid))
+            binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_my_requests
         }
-
-
-
 
         binding.bottomAppBarRequestScreen.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.menu_my_requests->replaceFragment(MyRequestsFragment(uid))
-                else->replaceFragment(RequestsFragment(uid))
+                R.id.menu_my_requests->binding.requestsViewPager.currentItem = 0
+                else->binding.requestsViewPager.currentItem = 1
             }
             true
         }
 
-    }
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentManager : FragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.request_frame_layout,fragment)
-        fragmentTransaction.commit()
     }
 
     @Suppress("DEPRECATION")
@@ -72,15 +81,15 @@ class RequestActivity : AppCompatActivity() {
         uid=intent.getStringExtra(myTags.intentUID).toString()
 
         if(intent.getStringExtra(myTags.intentFragmentRequest).toString()=="1"){
-            replaceFragment(RequestsFragment(uid))
+            binding.requestsViewPager.currentItem = 1
             binding.bottomAppBarRequestScreen.selectedItemId = R.id.menu_requests
-            stopService(Intent(this,NotificationService::class.java))
+            stopService(Intent(this, NotificationService::class.java))
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancelAll()
-            val intent = Intent(this,NotificationService::class.java)
+            val intent = Intent(this, NotificationService::class.java)
             startService(intent)
         }else{
-            replaceFragment(MyRequestsFragment(uid))
+            binding.requestsViewPager.currentItem = 0
         }
         super.onStart()
     }

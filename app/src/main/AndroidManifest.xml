@@ -85,7 +85,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <service android:name=".NotificationService"
+        <service android:name=".Util.NotificationService"
             android:exported="false"
             android:permission="android.permission.FOREGROUND_SERVICE" />
     </application>

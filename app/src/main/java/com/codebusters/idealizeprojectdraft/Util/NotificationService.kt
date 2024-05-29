@@ -1,4 +1,4 @@
-package com.codebusters.idealizeprojectdraft
+package com.codebusters.idealizeprojectdraft.Util
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -11,6 +11,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.codebusters.idealizeprojectdraft.R
+import com.codebusters.idealizeprojectdraft.RequestActivity
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange

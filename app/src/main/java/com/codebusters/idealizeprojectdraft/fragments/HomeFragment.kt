@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.codebusters.idealizeprojectdraft.CustomProgressDialog
-import com.codebusters.idealizeprojectdraft.ModelBuilder
+import com.codebusters.idealizeprojectdraft.Util.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.RequestActivity
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser

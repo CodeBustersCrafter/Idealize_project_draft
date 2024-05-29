@@ -1,4 +1,4 @@
-package com.codebusters.idealizeprojectdraft
+package com.codebusters.idealizeprojectdraft.Util
 
 import android.content.Intent
 import android.net.Uri

@@ -52,6 +52,7 @@ import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.gemini_support.GenerativeViewModelFactory
 import kotlinx.coroutines.launch
 
+
 @Preview
 @Composable
 internal fun ChatRoute(
@@ -66,8 +67,7 @@ internal fun ChatRoute(
         bottomBar = {
             MessageInput(
                 onSendMessage = { inputText ->
-                    chatViewModel.sendMessage(inputText)
-                },
+                    chatViewModel.sendMessage(inputText)},
                 resetScroll = {
                     coroutineScope.launch {
                         listState.scrollToItem(0)

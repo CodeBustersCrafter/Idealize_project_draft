@@ -10,16 +10,13 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import com.codebusters.idealizeprojectdraft.fragments.HomeFragment
-import com.codebusters.idealizeprojectdraft.fragments.ProfileFragment
-import com.codebusters.idealizeprojectdraft.fragments.SellFragment
-import com.codebusters.idealizeprojectdraft.gemini_support.GeminiFragment
+import androidx.viewpager2.widget.ViewPager2
+import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.Util.NotificationService
+import com.codebusters.idealizeprojectdraft.fragments.FragmentPageAdapter
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
@@ -42,9 +39,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var firestore : FirebaseFirestore
 
     private lateinit var bottomNavigationBar : BottomNavigationView
-    private lateinit var frameLayout : FrameLayout
 
-    private var nonChangingFragment : Boolean = false
+    private lateinit var viewPager : ViewPager2
 
     private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
 
@@ -66,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         bottomNavigationBar = findViewById(R.id.bottom_app_bar)
-        frameLayout = findViewById(R.id.main_frame_layout)
+        viewPager = findViewById(R.id.main_view_pager)
 
         firestore = FirebaseFirestore.getInstance()
 
@@ -83,54 +79,91 @@ class MainActivity : AppCompatActivity() {
                 if(documentSnapshot.exists()){
                     idealizeUser = ModelBuilder().getUser(documentSnapshot)
                     bottomNavigationBar.visibility= View.VISIBLE
-                    replaceFragment(HomeFragment(idealizeUser))
+                    val fragmentAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle,idealizeUser)
+                    viewPager.adapter = fragmentAdapter
+                    viewPager.registerOnPageChangeCallback(object :
+                        ViewPager2.OnPageChangeCallback() {
+                        override fun onPageSelected(position: Int) {
+                            super.onPageSelected(position)
+                            when(position){
+                                0->{
+                                    bottomNavigationBar.selectedItemId = R.id.menu_explore
+                                }
+                                1->{
+                                    bottomNavigationBar.selectedItemId = R.id.menu_my_ads
+                                }
+                                2->{
+                                    bottomNavigationBar.selectedItemId = R.id.menu_ai_help
+                                }
+                                else->{
+                                    bottomNavigationBar.selectedItemId = R.id.menu_profile
+                                }
+                            }
+                        }
+
+                    })
+                    viewPager.currentItem = 0
                 }
             }
         }else{
+            val fragmentAdapter = FragmentPageAdapter(supportFragmentManager,lifecycle,IdealizeUser())
+            viewPager.adapter = fragmentAdapter
+            viewPager.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    when(position){
+                        0->{
+                            bottomNavigationBar.selectedItemId = R.id.menu_explore
+                        }
+                        1->{
+                            bottomNavigationBar.selectedItemId = R.id.menu_my_ads
+                        }
+                        2->{
+                            bottomNavigationBar.selectedItemId = R.id.menu_ai_help
+                        }
+                        else->{
+                            bottomNavigationBar.selectedItemId = R.id.menu_profile
+                        }
+                    }
+                }
+            })
             bottomNavigationBar.visibility= View.GONE
-            replaceFragment(HomeFragment(IdealizeUser()))
+            viewPager.currentItem = 0
         }
 
         bottomNavigationBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.menu_explore -> {replaceFragment(HomeFragment(idealizeUser))
-                nonChangingFragment =false}
-                R.id.menu_my_ads -> {replaceFragment(SellFragment(idealizeUser))
-                    nonChangingFragment =false}
-                R.id.menu_ai_help -> {replaceFragment(GeminiFragment(idealizeUser.name))
-                                        nonChangingFragment = true
-                                        }
-                else ->{ replaceFragment(ProfileFragment())
-                    nonChangingFragment =false}
+                R.id.menu_explore -> {
+                    viewPager.currentItem = 0}
+                R.id.menu_my_ads -> {
+                    viewPager.currentItem = 1}
+                R.id.menu_ai_help -> {
+                    viewPager.currentItem = 2}
+                else ->{
+                    viewPager.currentItem = 3}
             }
             true
         }
     }
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentManager : FragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.main_frame_layout,fragment)
-        fragmentTransaction.commit()
-    }
+
     @SuppressLint("MissingSuperCall")
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
-        if(nonChangingFragment){
-            replaceFragment(GeminiFragment(idealizeUser.name))
-            nonChangingFragment = false
+        if(bottomNavigationBar.selectedItemId == R.id.menu_ai_help){
+            //Nothing
         }else{
             auth.signOut()
             val intent = Intent(this,HomeActivity::class.java)
             startActivity(intent)
             finish()
         }
-
     }
 
     private fun startStopService(){
         if(!isMyServiceRunning(NotificationService::class.java)){
             Toast.makeText(this,"Started",Toast.LENGTH_SHORT).show()
-            val intent = Intent(this,NotificationService::class.java)
+            val intent = Intent(this, NotificationService::class.java)
             startService(intent)
         }else{
             Toast.makeText(this,"Running...",Toast.LENGTH_SHORT).show()
@@ -164,5 +197,4 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(networkChangeListener)
         super.onStop()
     }
-
 }

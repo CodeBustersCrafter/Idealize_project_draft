@@ -32,16 +32,18 @@ class LeaderboardActivity : AppCompatActivity() {
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 // Get the selected row count
+                var selectedRowCount : Int
                 if(position!=0){
-                    val selectedRowCount = rowCounts[position].substring(2).toInt()
-
-                    // Update the table layout to display the selected number of rows
-                    // (You need to implement the logic to update the table layout based on the selected row count)
-                    binding.tableLayoutLeaderboard.removeViews(0, binding.tableLayoutLeaderboard.childCount)
-                    val d = listOf("Rank","Name","Rate")
-                    addToTable(d,true)
-                    gatherData(selectedRowCount)
+                     selectedRowCount = rowCounts[position].substring(2).toInt()
+                }else{
+                    selectedRowCount = 10
                 }
+                // Update the table layout to display the selected number of rows
+                // (You need to implement the logic to update the table layout based on the selected row count)
+                binding.tableLayoutLeaderboard.removeViews(0, binding.tableLayoutLeaderboard.childCount)
+                val d = listOf("Rank","Name","Rate")
+                addToTable(d,true)
+                gatherData(selectedRowCount)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {

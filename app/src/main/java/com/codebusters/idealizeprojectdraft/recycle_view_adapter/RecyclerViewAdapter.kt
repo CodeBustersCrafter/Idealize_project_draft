@@ -13,9 +13,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.codebusters.idealizeprojectdraft.CustomMaskTransformation
-import com.codebusters.idealizeprojectdraft.ModelBuilder
-import com.codebusters.idealizeprojectdraft.NormalCalls
+import com.codebusters.idealizeprojectdraft.Util.CustomMaskTransformation
+import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.Util.NormalCalls
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
@@ -298,7 +298,8 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 Toast.makeText(context,"Not Sent! Try Again", Toast.LENGTH_SHORT).show()
             }
         }
-        firestore.collection(myTags.users).document(requestModel.buyerId).collection(myTags.userMyRequests).document(requestModel.requestID).set(ModelBuilder().getRequestAsMap(requestModel)).addOnCompleteListener{
+        firestore.collection(myTags.users).document(requestModel.buyerId).collection(myTags.userMyRequests).document(requestModel.requestID).set(
+            ModelBuilder().getRequestAsMap(requestModel)).addOnCompleteListener{
                 result ->
             if(result.isSuccessful){
                 Toast.makeText(context,"Request is shown to you", Toast.LENGTH_SHORT).show()
@@ -347,7 +348,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
     }
 
     private fun putAd(item: ItemModel, context : Context){
-        val map=ModelBuilder().getItemAsMap(item)
+        val map= ModelBuilder().getItemAsMap(item)
 
         firestore.collection(myTags.ads).document(item.adId)
             .set(map).addOnCompleteListener {

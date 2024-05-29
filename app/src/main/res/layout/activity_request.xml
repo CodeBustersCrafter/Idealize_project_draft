@@ -8,13 +8,14 @@
     android:background="@color/white"
     tools:ignore="UseCompoundDrawables">
 
-    <FrameLayout
-        android:id="@+id/request_frame_layout"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/requests_view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottom_app_bar_request_screen"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="InefficientWeight"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_app_bar_request_screen"
