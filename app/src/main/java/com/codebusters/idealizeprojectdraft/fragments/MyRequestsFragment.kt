@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.ItemRequestModel
 import com.codebusters.idealizeprojectdraft.models.MyTags

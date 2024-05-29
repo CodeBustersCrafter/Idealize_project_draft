@@ -1,4 +1,4 @@
-package com.codebusters.idealizeprojectdraft.Util
+package com.codebusters.idealizeprojectdraft.util
 
 import android.net.Uri
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser

@@ -15,8 +15,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
-import com.codebusters.idealizeprojectdraft.Util.NotificationService
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.util.NotificationService
 import com.codebusters.idealizeprojectdraft.fragments.FragmentPageAdapter
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags

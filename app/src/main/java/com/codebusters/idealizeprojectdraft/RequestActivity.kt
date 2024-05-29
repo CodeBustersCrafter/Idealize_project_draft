@@ -10,7 +10,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.codebusters.idealizeprojectdraft.Util.NotificationService
+import com.codebusters.idealizeprojectdraft.util.NotificationService
 import com.codebusters.idealizeprojectdraft.databinding.ActivityRequestBinding
 import com.codebusters.idealizeprojectdraft.fragments.FragmentRequestPageAdapter
 import com.codebusters.idealizeprojectdraft.models.MyTags

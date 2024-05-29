@@ -13,7 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.codebusters.idealizeprojectdraft.Util.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
 import com.codebusters.idealizeprojectdraft.databinding.ActivityProfileDetailUpdatesBinding
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.google.firebase.auth.FirebaseAuth

@@ -1,4 +1,4 @@
-package com.codebusters.idealizeprojectdraft.Util
+package com.codebusters.idealizeprojectdraft.util
 
 import android.app.Activity
 import android.app.Dialog
