@@ -96,7 +96,7 @@
     <string name="best_healthy_grocery"><![CDATA[Best & Healthy Grocery]]></string>
     <string name="let_s_find_the">Let\'s Find the</string>
 
-    <string name="Wadana">Step into a world where quality meets convenience. Connect with local farmers and suppliers to receive the freshest produce and enjoy healthy eating and vibrant blooms, all within just a few taps on your screen.</string>
+    <string name="Wadana">\nStep into a world where quality meets convenience. Connect with local farmers and suppliers to receive the freshest produce and enjoy healthy eating and vibrant blooms, all within just a few taps on your screen.\n</string>
     <string name="AI1">Hello, Ask Me \n  Anything…</string>
     <string name="Prompts">Popular Prompts</string>
     <string-array name="categories">

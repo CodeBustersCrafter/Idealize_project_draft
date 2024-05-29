@@ -44,7 +44,7 @@ class HomeActivity : AppCompatActivity() {
 
     private val progressDialog by lazy { CustomProgressDialog(this) }
 
-    @SuppressLint("SourceLockedOrientationActivity")
+    @SuppressLint("SourceLockedOrientationActivity", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)

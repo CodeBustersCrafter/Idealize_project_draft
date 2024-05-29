@@ -136,6 +136,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this,"Running...",Toast.LENGTH_SHORT).show()
         }
     }
+    @Suppress("DEPRECATION")
     private fun isMyServiceRunning(mClass : Class<NotificationService>):Boolean{
         val manager : ActivityManager = getSystemService(
             Context.ACTIVITY_SERVICE
@@ -164,7 +165,4 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
 }
