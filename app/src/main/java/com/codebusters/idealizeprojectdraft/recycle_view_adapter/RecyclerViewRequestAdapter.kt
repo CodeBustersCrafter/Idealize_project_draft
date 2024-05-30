@@ -15,10 +15,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.codebusters.idealizeprojectdraft.Util.CustomMaskTransformation
-import com.codebusters.idealizeprojectdraft.Util.CustomProgressDialog
-import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
-import com.codebusters.idealizeprojectdraft.Util.NormalCalls
+import com.codebusters.idealizeprojectdraft.util.CustomMaskTransformation
+import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.util.NormalCalls
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.ItemRequestModel

@@ -22,17 +22,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.codebusters.idealizeprojectdraft.Util.CustomProgressDialog
-import com.codebusters.idealizeprojectdraft.Util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.RequestActivity
+import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -72,7 +71,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         newNotificationTag = view.findViewById(R.id.new_tag_home_screen)
         refreshButton2.isEnabled = false
         searchEditText = view.findViewById(R.id.searchEditText)
-        toggleButton = view.findViewById(R.id.toggleButton);
+        toggleButton = view.findViewById(R.id.toggleButton)
         val autoCompleteTextView: AutoCompleteTextView = view.findViewById(R.id.autoCompleteTextView)
         autoCompleteTextView.threshold = 0
         var selectedCity = ""
@@ -80,6 +79,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
         var itemcategory = ""
         var mycity = ""
 
+        newNotificationTag.visibility = View.GONE
 
         firestore= FirebaseFirestore.getInstance()
 
@@ -184,7 +184,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
         refreshButton.setOnRefreshListener {
             dataList.clear() // Clear previous data
-            var temp = autoCompleteTextView.text.toString()
+            val temp = autoCompleteTextView.text.toString()
             if(temp == ""){
                 selectedCity = ""
             }
@@ -271,18 +271,28 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
 
 
     private fun newRequestsChecking(){
-        firestore.collection(myTags.users).document(FirebaseAuth.getInstance().currentUser?.uid.toString()).get().addOnSuccessListener {
-            if(it.get(myTags.areNewRequests)!=null){
-                if(it.get(myTags.areNewRequests).toString().trim().toInt()==1){
-                    newNotificationTag.visibility = View.VISIBLE
-                }else{
-                    newNotificationTag.visibility = View.GONE
+
+            FirebaseFirestore.getInstance().collection(myTags.users).document(user.uid)
+                .collection(myTags.userRequests)
+                .addSnapshotListener { _, _ ->
+                            FirebaseFirestore.getInstance().collection(myTags.users).document(user.uid)
+                                .get().addOnSuccessListener { document ->
+                                    if (document.get(myTags.areNewRequests) != null) {
+                                        if (document.get(myTags.areNewRequests).toString().trim().toInt()==1) {
+                                            newNotificationTag.visibility = View.VISIBLE
+                                        }else{
+                                            newNotificationTag.visibility = View.GONE
+                                        }
+                                    }else{
+                                        newNotificationTag.visibility = View.GONE
+                                    }
+                                }.addOnFailureListener{
+                                    newNotificationTag.visibility = View.GONE
+                                }
                 }
-            }else{
-                newNotificationTag.visibility = View.GONE
-            }
-        }
+
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun initData(type: Int, view: View, searchQuery: String = "",location: String = "",filtering: String = "",itemcategory: String = "",mycity: String = "") {
         dataList = ArrayList()

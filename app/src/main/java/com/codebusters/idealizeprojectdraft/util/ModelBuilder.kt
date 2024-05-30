@@ -1,4 +1,4 @@
-package com.codebusters.idealizeprojectdraft.Util
+package com.codebusters.idealizeprojectdraft.util
 
 import android.net.Uri
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
@@ -67,6 +67,7 @@ class ModelBuilder {
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun getUser(documentSnapshot: DocumentSnapshot): IdealizeUser {
         val idealizeUser = IdealizeUser(
             documentSnapshot.get(myTags.userEmail).toString(),

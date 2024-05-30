@@ -32,18 +32,16 @@ class LeaderboardActivity : AppCompatActivity() {
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 // Get the selected row count
-                var selectedRowCount : Int
                 if(position!=0){
-                     selectedRowCount = rowCounts[position].substring(2).toInt()
-                }else{
-                    selectedRowCount = 10
-                }
+                     val selectedRowCount = rowCounts[position].substring(2).toInt()
+
                 // Update the table layout to display the selected number of rows
                 // (You need to implement the logic to update the table layout based on the selected row count)
                 binding.tableLayoutLeaderboard.removeViews(0, binding.tableLayoutLeaderboard.childCount)
                 val d = listOf("Rank","Name","Rate")
                 addToTable(d,true)
                 gatherData(selectedRowCount)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -103,7 +101,8 @@ class LeaderboardActivity : AppCompatActivity() {
     }
 
 
-    private fun addToTable(data : List<*>,isTopic : Boolean = false){
+    @Suppress("DEPRECATION")
+    private fun addToTable(data : List<*>, isTopic : Boolean = false){
         val tableRow = TableRow(this)
         tableRow.layoutParams = TableLayout.LayoutParams(
             TableLayout.LayoutParams.MATCH_PARENT,
@@ -132,7 +131,6 @@ class LeaderboardActivity : AppCompatActivity() {
                     TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.WRAP_CONTENT
                 ).apply {
-                    @Suppress("KotlinConstantConditions")
                     if(cellNo==0 || cellNo==2){
                         weight = .2f
                     }else{
@@ -158,14 +156,12 @@ class LeaderboardActivity : AppCompatActivity() {
 
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
-        if(true){
-            val intent = Intent(this,MainActivity::class.java)
-            intent.putExtra(myTags.intentType,myTags.userMode)
-            intent.putExtra(myTags.intentUID,FirebaseAuth.getInstance().currentUser?.uid)
-            startActivity(intent)
-            finish()
-        }else{
         super.onBackPressed()
-        }
+        val intent = Intent(this,MainActivity::class.java)
+        intent.putExtra(myTags.intentType,myTags.userMode)
+        intent.putExtra(myTags.intentUID,FirebaseAuth.getInstance().currentUser?.uid)
+        startActivity(intent)
+        finish()
+
     }
 }
