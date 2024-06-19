@@ -67,7 +67,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChatRoute(
-    user : String = "#Code_Busters",
+    user : String = "user",
     h : ArrayList<Content> ,
     chatViewModel: ChatViewModel = viewModel<ChatViewModel>(factory = GenerativeViewModelFactory),
     navController: NavController

@@ -65,6 +65,7 @@ class MyTags {
     var cities : String = "Cities"
 
     val apikey : String  = "AIzaSyDHgeax4THkVyLonaykqSw8i7R-R-dlOYg"
+    //val apikey : String = "AIzaSyAjXIS8Joz51sYzdCLlkZo3C2qNP5l5MJs"
 
     val adRequest : String = "Ad Request"
 

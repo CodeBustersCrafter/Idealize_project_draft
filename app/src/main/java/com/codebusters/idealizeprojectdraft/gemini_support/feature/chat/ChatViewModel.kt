@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-//role
 class ChatViewModel(
     private val generativeModel: GenerativeModel,private var user : String = "Haritha AI Buddy"
 ) : ViewModel() {

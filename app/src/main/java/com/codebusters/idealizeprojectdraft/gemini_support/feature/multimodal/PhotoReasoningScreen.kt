@@ -83,6 +83,7 @@ import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.gemini_support.GenerativeViewModelFactory
 import com.codebusters.idealizeprojectdraft.gemini_support.util.UriSaver
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.text.selection.SelectionContainer
 
 @Composable
 internal fun PhotoReasoningRoute(

@@ -56,7 +56,7 @@ class GeminiFragment(private val user : String ="Guest") : Fragment() {
                                                 while(i<userChatHistory.size){
                                                     var temp = userChatHistory[i] as HashMap<*, *>
                                                     history.add(
-                                                        Content(user,
+                                                        Content("user",
                                                             listOf(TextPart(temp[MyTags().userChatHistoryUSER].toString()))
                                                         )
                                                     )
