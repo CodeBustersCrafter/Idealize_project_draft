@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.codebusters.idealizeprojectdraft.MainActivity
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.ChatRoute
 import com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal.PhotoReasoningRoute
 import com.codebusters.idealizeprojectdraft.models.MyTags
@@ -24,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class GeminiFragment(private val user : String ="Guest") : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,12 +35,15 @@ class GeminiFragment(private val user : String ="Guest") : Fragment() {
                 GenerativeAISample {
                     // A surface container using the 'background' color from the theme
                     Surface(
-                        modifier = Modifier.fillMaxSize().background(color = Color.Green),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = Color.Green),
                     ) {
                         val navController = rememberNavController()
                         var history = ArrayList<Content>()
                         NavHost(navController = navController, startDestination = "menu") {
                             composable("menu") {
+                                (activity as MainActivity).changeCurrentPosition(0)
                                 MenuScreen(onItemClicked = { routeId ->
                                     FirebaseFirestore.getInstance().collection(MyTags().chats)
                                         .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
@@ -81,12 +84,15 @@ class GeminiFragment(private val user : String ="Guest") : Fragment() {
                                             navController.navigate(routeId)
                                         }
                                 })
+
                             }
                             composable("photo_reasoning") {
-                                PhotoReasoningRoute(user)
+                                (activity as MainActivity).changeCurrentPosition()
+                                PhotoReasoningRoute(user, navController = navController)
                             }
                             composable("chat") {
-                                ChatRoute(user,history)
+                                (activity as MainActivity).changeCurrentPosition()
+                                ChatRoute(user,history, navController = navController)
                             }
                         }
                     }

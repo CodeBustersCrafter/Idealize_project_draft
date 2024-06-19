@@ -15,12 +15,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.codebusters.idealizeprojectdraft.util.ModelBuilder
-import com.codebusters.idealizeprojectdraft.util.NotificationService
 import com.codebusters.idealizeprojectdraft.fragments.FragmentPageAdapter
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.util.NotificationService
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewPager : ViewPager2
 
     private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
+
+    private var currentPosition : String = "ground"
 
     @SuppressLint("UseCompatLoadingForDrawables", "MissingInflatedId", "UseSupportActionBar",
         "ResourceType", "SourceLockedOrientationActivity"
@@ -159,8 +161,8 @@ class MainActivity : AppCompatActivity() {
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
     override fun onBackPressed() {
         if(type==myTags.userMode){
-            if(bottomNavigationBar.selectedItemId == R.id.menu_ai_help){
-                viewPager.currentItem = 2
+            if(bottomNavigationBar.selectedItemId == R.id.menu_ai_help && currentPosition!="ground"){
+
             }else{
                 //Add a alert dialogue here
                 val builder = AlertDialog.Builder(this)
@@ -231,5 +233,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         unregisterReceiver(networkChangeListener)
         super.onStop()
+    }
+    public fun changeCurrentPosition(cmd:Int = 1){
+        if(cmd==1){
+            currentPosition="up"
+        }else{
+            currentPosition="ground"
+        }
     }
 }

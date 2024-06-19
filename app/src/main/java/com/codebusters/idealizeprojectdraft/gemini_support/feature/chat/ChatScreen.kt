@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
@@ -32,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,7 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -52,6 +54,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.gemini_support.GenerativeViewModelFactory
 import com.codebusters.idealizeprojectdraft.models.MyTags
@@ -64,7 +67,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChatRoute(
-    user : String = "#Code_Busters",h : ArrayList<Content> ,chatViewModel: ChatViewModel = viewModel<ChatViewModel>(factory = GenerativeViewModelFactory)
+    user : String = "#Code_Busters",
+    h : ArrayList<Content> ,
+    chatViewModel: ChatViewModel = viewModel<ChatViewModel>(factory = GenerativeViewModelFactory),
+    navController: NavController
 ) {
     chatViewModel.setUSer(user)
     chatViewModel.setHistory(h)
@@ -77,30 +83,51 @@ internal fun ChatRoute(
             TopAppBar(
                 title = { Text(text = "Chat History") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            // Implement logic to delete the message
-                            val map = HashMap<String,Any>()
-                            map[MyTags().userChatHistoryUSER] = ArrayList<Any>()
-                            map[MyTags().userChatHistoryBOT] = ArrayList<Any>()
-                            FirebaseFirestore.getInstance().collection(MyTags().chats)
-                                .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
-                                .set(map).addOnSuccessListener {
-                                    val history = ArrayList<Content>()
-                                    history.add(
-                                        Content("model",
-                                            listOf(TextPart("Great to meet you. What would you like to know?"))
-                                        )
-                                    )
-                                }
+                    Row{
+
+                        IconButton(
+                            onClick = {
+                                navController.navigate("menu")
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Go Back",
+                                tint = MaterialTheme.colorScheme.onPrimary)
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete message",
-                            tint = MaterialTheme.colorScheme.error)
+
+                        IconButton(
+                            onClick = {
+                                // Implement logic to delete the message
+                                val map = HashMap<String,Any>()
+                                map[MyTags().userChatHistoryUSER] = ArrayList<Any>()
+                                map[MyTags().userChatHistoryBOT] = ArrayList<Any>()
+                                FirebaseFirestore.getInstance().collection(MyTags().chats)
+                                    .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
+                                    .set(map).addOnSuccessListener {
+                                        val history = ArrayList<Content>()
+                                        history.add(
+                                            Content("model",
+                                                listOf(TextPart("Great to meet you. What would you like to know?"))
+                                            )
+                                        )
+                                        navController.navigate("menu")
+
+                                    }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete message")
+                        }
                     }
                 }
+                ,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = colorResource(id = R.color.appgreeen),
+                    navigationIconContentColor = colorResource(id = R.color.appgreeen)
+                )
             )
         },
         bottomBar = {

@@ -11,13 +11,14 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+//role
 class ChatViewModel(
     private val generativeModel: GenerativeModel,private var user : String = "Haritha AI Buddy"
 ) : ViewModel() {
@@ -90,7 +91,7 @@ class ChatViewModel(
                 _uiState.value.replaceLastPendingMessage()
                 _uiState.value.addMessage(
                     ChatMessage(
-                        text = e.localizedMessage!!,
+                        text = e.toString(),
                         participantName = "Haritha AI Buddy",
                         participant = Participant.ERROR
                     )
@@ -110,8 +111,8 @@ class ChatViewModel(
             // Map the initial messages
             ChatMessage(
                 text = content.parts.first().asTextOrNull() ?: "",
-                participant = if (content.role == user) Participant.USER else Participant.MODEL,
-                participantName = if (content.role == user) user else "Haritha AI Buddy",
+                participant = if (content.role == "user") Participant.USER else Participant.MODEL,
+                participantName = if (content.role == "user") user else "Haritha AI Buddy",
                 isPending = false
             )
         }))
