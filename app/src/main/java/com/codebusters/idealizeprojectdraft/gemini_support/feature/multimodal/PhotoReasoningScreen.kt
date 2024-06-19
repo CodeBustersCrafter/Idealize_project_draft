@@ -74,10 +74,11 @@ import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.gemini_support.GenerativeViewModelFactory
 import com.codebusters.idealizeprojectdraft.gemini_support.util.UriSaver
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.text.selection.SelectionContainer
 
 @Composable
 internal fun PhotoReasoningRoute(
-    user :String = "#Code_Busters",
+    user :String = "Haritha AI Buddy",
     viewModel: PhotoReasoningViewModel = viewModel(factory = GenerativeViewModelFactory)
 ) {
     viewModel.setUser(user)
@@ -260,16 +261,18 @@ fun PhotoReasoningScreen(
                                     .padding(all = 16.dp)
                                     .fillMaxWidth()
                             ) {
-                                Text(
-                                    text = uiState.outputText, // TODO(FireBreath): Figure out Markdown support
-                                    modifier = Modifier
-                                        .padding(start = 16.dp)
-                                        .fillMaxWidth(),
-                                    color = colorResource(id = R.color.black),
-                                    fontFamily = fontFamily,
-                                    fontWeight = FontWeight(600),
-                                    fontSize = TextUnit(18f, TextUnitType.Sp)
-                                )
+                                SelectionContainer {
+                                    Text(
+                                        text = uiState.outputText, // TODO: Figure out Markdown support
+                                        modifier = Modifier
+                                            .padding(start = 16.dp)
+                                            .fillMaxWidth(),
+                                        color = colorResource(id = R.color.black),
+                                        fontFamily = fontFamily,
+                                        fontWeight = FontWeight(600),
+                                        fontSize = TextUnit(18f, TextUnitType.Sp)
+                                    )
+                                }
                             }
                         }
                     }

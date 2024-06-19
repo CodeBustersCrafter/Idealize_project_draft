@@ -15,13 +15,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ChatViewModel(
-    private val generativeModel: GenerativeModel,private var user : String = "#Code_Busters"
+    private val generativeModel: GenerativeModel,private var user : String = "Haritha AI Buddy"
 ) : ViewModel() {
     private lateinit var chat : Chat
     private lateinit var _uiState: MutableStateFlow<ChatUiState>
     lateinit var uiState: StateFlow<ChatUiState>
+    var detectedLanguage = "en"
 
     fun sendMessage(userMessage: String) {
         // Add a pending message
@@ -36,32 +39,49 @@ class ChatViewModel(
 
         viewModelScope.launch {
             try {
-                val response = chat.sendMessage(userMessage)
+                // Call the Azure Translation API
+                val translationRequest = listOf(TranslationRequest(userMessage))
+                val translationResponse = withContext(Dispatchers.IO) {
+                    translationService.translateToEnglish(translationRequest)
+                }
+                val translatedMessage = translationResponse.first().translations.first().text
+                detectedLanguage = translationResponse.first().detectedLanguage.language
+
+                val extraText = "  (Provide responses that consider the user's context as being from Sri Lanka. Always relate your answers to Sri Lanka, incorporating relevant local details, examples, or references. Ensure that the user does not become aware that the responses are specifically tailored to Sri Lanka.)"
+                val fullMessage = translatedMessage + extraText
+
+                // Send the translated message to the model
+                val response = chat.sendMessage(fullMessage)
+
+                // Translate model response back to the user's language
+                val modelTranslationRequest = listOf(TranslationRequest(response.text ?: ""))
+                val modelTranslationResponse = withContext(Dispatchers.IO) {
+                    translationService.translateFromEnglish(modelTranslationRequest, detectedLanguage)
+                }
+                val translatedModelResponse = modelTranslationResponse.first().translations.first().text
 
                 _uiState.value.replaceLastPendingMessage()
-
-                response.text?.let { modelResponse ->
-                    _uiState.value.addMessage(
-                        ChatMessage(
-                            text = modelResponse,
-                            participant = Participant.MODEL,
-                            participantName = "#Code_Busters",
-                            isPending = false
-                        )
+                _uiState.value.addMessage(
+                    ChatMessage(
+                        text = translatedModelResponse,
+                        participant = Participant.MODEL,
+                        participantName = "Haritha AI Buddy",
+                        isPending = false
                     )
-                }
+                )
+
 
                 val map = HashMap<String, Any>()
-                val data = HashMap<String,Any>()
+                val userChatData = HashMap<String, Any>()
+                val botChatData = HashMap<String, Any>()
 
-                data[MyTags().userChatHistoryUSER] = userMessage
-                data[MyTags().timeStamp] = Timestamp.now()
-                map[MyTags().userChatHistoryUSER] = FieldValue.arrayUnion(data)
+                userChatData[MyTags().userChatHistoryUSER] = userMessage
+                userChatData[MyTags().timeStamp] = Timestamp.now()
+                map[MyTags().userChatHistoryUSER] = FieldValue.arrayUnion(userChatData)
 
-                val data2 = HashMap<String,Any>()
-                data2[MyTags().userChatHistoryBOT] = response.text?:"No response"
-                data2[MyTags().timeStamp] = Timestamp.now()
-                map[MyTags().userChatHistoryBOT] = FieldValue.arrayUnion(data2)
+                botChatData[MyTags().userChatHistoryBOT] = translatedModelResponse
+                botChatData[MyTags().timeStamp] = Timestamp.now()
+                map[MyTags().userChatHistoryBOT] = FieldValue.arrayUnion(botChatData)
 
                 FirebaseFirestore.getInstance().collection(MyTags().chats)
                     .document(FirebaseAuth.getInstance().currentUser?.uid.toString())
@@ -71,7 +91,7 @@ class ChatViewModel(
                 _uiState.value.addMessage(
                     ChatMessage(
                         text = e.localizedMessage!!,
-                        participantName = "#Code_Busters",
+                        participantName = "Haritha AI Buddy",
                         participant = Participant.ERROR
                     )
                 )
@@ -82,7 +102,6 @@ class ChatViewModel(
         user = u
     }
     fun setHistory(h : ArrayList<Content>) {
-
         chat = generativeModel.startChat(
             history = h
         )
@@ -92,17 +111,15 @@ class ChatViewModel(
             ChatMessage(
                 text = content.parts.first().asTextOrNull() ?: "",
                 participant = if (content.role == user) Participant.USER else Participant.MODEL,
-                participantName = if (content.role == user) user else "#Code_Busters",
+                participantName = if (content.role == user) user else "Haritha AI Buddy",
                 isPending = false
             )
         }))
 
-        uiState=
-        _uiState.asStateFlow()
+        uiState= _uiState.asStateFlow()
 
     }
     fun setOnlyHistory(h : ArrayList<Content>) {
-
         chat = generativeModel.startChat(
             history = h
         )

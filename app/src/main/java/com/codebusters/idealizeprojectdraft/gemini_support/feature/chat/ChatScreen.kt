@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Delete
@@ -40,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -59,7 +61,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ChatRoute(
@@ -74,7 +75,7 @@ internal fun ChatRoute(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Chat with Gemini") },
+                title = { Text(text = "Chat History") },
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -207,15 +208,17 @@ fun ChatBubbleItem(
                     shape = bubbleShape,
                     modifier = Modifier.widthIn(0.dp, maxWidth * 0.9f)
                 ) {
-                    Text(
-                        text = chatMessage.text,
-                        modifier = Modifier.padding(16.dp),
-                        color = colorResource(id = R.color.black),
-                        fontStyle = fontStyle,
-                        fontFamily = fontFamily,
-                        fontWeight = FontWeight(600),
-                        fontSize = TextUnit(18f, TextUnitType.Sp)
-                    )
+                    SelectionContainer {
+                        Text(
+                            text = chatMessage.text,
+                            modifier = Modifier.padding(16.dp),
+                            color = colorResource(id = R.color.black),
+                            fontStyle = fontStyle,
+                            fontFamily = fontFamily,
+                            fontWeight = FontWeight(600),
+                            fontSize = TextUnit(18f, TextUnitType.Sp)
+                        )
+                    }
                 }
             }
         }

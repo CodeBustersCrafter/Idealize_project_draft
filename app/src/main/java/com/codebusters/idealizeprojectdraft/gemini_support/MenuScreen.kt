@@ -189,7 +189,7 @@ fun MenuScreen(
                         .padding(end = 16.dp, bottom = 0.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(40.dp))
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {

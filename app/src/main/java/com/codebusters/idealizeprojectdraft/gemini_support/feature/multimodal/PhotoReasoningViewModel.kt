@@ -19,6 +19,8 @@ package com.codebusters.idealizeprojectdraft.gemini_support.feature.multimodal
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.TranslationRequest
+import com.codebusters.idealizeprojectdraft.gemini_support.feature.chat.translationService
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PhotoReasoningViewModel(
     private val generativeModel: GenerativeModel,private var user: String? = "Guest",private var uid: String? = ""
@@ -35,16 +38,27 @@ class PhotoReasoningViewModel(
         MutableStateFlow(PhotoReasoningUiState.Initial)
     val uiState: StateFlow<PhotoReasoningUiState> =
         _uiState.asStateFlow()
+    var detectedLanguage = "en"
+
 
     fun reason(
         userInput: String,
         selectedImages: List<Bitmap>
     ) {
         _uiState.value = PhotoReasoningUiState.Loading
-        val prompt = "Look at the image(s), and then answer the following question: $userInput"
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
+                // Translate user input to English
+                val translationRequest = listOf(TranslationRequest(userInput))
+                val translationResponse = withContext(Dispatchers.IO) {
+                    translationService.translateToEnglish(translationRequest)
+                }
+                val translatedInput = translationResponse.first().translations.first().text
+                detectedLanguage = translationResponse.first().detectedLanguage.language
+
+                val prompt = "Look at the image(s), and then answer the following question: $translatedInput"
+
                 val inputContent = content {
                     for (bitmap in selectedImages) {
                         image(bitmap)
@@ -52,22 +66,35 @@ class PhotoReasoningViewModel(
                     text(prompt)
                 }
 
-                var outputContent = ""
+                val outputContentBuilder = StringBuilder()
 
-                generativeModel.generateContentStream(inputContent)
-                    .collect { response ->
-                        outputContent += response.text
-                        _uiState.value = PhotoReasoningUiState.Success(outputContent)
+                generativeModel.generateContentStream(inputContent).collect { response ->
+                    outputContentBuilder.append(response.text)
+
+                    // Only update the UI state after the full response is collected
+                    val fullResponse = outputContentBuilder.toString()
+
+                    // Translate the full model response back to the detected language
+                    val modelTranslationRequest = listOf(TranslationRequest(fullResponse))
+                    val modelTranslationResponse = withContext(Dispatchers.IO) {
+                        translationService.translateFromEnglish(modelTranslationRequest, detectedLanguage)
                     }
+                    val translatedModelResponse = modelTranslationResponse.first().translations.first().text
+
+                    _uiState.value = PhotoReasoningUiState.Success(translatedModelResponse)
+
+                }
             } catch (e: Exception) {
                 _uiState.value = PhotoReasoningUiState.Error(e.localizedMessage ?: "")
             }
         }
     }
-    fun setUser(u : String){
-        user=u
+
+    fun setUser(u: String) {
+        user = u
     }
-    fun setUserID(u : String){
+
+    fun setUserID(u: String) {
         uid = u
     }
 }
