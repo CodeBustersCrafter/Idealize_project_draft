@@ -24,7 +24,8 @@ class ChatViewModel(
     private lateinit var chat : Chat
     private lateinit var _uiState: MutableStateFlow<ChatUiState>
     lateinit var uiState: StateFlow<ChatUiState>
-    var detectedLanguage = "en"
+    private var detectedLanguage = "en"
+    private var translatedModelResponse =""
 
     fun sendMessage(userMessage: String) {
         // Add a pending message
@@ -47,18 +48,22 @@ class ChatViewModel(
                 val translatedMessage = translationResponse.first().translations.first().text
                 detectedLanguage = translationResponse.first().detectedLanguage.language
 
-                val extraText = "  (Provide responses that consider the user's context as being from Sri Lanka. Always relate your answers to Sri Lanka, incorporating relevant local details, examples, or references. Ensure that the user does not become aware that the responses are specifically tailored to Sri Lanka.)"
+                val extraText = "  (If the response for the above massage varying for counties use the country as Sri Lanka. Only mention Sri Lanka explicitly when necessary.)"
                 val fullMessage = translatedMessage + extraText
 
                 // Send the translated message to the model
                 val response = chat.sendMessage(fullMessage)
 
-                // Translate model response back to the user's language
-                val modelTranslationRequest = listOf(TranslationRequest(response.text ?: ""))
-                val modelTranslationResponse = withContext(Dispatchers.IO) {
-                    translationService.translateFromEnglish(modelTranslationRequest, detectedLanguage)
+                if(detectedLanguage == "si" || detectedLanguage == "ta"){
+                    // Translate model response back to the user's language
+                    val modelTranslationRequest = listOf(TranslationRequest(response.text ?: "Sorry can't Help you now"))
+                    val modelTranslationResponse = withContext(Dispatchers.IO) {
+                        translationService.translateFromEnglish(modelTranslationRequest, detectedLanguage)
+                    }
+                    translatedModelResponse = modelTranslationResponse.first().translations.first().text
+                }else{
+                    translatedModelResponse = response.text ?: "Sorry can't Help you now"
                 }
-                val translatedModelResponse = modelTranslationResponse.first().translations.first().text
 
                 _uiState.value.replaceLastPendingMessage()
                 _uiState.value.addMessage(
