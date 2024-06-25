@@ -189,7 +189,17 @@ fun MenuScreen(
                         .padding(end = 16.dp, bottom = 0.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(40.dp))
+            Text(
+                text = stringResource(id = R.string.languages),
+                style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.black)
+                ),
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 0.dp)
+                    .align(Alignment.Start)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {

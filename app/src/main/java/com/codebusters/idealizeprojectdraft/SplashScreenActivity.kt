@@ -28,7 +28,7 @@ class SplashScreenActivity : ComponentActivity() {
         setContentView(binding.root)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        val path = "android.resource://"+packageName+"/"+R.raw.updatedlogo
+        val path = "android.resource://"+packageName+"/"+R.raw.final_logo2
         binding.videoViewSplash.setVideoURI(Uri.parse(path))
         binding.videoViewSplash.start()
 

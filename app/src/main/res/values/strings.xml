@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Idealize project draft</string>
+    <string name="app_name">Haritha</string>
     <string name="home_screen_title">Home</string>
     <string name="login_title">Login</string>
     <string name="Login_screen_sign_in_button">Sign In</string>
@@ -99,6 +99,7 @@
     <string name="Wadana">\nStep into a world where quality meets convenience. Connect with local farmers and suppliers to receive the freshest produce and enjoy healthy eating and vibrant blooms, all within just a few taps on your screen.\n</string>
     <string name="AI1">Hello, Ask Me \n  Anything…</string>
     <string name="Prompts">Popular Prompts</string>
+    <string name="languages">English \t\t සිංහල \t\t தமிழ்</string>
     <string-array name="categories">
         <item>Fruits</item>
         <item>Vegetables</item>
@@ -112,3 +113,4 @@
     </string-array>
 
 </resources>
+
