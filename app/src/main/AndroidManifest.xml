@@ -22,7 +22,8 @@
         android:roundIcon="@drawable/logo1"
         android:supportsRtl="true"
         android:theme="@style/Theme.IdealizeProjectDraft"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        >
         <activity
             android:name=".LeaderboardActivity"
             android:exported="false" />
@@ -37,8 +38,7 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:exported="false"
-            android:noHistory="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.HOME" />
 
@@ -52,8 +52,7 @@
 
         <activity
             android:name=".RequestActivity"
-            android:exported="false"
-            android:noHistory="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.REQUEST" />
 
@@ -67,7 +66,6 @@
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
-            android:noHistory="true"
             android:theme="@style/Theme.IdealizeProjectDraft">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,7 +76,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:noHistory="true">
+            android:noHistory="false">
             <intent-filter>
                 <action android:name="android.intent.action.EXPLORE" />
 
