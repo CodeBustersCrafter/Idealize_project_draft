@@ -11,6 +11,10 @@ class MyTags {
     var intentUID: String = "ID"
     var intentFragmentRequest: String = "Fragment"
     var intentNotificationID :  String = "Notification ID"
+    var intentAddingAdsMode :  String = "MODE"
+    var intentUpdatingAdID: String = "UPDATE ID"
+    var addMode: String = "ADD"
+    var updateMode: String = "UPDATE"
 
     //Database
     //Users

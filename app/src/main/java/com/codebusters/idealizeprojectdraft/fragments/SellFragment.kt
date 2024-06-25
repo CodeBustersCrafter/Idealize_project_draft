@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codebusters.idealizeprojectdraft.AddingAdsActivity
-import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -54,6 +54,7 @@ class SellFragment(u : IdealizeUser) : Fragment() {
         btnAddAdd.setOnClickListener {
             val intent = Intent(context, AddingAdsActivity::class.java)
             intent.putExtra(myTags.intentUID,user.uid)
+            intent.putExtra(myTags.intentAddingAdsMode,myTags.addMode)
             startActivity(intent)
         }
 

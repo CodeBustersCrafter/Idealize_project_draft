@@ -14,19 +14,20 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.codebusters.idealizeprojectdraft.util.Converter
-import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
-import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.databinding.ActivityAddingAdsBinding
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.Item
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
+import com.codebusters.idealizeprojectdraft.util.Converter
+import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -52,7 +53,9 @@ class AddingAdsActivity : AppCompatActivity() {
 
     private val networkChangeListener: NetworkChangeListener = NetworkChangeListener()
 
-    @SuppressLint("SuspiciousIndentation", "SourceLockedOrientationActivity")
+    private lateinit var mode : String
+
+    @SuppressLint("SuspiciousIndentation", "SourceLockedOrientationActivity", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,58 +69,46 @@ class AddingAdsActivity : AppCompatActivity() {
         storage=FirebaseStorage.getInstance()
 
         uid = intent.getStringExtra(myTags.intentUID).toString()
+        mode = intent.getStringExtra(myTags.intentAddingAdsMode).toString()
 
-        firestore =FirebaseFirestore.getInstance()
-        firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
-                documentSnapshot ->
-            if(documentSnapshot.exists()){
-                idealizeUser = ModelBuilder().getUser(documentSnapshot)
-                val catagories = resources.getStringArray(R.array.categories)
-                val arrayAdapter = ArrayAdapter(this,R.layout.drop_down_menu,catagories)
-                binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
+        if(mode==myTags.updateMode){
 
-                binding.btnOpenCameraSellScreen.setOnClickListener {
-                    if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=resources.getString(R.string.select_one)){
-                        //open the camera
-                        imageChooser()
-                    }else{
-                        Toast.makeText(this,"Please insert a category", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            progressDialog.start("Loading...")
+            val adId = intent.getStringExtra(myTags.intentUpdatingAdID).toString()
 
+            binding.btnOpenCameraSellScreen.visibility = View.GONE
+            binding.autoCompleteTextViewSellScreen.isEnabled = false
+            binding.ediTextNameSellScreen.isEnabled = false
+            binding.btnSaveSellScreen.text = "Update"
+            binding.imageViewSellScreen.visibility = View.VISIBLE
 
-                binding.btnSaveSellScreen.setOnClickListener {
-                    if(uri==null || binding.ediTextNameSellScreen.text.toString().trim()=="" || binding.ediTextPriceSellScreen.text.toString().trim()=="" || binding.ediTextQuantitySellScreen.text.toString().trim()=="" || binding.autoCompleteTextViewSellScreen.text.toString().trim()==""){
-                        Toast.makeText(this,"Please fill the required fields", Toast.LENGTH_SHORT).show()
-                        return@setOnClickListener
-                    }
-                    if(binding.ediTextPriceSellScreen.text.toString()[0] == '-' || binding.ediTextQuantitySellScreen.text.toString()[0] == '-'){
-                        Toast.makeText(this,"Please enter a valid price and quantity", Toast.LENGTH_SHORT).show()
-                        return@setOnClickListener
-                    }
-//                    show progress dialog
-//                    progressDialog = ProgressDialog(this)
-//                    progressDialog.setCancelable(false)
-//                    progressDialog.setTitle("Please wait...")
-//                    progressDialog.setMessage("uploading the ad...")
-//                    progressDialog.create()
-//                    progressDialog.show()
+            firestore =FirebaseFirestore.getInstance()
+            firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
+                    documentSnapshot1 ->
+                if(documentSnapshot1.exists()) {
+                    idealizeUser = ModelBuilder().getUser(documentSnapshot1)
 
-                    progressDialog.start("uploading the ad...")
+                    firestore.collection(myTags.ads).document(adId).get().addOnSuccessListener{
+                            documentSnapshot ->
+                        val ad = ModelBuilder().getAdItem(documentSnapshot,idealizeUser)
+                        binding.addingAdsTitle.text = "Update Ad"
+                        binding.ediTextNameSellScreen.setText(ad.name)
+                        binding.ediTextPriceSellScreen.setText(ad.price)
+                        binding.autoCompleteTextViewSellScreen.setText(ad.category)
+                        binding.ediTextDescriptionSellScreen.setText(ad.description)
+                        binding.ediTextQuantitySellScreen.setText(ad.quantity)
+                        uri = ad.photo
+                        Picasso.get().load(uri).into(binding.imageViewSellScreen)
 
+                        progressDialog.stop()
 
-                    item = init()
-                    //validate inputs
-                    //upload
-                    val imgRef =storage.getReference(myTags.ads).child(item.adId).child("img")
-                    val uploadTask=imgRef.putFile(item.photo)
-                    uploadTask.addOnSuccessListener  {
-                        imgRef.downloadUrl.addOnSuccessListener{
-                            uri ->
-                            item.photo = uri
-                            val count = idealizeUser.adCount.toInt()
-                            idealizeUser.adCount = (count+1).toString()
-
+                        binding.btnSaveSellScreen.setOnClickListener{
+                            progressDialog.start("Updating...")
+                            val item = initUpdate()
+                            item.adId=adId
+                            item.rate = ad.rate
+                            item.requestCount = ad.requestCount
+                            item.viewCount = ad.viewCount
                             val map = ModelBuilder().getItemAsMap(item)
 
                             // Add keywords to map
@@ -137,18 +128,7 @@ class AddingAdsActivity : AppCompatActivity() {
                                 .set(map).addOnCompleteListener {
                                         task ->
                                     if(task.isSuccessful){
-                                        Toast.makeText(this,"Updated! from advertisements", Toast.LENGTH_SHORT).show()
-                                    }else{
-                                        Toast.makeText(this,"Not Updated! from advertisements. Try Again",
-                                            Toast.LENGTH_SHORT).show()
-                                    }
-
-                                }
-                            firestore.collection(myTags.users).document(idealizeUser.uid).update(myTags.userAdCount,idealizeUser.adCount)
-                                .addOnCompleteListener {
-                                        task ->
-                                    if(task.isSuccessful){
-                                        Toast.makeText(this,"Updated! from user", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this,"Updated!", Toast.LENGTH_SHORT).show()
 //                                        progressDialog.cancel()
                                         progressDialog.stop()
 
@@ -159,14 +139,118 @@ class AddingAdsActivity : AppCompatActivity() {
                                         startActivity(intent)
                                         finish()
                                     }else{
-                                        Toast.makeText(this,"Not Updated! from user. Try Again", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this,"Not Updated!. Try Again", Toast.LENGTH_SHORT).show()
                                     }
+
                                 }
                         }
                     }
                 }
             }
+
+        }else{
+            firestore =FirebaseFirestore.getInstance()
+            firestore.collection(myTags.users).document(uid).get().addOnSuccessListener {
+                    documentSnapshot ->
+                if(documentSnapshot.exists()){
+                    idealizeUser = ModelBuilder().getUser(documentSnapshot)
+                    val catagories = resources.getStringArray(R.array.categories)
+                    val arrayAdapter = ArrayAdapter(this,R.layout.drop_down_menu,catagories)
+                    binding.autoCompleteTextViewSellScreen.setAdapter(arrayAdapter)
+
+                    binding.btnOpenCameraSellScreen.setOnClickListener {
+                        if(binding.autoCompleteTextViewSellScreen.text.toString().trim()!=resources.getString(R.string.select_one)){
+                            //open the camera
+                            imageChooser()
+                        }else{
+                            Toast.makeText(this,"Please insert a category", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+
+                    binding.btnSaveSellScreen.setOnClickListener {
+                        if(uri==null || binding.ediTextNameSellScreen.text.toString().trim()=="" || binding.ediTextPriceSellScreen.text.toString().trim()=="" || binding.ediTextQuantitySellScreen.text.toString().trim()=="" || binding.autoCompleteTextViewSellScreen.text.toString().trim()==""){
+                            Toast.makeText(this,"Please fill the required fields", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+                        if(binding.ediTextPriceSellScreen.text.toString()[0] == '-' || binding.ediTextQuantitySellScreen.text.toString()[0] == '-'){
+                            Toast.makeText(this,"Please enter a valid price and quantity", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+//                    show progress dialog
+//                    progressDialog = ProgressDialog(this)
+//                    progressDialog.setCancelable(false)
+//                    progressDialog.setTitle("Please wait...")
+//                    progressDialog.setMessage("uploading the ad...")
+//                    progressDialog.create()
+//                    progressDialog.show()
+
+                        progressDialog.start("uploading the ad...")
+
+
+                        item = init()
+                        //validate inputs
+                        //upload
+                        val imgRef =storage.getReference(myTags.ads).child(item.adId).child("img")
+                        val uploadTask=imgRef.putFile(item.photo)
+                        uploadTask.addOnSuccessListener  {
+                            imgRef.downloadUrl.addOnSuccessListener{
+                                    uri ->
+                                item.photo = uri
+                                val count = idealizeUser.adCount.toInt()
+                                idealizeUser.adCount = (count+1).toString()
+
+                                val map = ModelBuilder().getItemAsMap(item)
+
+                                // Add keywords to map
+                                map[myTags.keywords] = generateKeywords(item.name)
+                                map[myTags.adLocation] = idealizeUser.location
+
+                                firestore.collection(myTags.users).document(idealizeUser.uid).collection(myTags.ads).document(item.adId)
+                                    .set(map).addOnCompleteListener {
+                                            task ->
+                                        if(task.isSuccessful){
+                                            Toast.makeText(this,"Saved! from User", Toast.LENGTH_SHORT).show()
+                                        }else{
+                                            Toast.makeText(this,"Not Saved! from User. Try Again", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                firestore.collection(myTags.ads).document(item.adId)
+                                    .set(map).addOnCompleteListener {
+                                            task ->
+                                        if(task.isSuccessful){
+                                            Toast.makeText(this,"Updated! from advertisements", Toast.LENGTH_SHORT).show()
+                                        }else{
+                                            Toast.makeText(this,"Not Updated! from advertisements. Try Again",
+                                                Toast.LENGTH_SHORT).show()
+                                        }
+
+                                    }
+                                firestore.collection(myTags.users).document(idealizeUser.uid).update(myTags.userAdCount,idealizeUser.adCount)
+                                    .addOnCompleteListener {
+                                            task ->
+                                        if(task.isSuccessful){
+                                            Toast.makeText(this,"Updated! from user", Toast.LENGTH_SHORT).show()
+//                                        progressDialog.cancel()
+                                            progressDialog.stop()
+
+
+                                            val intent = Intent(baseContext,MainActivity::class.java)
+                                            intent.putExtra(myTags.intentType,myTags.userMode)
+                                            intent.putExtra(myTags.intentUID,uid)
+                                            startActivity(intent)
+                                            finish()
+                                        }else{
+                                            Toast.makeText(this,"Not Updated! from user. Try Again", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     }
 
     private fun imageChooser() {
@@ -247,6 +331,26 @@ class AddingAdsActivity : AppCompatActivity() {
             0,
             "0.0"
             )
+        return getDateTime(item)
+    }
+    private fun initUpdate(): Item {
+
+        item =Item(
+            binding.ediTextNameSellScreen.text.toString(),
+            binding.ediTextPriceSellScreen.text.toString(),
+            "",
+            "",
+            binding.ediTextDescriptionSellScreen.text.toString(),
+            binding.ediTextQuantitySellScreen.text.toString(),
+            uri!!,
+            binding.autoCompleteTextViewSellScreen.text.toString(),
+            myTags.adVisible,
+            "",
+            uid,
+            0,
+            0,
+            "0.0"
+        )
         return getDateTime(item)
     }
 
