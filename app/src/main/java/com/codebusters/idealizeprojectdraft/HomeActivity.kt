@@ -17,11 +17,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
 import com.codebusters.idealizeprojectdraft.databinding.ActivityHomeBinding
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.network_services.NetworkChangeListener
+import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -33,6 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.initialize
+import kotlin.system.exitProcess
 
 
 class HomeActivity : AppCompatActivity() {
@@ -66,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
             intent.putExtra(myTags.intentType,myTags.guestMode)
             intent.putExtra(myTags.intentUID,"0")
             startActivity(intent)
+            finish()
         }
     }
 
@@ -129,6 +131,7 @@ class HomeActivity : AppCompatActivity() {
                     intent.putExtra(myTags.intentUID,auth.currentUser?.uid)
                     startActivity(intent)
                     progressDialog.stop()
+                    finish()
                 }
             }
             if (!isFound){
@@ -209,6 +212,7 @@ class HomeActivity : AppCompatActivity() {
                 intent.putExtra(myTags.intentType,myTags.userMode)
                 intent.putExtra(myTags.intentUID,auth.currentUser?.uid)
                 startActivity(intent)
+                finish()
 
             }
         }
@@ -242,6 +246,13 @@ class HomeActivity : AppCompatActivity() {
     override fun onStop() {
         unregisterReceiver(networkChangeListener)
         super.onStop()
+    }
+    @Suppress("DEPRECATION")
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    override fun onBackPressed() {
+        auth.signOut()
+        exitProcess(0)
+        super.onBackPressed()
     }
 
 }

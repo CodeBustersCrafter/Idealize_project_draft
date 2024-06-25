@@ -3,23 +3,26 @@ package com.codebusters.idealizeprojectdraft.recycle_view_adapter
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.codebusters.idealizeprojectdraft.AddingAdsActivity
 import com.codebusters.idealizeprojectdraft.R
-import com.codebusters.idealizeprojectdraft.util.CustomMaskTransformation
-import com.codebusters.idealizeprojectdraft.util.ModelBuilder
-import com.codebusters.idealizeprojectdraft.util.NormalCalls
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.models.RequestModel
+import com.codebusters.idealizeprojectdraft.util.CustomMaskTransformation
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
+import com.codebusters.idealizeprojectdraft.util.NormalCalls
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.squareup.picasso.Picasso
@@ -71,14 +74,25 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         val category = d.findViewById<TextView>(R.id.dialog_category)
         val call = d.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.call_dialogue)
         val itemBooking = d.findViewById<ImageView>(R.id.btn_booking_item_view)
+        val itemUpdate = d.findViewById<Button>(R.id.btn_update_item_view)
 
         val dialogRecyclerView = d.findViewById<RecyclerView>(R.id.dialogue_recycler_view)
 
         when (type){
             myTags.userMode->{
                 itemBooking.visibility = View.GONE
+                itemUpdate.visibility = View.VISIBLE
+                itemUpdate.setOnClickListener{
+                    val intent = Intent(context, AddingAdsActivity::class.java)
+                    intent.putExtra(myTags.intentUID,uid)
+                    intent.putExtra(myTags.intentAddingAdsMode,myTags.updateMode)
+                    intent.putExtra(myTags.intentUpdatingAdID,currentItem.adId)
+                    context.startActivity(intent)
+                    d.cancel()
+                }
             }
             myTags.userViewMode -> {//
+                itemUpdate.visibility = View.GONE
                 itemBooking.visibility = View.VISIBLE
                 itemBooking.setOnClickListener{
                     val request = RequestModel(currentItem.adId,uid,currentItem.idealizeUserID,"0","0","0","0",uid+"_"+currentItem.idealizeUserID+"_"+currentItem.adId)
@@ -92,6 +106,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
             }
             else -> {
                 itemBooking.visibility = View.VISIBLE
+                itemUpdate.visibility = View.GONE
                 itemBooking.setOnClickListener{
                     Toast.makeText(context,"You need to sign in to your account before requesting",Toast.LENGTH_SHORT).show()
                 }
