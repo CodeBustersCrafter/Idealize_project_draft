@@ -181,6 +181,14 @@ fun MenuScreen(
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
+                Text(
+                    text = stringResource(id = R.string.support),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = colorResource(id = R.color.black)
+                    ),
+                    modifier = Modifier
+                        .padding(start = 25.dp , top = 170.dp)
+                )
                 Image(
                     painter = painterResource(id = R.drawable.frame2),
                     contentDescription = null,
@@ -191,15 +199,15 @@ fun MenuScreen(
             }
             Text(
                 text = stringResource(id = R.string.languages),
-                style = MaterialTheme.typography.headlineMedium.copy(
+                style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.black)
                 ),
                 modifier = Modifier
-                    .padding(start = 10.dp, top = 0.dp)
-                    .align(Alignment.Start)
+                    .padding(start = 0.dp, top = 0.dp)
+                    .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
