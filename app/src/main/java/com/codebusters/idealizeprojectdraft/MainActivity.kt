@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -150,6 +149,12 @@ class MainActivity : AppCompatActivity() {
                     viewPager.currentItem = 1}
                 R.id.menu_ai_help -> {
                     viewPager.currentItem = 2}
+                R.id.menu_new_ads -> {
+                    val intent = Intent(this, AddingAdsActivity::class.java)
+                    intent.putExtra(myTags.intentUID,uid)
+                    intent.putExtra(myTags.intentAddingAdsMode,myTags.addMode)
+                    startActivity(intent)
+                }
                 else ->{
                     viewPager.currentItem = 3}
             }
@@ -199,11 +204,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun startStopService(){
         if(!isMyServiceRunning(NotificationService::class.java)){
-            Toast.makeText(this,"Started",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"Started",Toast.LENGTH_SHORT).show()
             val intent = Intent(this, NotificationService::class.java)
             startService(intent)
         }else{
-            Toast.makeText(this,"Running...",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"Running...",Toast.LENGTH_SHORT).show()
         }
     }
     @Suppress("DEPRECATION")
@@ -234,11 +239,11 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(networkChangeListener)
         super.onStop()
     }
-    public fun changeCurrentPosition(cmd:Int = 1){
-        if(cmd==1){
-            currentPosition="up"
+    fun changeCurrentPosition(cmd:Int = 1){
+        currentPosition = if(cmd==1){
+            "up"
         }else{
-            currentPosition="ground"
+            "ground"
         }
     }
 }

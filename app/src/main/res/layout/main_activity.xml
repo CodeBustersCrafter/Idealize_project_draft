@@ -23,9 +23,13 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:itemIconTint="#4CAF50"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:itemBackground="@color/white"
         app:itemTextColor="@color/black"
+        app:itemTextAppearanceActive="@color/appgreeen"
+        app:itemTextAppearanceInactive="@color/black"
+        app:itemTextAppearanceActiveBoldEnabled="true"
         app:menu="@menu/bottom_navigation_menus"
         tools:ignore="VisualLintBottomNav" />
 

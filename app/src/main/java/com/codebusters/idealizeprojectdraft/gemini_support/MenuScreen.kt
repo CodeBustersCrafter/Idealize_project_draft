@@ -16,26 +16,34 @@
 
 package com.codebusters.idealizeprojectdraft.gemini_support
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -44,15 +52,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.codebusters.idealizeprojectdraft.R
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 
 
 data class MenuItem(
@@ -244,7 +243,10 @@ fun MenuScreen(
                             contentColor = colorResource(id = R.color.colorPrimary),
                             disabledContentColor = colorResource(id = R.color.grey),
                             disabledContainerColor = colorResource(id = R.color.colorSecondary)
-                        )
+                        ),
+                        onClick = {
+                            onItemClicked(menuItem.routeId)
+                        }
                     ) {
                         Column(
                             modifier = Modifier
@@ -281,9 +283,9 @@ fun MenuScreen(
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(top = 8.dp),
                                 fontSize = TextUnit(15f, TextUnitType.Sp),
-                                color = colorResource(id = R.color.appgreeen),
+                                color = colorResource(id = R.color.colorPrimaryDark),
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight(600)
+                                fontWeight = FontWeight(700)
                             )
                         }
                     }
@@ -322,7 +324,10 @@ fun MenuScreen(
                             contentColor = colorResource(id = R.color.colorPrimary),
                             disabledContentColor = colorResource(id = R.color.grey),
                             disabledContainerColor = colorResource(id = R.color.colorSecondary)
-                        )
+                        ),
+                        onClick = {
+                            onItemClicked(menuItem.routeId)
+                        }
                     ) {
                         Column(
                             modifier = Modifier
@@ -359,7 +364,7 @@ fun MenuScreen(
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(top = 8.dp),
                                 fontSize = TextUnit(15f, TextUnitType.Sp),
-                                color = colorResource(id = R.color.appgreeen),
+                                color = colorResource(id = R.color.colorPrimaryDark),
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight(600)
                             )

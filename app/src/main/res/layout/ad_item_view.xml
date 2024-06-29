@@ -132,7 +132,6 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:padding="5dp">
-
                 <ImageButton
                     android:id="@+id/btn_avilable_item_view"
                     android:layout_width="wrap_content"
@@ -148,25 +147,24 @@
                     android:layout_marginHorizontal="15dp"
                     android:background="@drawable/baseline_delete_24"
                     tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                               <ImageButton
+                                   android:id="@+id/btn_rate_request_item_view"
+                                   android:layout_width="90dp"
+                                   android:layout_height="40dp"
+                                   android:layout_marginHorizontal="15dp"
+                                   android:background="@drawable/baseline_request_page_24"
+                                   tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
+                            <ImageButton
+                                   android:id="@+id/btn_rate_accept_item_view"
+                                   android:layout_width="90dp"
+                                   android:layout_height="40dp"
+                                   android:layout_marginHorizontal="15dp"
+                                   android:background="@drawable/baseline_rate_review_24"
+                                   tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-                <ImageButton
-                    android:id="@+id/btn_rate_request_item_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:background="@drawable/baseline_request_page_24"
-                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
-                <ImageButton
-                    android:id="@+id/btn_rate_accept_item_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:background="@drawable/baseline_rate_review_24"
-                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                           </LinearLayout>
+                       </LinearLayout>
+                   </androidx.cardview.widget.CardView>
 
 
-</LinearLayout>
+               </LinearLayout>

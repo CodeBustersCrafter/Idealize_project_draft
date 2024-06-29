@@ -24,12 +24,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.codebusters.idealizeprojectdraft.R
 import com.codebusters.idealizeprojectdraft.RequestActivity
-import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
-import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.codebusters.idealizeprojectdraft.models.IdealizeUser
 import com.codebusters.idealizeprojectdraft.models.ItemModel
 import com.codebusters.idealizeprojectdraft.models.MyTags
 import com.codebusters.idealizeprojectdraft.recycle_view_adapter.RecyclerViewAdapter
+import com.codebusters.idealizeprojectdraft.util.CustomProgressDialog
+import com.codebusters.idealizeprojectdraft.util.ModelBuilder
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
@@ -338,7 +338,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                     .get()
                     .addOnSuccessListener { documentSnapshot ->
                         val item = ModelBuilder().getAdItem(document, documentSnapshot)
-                        if (!dataList.contains(item)) {
+                        if (!dataList.contains(item) && item.uid!=user.uid) {
                             dataList.add(item)
                         }
 
@@ -354,7 +354,7 @@ class HomeFragment(idealizeUser: IdealizeUser) : Fragment() {
                         when (filtering) {
                             "date" -> dataList.sortBy { it.date }
                             "price" -> dataList.sortBy { it.price.toLong() }
-                            "rating" -> dataList.sortBy { it.rating }
+                            "rating" -> dataList.sortBy { it.rate }
                         }
 
                         if(filtering != "price") {

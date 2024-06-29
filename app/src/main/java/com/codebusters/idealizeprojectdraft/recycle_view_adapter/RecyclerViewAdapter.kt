@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
@@ -63,7 +64,8 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         val quantity = d.findViewById<TextView>(R.id.dialogue_quantity)
         val location = d.findViewById<TextView>(R.id.dialogue_location)
         val seller = d.findViewById<TextView>(R.id.dialogue_seller)
-        val dateTime = d.findViewById<TextView>(R.id.dialogue_date_time)
+        val date = d.findViewById<TextView>(R.id.dialogue_date)
+        val time = d.findViewById<TextView>(R.id.dialogue_time)
         val description = d.findViewById<TextView>(R.id.dialogue_description)
         val userRate = d.findViewById<TextView>(R.id.dialogue_user_rate)
         val adRate = d.findViewById<TextView>(R.id.dialogue_ad_rate)
@@ -75,13 +77,16 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         val call = d.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.call_dialogue)
         val itemBooking = d.findViewById<ImageView>(R.id.btn_booking_item_view)
         val itemUpdate = d.findViewById<Button>(R.id.btn_update_item_view)
+        val itemLL = d.findViewById<LinearLayout>(R.id.dialogue_linear_layout)
 
         val dialogRecyclerView = d.findViewById<RecyclerView>(R.id.dialogue_recycler_view)
 
         when (type){
             myTags.userMode->{
+                itemLL.visibility = View.GONE
                 itemBooking.visibility = View.GONE
                 itemUpdate.visibility = View.VISIBLE
+
                 itemUpdate.setOnClickListener{
                     val intent = Intent(context, AddingAdsActivity::class.java)
                     intent.putExtra(myTags.intentUID,uid)
@@ -92,6 +97,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 }
             }
             myTags.userViewMode -> {//
+                itemLL.visibility = View.VISIBLE
                 itemUpdate.visibility = View.GONE
                 itemBooking.visibility = View.VISIBLE
                 itemBooking.setOnClickListener{
@@ -105,6 +111,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
                 }
             }
             else -> {
+                itemLL.visibility = View.VISIBLE
                 itemBooking.visibility = View.VISIBLE
                 itemUpdate.visibility = View.GONE
                 itemBooking.setOnClickListener{
@@ -132,7 +139,8 @@ class RecyclerViewAdapter(private val itemList: ArrayList<ItemModel>, private va
         quantity.text = "Quantity : " + currentItem.quantity
         location.text = currentItem.location
         seller.text = currentItem.username
-        dateTime.text = "Date : " + currentItem.date + " | Time : " + currentItem.time
+        date.text = currentItem.date
+        time.text = currentItem.time
         description.text = currentItem.description
         category.text = currentItem.category
 

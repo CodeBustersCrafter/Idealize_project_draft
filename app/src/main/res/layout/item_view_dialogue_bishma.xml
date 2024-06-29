@@ -31,7 +31,6 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp">
 
-
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout"
                         android:layout_width="match_parent"
@@ -90,7 +89,55 @@
                         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
                         app:srcCompat="@drawable/orange"
                         tools:ignore="ContentDescription,ImageContrastCheck" />
+                    <LinearLayout
+                        android:background="@drawable/calander_background"
+                        android:elevation="50dp"
+                        android:padding="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.072"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                        app:layout_constraintVertical_bias="0.035"
+                        tools:ignore="UseCompoundDrawables"
+                        android:orientation="vertical"
+                        android:gravity="center">
 
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="TODO"
+                            android:src="@drawable/baseline_calendar_month_24"
+                            tools:ignore="ContentDescription,HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/dialogue_date"
+                            android:textAlignment="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="monospace"
+                            android:text="Date"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+                        <TextView
+                            android:textAlignment="center"
+                            android:id="@+id/dialogue_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="monospace"
+                            android:text="Time"
+                            android:textColor="@color/black"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            tools:ignore="HardcodedText" />
+
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/dialogue_price"
                         android:layout_width="110dp"
@@ -220,39 +267,33 @@ that comhines health and taste"
                     android:textColor="@color/grey"
                     android:textSize="16sp"
                     tools:ignore="HardcodedText,TextViewEdits,TextContrastCheck,VisualLintLongText" />
-                <TextView
-                    android:id="@+id/dialogue_date_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Date and Time"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:fontFamily="monospace"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
 
-                <TextView
-                    android:id="@+id/textView13"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
-                    android:text="Other Products of the Seller"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:orientation="vertical"
+                    android:id="@+id/dialogue_linear_layout">
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Other Products of the Seller"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:background="@color/white"
-                    android:id="@+id/dialogue_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:paddingHorizontal="12dp"
-                    android:layout_marginBottom="10dp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:background="@color/white"
+                        android:id="@+id/dialogue_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="12dp"
+                        android:layout_marginBottom="10dp"/>
+                </LinearLayout>
 
 
             </LinearLayout>
